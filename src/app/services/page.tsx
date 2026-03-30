@@ -84,45 +84,50 @@ export default function ServicesPage() {
         </header>
 
         <div className="flex flex-col gap-24">
-          {serviceCategories.map((service, idx) => (
-            <div 
-              key={service.id} 
-              id={service.id}
-              className={`flex flex-col lg:flex-row gap-12 items-center ${idx % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}
-            >
-              <div className="flex-1 space-y-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
-                    <service.icon className="h-6 w-6 text-primary" />
-                  </div>
-                  <h2 className="text-3xl font-headline font-bold text-primary">{service.title}</h2>
-                </div>
-                <p className="text-lg text-foreground/70 leading-relaxed">
-                  {service.description}
-                </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {service.points.map((point, pIdx) => (
-                    <div key={pIdx} className="flex gap-2 items-start text-sm text-foreground/70">
-                      <CheckCircle2 className="h-5 w-5 text-accent shrink-0" />
-                      <span>{point}</span>
+          {serviceCategories.map((service, idx) => {
+            const serviceImg = PlaceHolderImages.find(i => i.id === service.image);
+            return (
+              <div 
+                key={service.id} 
+                id={service.id}
+                className={`flex flex-col lg:flex-row gap-12 items-center ${idx % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}
+              >
+                <div className="flex-1 space-y-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
+                      <service.icon className="h-6 w-6 text-primary" />
                     </div>
-                  ))}
+                    <h2 className="text-3xl font-headline font-bold text-primary">{service.title}</h2>
+                  </div>
+                  <p className="text-lg text-foreground/70 leading-relaxed">
+                    {service.description}
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {service.points.map((point, pIdx) => (
+                      <div key={pIdx} className="flex gap-2 items-start text-sm text-foreground/70">
+                        <CheckCircle2 className="h-5 w-5 text-accent shrink-0" />
+                        <span>{point}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="flex-1 w-full">
+                  <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
+                    {serviceImg && (
+                      <Image
+                        src={serviceImg.imageUrl}
+                        alt={service.title}
+                        fill
+                        className="object-cover"
+                        data-ai-hint={service.image.replace('-', ' ')}
+                      />
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-primary/40 to-transparent" />
+                  </div>
                 </div>
               </div>
-              <div className="flex-1 w-full">
-                <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
-                  <Image
-                    src={PlaceHolderImages.find(i => i.id === service.image)?.imageUrl || ''}
-                    alt={service.title}
-                    fill
-                    className="object-cover"
-                    data-ai-hint={service.image.replace('-', ' ')}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-primary/40 to-transparent" />
-                </div>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

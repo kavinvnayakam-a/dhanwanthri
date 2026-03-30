@@ -17,6 +17,8 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export default function Home() {
   const heroImg = PlaceHolderImages.find(img => img.id === 'hero-clinic');
+  const interiorImg = PlaceHolderImages.find(i => i.id === 'interior-lobby');
+  
   const services = [
     {
       title: 'Advanced Kinesiology',
@@ -111,13 +113,15 @@ export default function Home() {
           </div>
         </div>
         <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl">
-          <Image
-            src={PlaceHolderImages.find(i => i.id === 'interior-lobby')?.imageUrl || ''}
-            alt="Clinic Interior"
-            fill
-            className="object-cover"
-            data-ai-hint="clinic lobby"
-          />
+          {interiorImg && (
+            <Image
+              src={interiorImg.imageUrl}
+              alt="Clinic Interior"
+              fill
+              className="object-cover"
+              data-ai-hint="clinic lobby"
+            />
+          )}
         </div>
       </section>
 
