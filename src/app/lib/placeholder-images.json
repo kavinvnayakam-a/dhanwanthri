@@ -1,0 +1,59 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "hero-clinic",
+      "description": "Modern medical clinic reception",
+      "imageUrl": "https://picsum.photos/seed/clinic1/1200/600",
+      "imageHint": "medical clinic"
+    },
+    {
+      "id": "dr-dharmesh",
+      "description": "Professional portrait of Dr. Dharmesh Kubendiran",
+      "imageUrl": "https://picsum.photos/seed/doctor/600/800",
+      "imageHint": "professional doctor"
+    },
+    {
+      "id": "ayurveda-therapy",
+      "description": "Traditional Ayurvedic massage therapy",
+      "imageUrl": "https://picsum.photos/seed/ayurveda/800/600",
+      "imageHint": "ayurveda therapy"
+    },
+    {
+      "id": "dry-needling",
+      "description": "Dry needling procedure on shoulder",
+      "imageUrl": "https://picsum.photos/seed/needling/800/600",
+      "imageHint": "dry needling"
+    },
+    {
+      "id": "sports-rehab",
+      "description": "Athlete performing rehabilitation exercises",
+      "imageUrl": "https://picsum.photos/seed/sports/800/600",
+      "imageHint": "sports therapy"
+    },
+    {
+      "id": "hbot-chamber",
+      "description": "Hyperbaric Oxygen Therapy chamber",
+      "imageUrl": "https://picsum.photos/seed/hbot/800/600",
+      "imageHint": "hbot chamber"
+    },
+    {
+      "id": "hydrocolon-room",
+      "description": "Modern hydrocolon therapy room",
+      "imageUrl": "https://picsum.photos/seed/hydro/800/600",
+      "imageHint": "medical room"
+    },
+    {
+      "id": "interior-lobby",
+      "description": "Modern and clean clinic interior lobby",
+      "imageUrl": "https://picsum.photos/seed/interior/800/600",
+      "imageHint": "clinic interior"
+    },
+    {
+      "id": "treatment-room",
+      "description": "Clean and professional treatment room",
+      "imageUrl": "https://picsum.photos/seed/room/800/600",
+      "imageHint": "treatment room"
+    }
+  ]
+}
