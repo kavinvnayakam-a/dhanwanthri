@@ -2,12 +2,24 @@
 "use client";
 
 import Link from 'next/link';
-import { useState } from 'react';
-import { Menu, X, HeartPulse } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { Menu, X, HeartPulse, PhoneCall, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const navLinks = [
     { name: 'Home', href: '/' },
@@ -15,37 +27,63 @@ export function Navigation() {
     { name: 'Dr. Dharmesh', href: '/about' },
     { name: 'Gallery', href: '/gallery' },
     { name: 'AI Q&A', href: '/qa' },
-    { name: 'Contact', href: '/contact' },
   ];
 
   return (
-    <nav className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-md border-b">
+    <nav 
+      className={cn(
+        "sticky top-0 z-50 w-full transition-all duration-300 border-b",
+        scrolled 
+          ? "bg-background/95 backdrop-blur-md shadow-sm py-2" 
+          : "bg-background py-4"
+      )}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
-          <Link href="/" className="flex items-center gap-2">
-            <HeartPulse className="h-8 w-8 text-primary" />
-            <span className="font-headline font-bold text-xl tracking-tighter text-primary">DHANWANTHRI</span>
+        <div className="flex justify-between items-center">
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2 group">
+            <div className="bg-primary/10 p-2 rounded-xl group-hover:bg-primary/20 transition-colors">
+              <HeartPulse className="h-7 w-7 text-primary" />
+            </div>
+            <div className="flex flex-col">
+              <span className="font-headline font-bold text-xl leading-none tracking-tighter text-primary">DHANWANTHRI</span>
+              <span className="text-[10px] font-bold text-accent tracking-[0.2em] uppercase">Healing Arts</span>
+            </div>
           </Link>
           
-          <div className="hidden md:flex items-center space-x-8">
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-1">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
                 href={link.href}
-                className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors"
+                className={cn(
+                  "px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200",
+                  pathname === link.href 
+                    ? "text-primary bg-primary/5" 
+                    : "text-foreground/60 hover:text-primary hover:bg-primary/5"
+                )}
               >
                 {link.name}
               </Link>
             ))}
-            <Button asChild className="bg-primary hover:bg-primary/90">
-              <Link href="/contact">Book Now</Link>
+            <div className="h-6 w-px bg-border mx-4" />
+            <Button asChild className="bg-primary hover:bg-primary/90 rounded-full px-6 shadow-md shadow-primary/20">
+              <Link href="/contact" className="flex items-center gap-2">
+                <Calendar className="h-4 w-4" />
+                <span>Book Appointment</span>
+              </Link>
             </Button>
           </div>
 
-          <div className="md:hidden">
+          {/* Mobile Toggle */}
+          <div className="md:hidden flex items-center gap-4">
+            <Button variant="ghost" size="icon" asChild className="text-primary">
+               <Link href="tel:+91XXXXXXXXXX"><PhoneCall className="h-5 w-5" /></Link>
+            </Button>
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-foreground/70 hover:text-primary"
+              className="p-2 text-foreground/70 hover:text-primary transition-colors"
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -53,22 +91,28 @@ export function Navigation() {
         </div>
       </div>
 
+      {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden bg-background border-b animate-in slide-in-from-top-4">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+        <div className="md:hidden bg-background border-t animate-in slide-in-from-top-4 duration-300">
+          <div className="px-4 pt-4 pb-8 space-y-2">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className="block px-3 py-2 text-base font-medium text-foreground/70 hover:text-primary"
+                className={cn(
+                  "block px-4 py-3 text-base font-bold rounded-xl transition-colors",
+                  pathname === link.href 
+                    ? "text-primary bg-primary/5" 
+                    : "text-foreground/70 hover:text-primary hover:bg-primary/5"
+                )}
               >
                 {link.name}
               </Link>
             ))}
-            <div className="px-3 py-2">
-              <Button asChild className="w-full bg-primary">
-                <Link href="/contact">Book Now</Link>
+            <div className="pt-4 border-t mt-4">
+              <Button asChild className="w-full bg-primary py-6 text-lg rounded-2xl">
+                <Link href="/contact" onClick={() => setIsOpen(false)}>Book Appointment</Link>
               </Button>
             </div>
           </div>

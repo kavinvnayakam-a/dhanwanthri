@@ -1,60 +1,147 @@
 
-import { HeartPulse, Mail, Phone, MapPin, Instagram, Facebook, Linkedin } from 'lucide-react';
+import { HeartPulse, Mail, Phone, MapPin, Instagram, Facebook, Linkedin, ArrowRight, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 export function Footer() {
   return (
-    <footer className="bg-primary text-primary-foreground pt-16 pb-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-12">
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <HeartPulse className="h-6 w-6 text-accent" />
-            <span className="font-headline font-bold text-xl tracking-tighter">DHANWANTHRI</span>
+    <footer className="bg-primary text-primary-foreground">
+      {/* Upper CTA Section */}
+      <div className="border-b border-primary-foreground/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col md:flex-row justify-between items-center gap-8">
+          <div className="text-center md:text-left">
+            <h3 className="text-2xl font-headline font-bold mb-2">Ready to start your recovery?</h3>
+            <p className="text-primary-foreground/70">Expert consultation available 7 days a week.</p>
           </div>
-          <p className="text-primary-foreground/80 text-sm leading-relaxed">
-            Premium Ayurvedic and Sports Therapy clinic in Chennai. Specializing in traditional Ayush medicine integrated with advanced sports rehabilitation.
+          <div className="flex flex-wrap justify-center gap-4">
+            <Button asChild variant="secondary" size="lg" className="rounded-full px-8 font-bold">
+              <Link href="/contact">Book Your Visit</Link>
+            </Button>
+            <Button asChild variant="outline" size="lg" className="rounded-full px-8 border-primary-foreground/30 hover:bg-primary-foreground/10">
+              <Link href="/qa">Ask Our AI</Link>
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16">
+        {/* Brand Column */}
+        <div className="space-y-6">
+          <Link href="/" className="flex items-center gap-2 group">
+            <div className="bg-white/10 p-2 rounded-xl">
+              <HeartPulse className="h-6 w-6 text-accent" />
+            </div>
+            <div className="flex flex-col">
+              <span className="font-headline font-bold text-xl leading-none tracking-tighter">DHANWANTHRI</span>
+              <span className="text-[10px] font-bold text-accent/80 tracking-[0.2em] uppercase">Healing Arts</span>
+            </div>
+          </Link>
+          <p className="text-primary-foreground/70 text-sm leading-relaxed">
+            Bridging the gap between ancient Ayurvedic wisdom and modern sports medicine. Our mission is to restore peak human performance through scientific movement analysis and holistic therapies.
           </p>
-          <div className="flex gap-4">
-            <Link href="#" className="hover:text-accent transition-colors"><Instagram className="h-5 w-5" /></Link>
-            <Link href="#" className="hover:text-accent transition-colors"><Facebook className="h-5 w-5" /></Link>
-            <Link href="#" className="hover:text-accent transition-colors"><Linkedin className="h-5 w-5" /></Link>
+          <div className="flex gap-3">
+            {[Instagram, Facebook, Linkedin].map((Icon, i) => (
+              <Link 
+                key={i} 
+                href="#" 
+                className="w-10 h-10 rounded-full border border-primary-foreground/20 flex items-center justify-center hover:bg-accent hover:border-accent hover:text-accent-foreground transition-all"
+              >
+                <Icon className="h-5 w-5" />
+              </Link>
+            ))}
           </div>
         </div>
 
-        <div className="space-y-4">
-          <h4 className="font-headline font-semibold text-lg">Services</h4>
-          <ul className="space-y-2 text-sm text-primary-foreground/80">
-            <li><Link href="/services#kinesiology" className="hover:text-accent">Advanced Kinesiology</Link></li>
-            <li><Link href="/services#needling" className="hover:text-accent">Dry Needling</Link></li>
-            <li><Link href="/services#manipulation" className="hover:text-accent">Joint Manipulation</Link></li>
-            <li><Link href="/services#ayurveda" className="hover:text-accent">Ayurveda Panchakarma</Link></li>
-            <li><Link href="/services#hbot" className="hover:text-accent">HBOT & Hydrocolon</Link></li>
+        {/* Services Column */}
+        <div className="space-y-6">
+          <h4 className="font-headline font-bold text-lg uppercase tracking-widest text-accent text-sm">Treatments</h4>
+          <ul className="space-y-4 text-sm text-primary-foreground/70">
+            {[
+              { name: 'Advanced Kinesiology', href: '/services#kinesiology' },
+              { name: 'Dry Needling Therapy', href: '/services#needling' },
+              { name: 'Osteopathic Manipulation', href: '/services#manipulation' },
+              { name: 'HBOT & Recovery', href: '/services#hbot' },
+              { name: 'Ayurveda Panchakarma', href: '/services#ayurveda' }
+            ].map((link) => (
+              <li key={link.name}>
+                <Link href={link.href} className="hover:text-accent flex items-center gap-2 group transition-colors">
+                  <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-all -ml-5 group-hover:ml-0" />
+                  {link.name}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
 
-        <div className="space-y-4">
-          <h4 className="font-headline font-semibold text-lg">Quick Links</h4>
-          <ul className="space-y-2 text-sm text-primary-foreground/80">
-            <li><Link href="/about" className="hover:text-accent">Dr. Dharmesh Kubendiran</Link></li>
-            <li><Link href="/gallery" className="hover:text-accent">Clinic Gallery</Link></li>
-            <li><Link href="/qa" className="hover:text-accent">Ask AI Assistant</Link></li>
-            <li><Link href="/contact" className="hover:text-accent">Book Appointment</Link></li>
+        {/* Information Column */}
+        <div className="space-y-6">
+          <h4 className="font-headline font-bold text-lg uppercase tracking-widest text-accent text-sm">Information</h4>
+          <ul className="space-y-4 text-sm text-primary-foreground/70">
+            {[
+              { name: 'Meet Dr. Dharmesh', href: '/about' },
+              { name: 'Clinical Gallery', href: '/gallery' },
+              { name: 'FAQ & AI Insights', href: '/qa' },
+              { name: 'Patient Privacy', href: '#' },
+              { name: 'Terms of Care', href: '#' }
+            ].map((link) => (
+              <li key={link.name}>
+                <Link href={link.href} className="hover:text-accent flex items-center gap-2 group transition-colors">
+                  <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-all -ml-5 group-hover:ml-0" />
+                  {link.name}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
 
-        <div className="space-y-4">
-          <h4 className="font-headline font-semibold text-lg">Contact Us</h4>
-          <ul className="space-y-3 text-sm text-primary-foreground/80">
-            <li className="flex gap-2"><MapPin className="h-5 w-5 shrink-0 text-accent" /> Chennai, Tamil Nadu, India</li>
-            <li className="flex gap-2"><Phone className="h-5 w-5 shrink-0 text-accent" /> +91 XXX XXX XXXX</li>
-            <li className="flex gap-2"><Mail className="h-5 w-5 shrink-0 text-accent" /> info@dhanwanthrihealing.com</li>
-            <li className="text-xs mt-2 border-t border-primary-foreground/20 pt-2">Open 7 AM - 9 PM, Mon - Sun</li>
+        {/* Contact Column */}
+        <div className="space-y-6">
+          <h4 className="font-headline font-bold text-lg uppercase tracking-widest text-accent text-sm">Connect</h4>
+          <ul className="space-y-6 text-sm">
+            <li className="flex gap-4">
+              <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center shrink-0">
+                <MapPin className="h-5 w-5 text-accent" />
+              </div>
+              <div className="text-primary-foreground/70">
+                <p className="font-bold text-primary-foreground">Chennai Clinic</p>
+                <p>Tamil Nadu, India</p>
+              </div>
+            </li>
+            <li className="flex gap-4">
+              <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center shrink-0">
+                <Phone className="h-5 w-5 text-accent" />
+              </div>
+              <div className="text-primary-foreground/70">
+                <p className="font-bold text-primary-foreground">+91 XXX XXX XXXX</p>
+                <p>Clinic Desk</p>
+              </div>
+            </li>
+            <li className="flex gap-4">
+              <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center shrink-0">
+                <Mail className="h-5 w-5 text-accent" />
+              </div>
+              <div className="text-primary-foreground/70">
+                <p className="font-bold text-primary-foreground">Email Inquiries</p>
+                <p className="truncate">care@dhanwanthri.com</p>
+              </div>
+            </li>
           </ul>
         </div>
       </div>
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 pt-8 border-t border-primary-foreground/20 text-center text-xs text-primary-foreground/60">
-        &copy; {new Date().getFullYear()} Dhanwanthri Healing. All rights reserved.
+      {/* Bottom Bar */}
+      <div className="border-t border-primary-foreground/10 bg-primary/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-primary-foreground/50">
+          <div className="flex items-center gap-4">
+            <span className="flex items-center gap-1"><ShieldCheck className="h-3 w-3" /> Accredited Facility</span>
+            <span>&copy; {new Date().getFullYear()} Dhanwanthri Healing Arts</span>
+          </div>
+          <div className="flex gap-8">
+            <Link href="#" className="hover:text-primary-foreground">Privacy Policy</Link>
+            <Link href="#" className="hover:text-primary-foreground">Cookie Settings</Link>
+            <Link href="#" className="hover:text-primary-foreground">Accessibility</Link>
+          </div>
+        </div>
       </div>
     </footer>
   );
