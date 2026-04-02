@@ -1,73 +1,77 @@
 
+"use client";
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { 
-  Dna, 
   Wind, 
   Activity, 
   Syringe, 
   Move, 
   CheckCircle2 
 } from 'lucide-react';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function ServicesPage() {
+  const { t } = useLanguage();
+
   const serviceCategories = [
     {
       id: 'kinesiology',
-      title: 'Advanced Kinesiology',
-      description: 'The scientific study of human body movement. It integrates human anatomy, physiology, and biomechanics to understand function and health.',
+      title: t.services.kinesiology.title,
+      description: t.services.kinesiology.desc,
       image: 'ayurveda-therapy',
       icon: Move,
       points: [
-        'Correcting Muscle Imbalances (Activating dormant muscles)',
-        'Neuromuscular Re-education (Resetting neural pathways)',
-        'Biomechanical Optimization (Gait and posture analysis)',
-        'Lymphatic and Vascular Support (Reducing inflammation)',
-        'Integration of Holistic Factors (Addressing systemic tension)'
+        t.services.kinesiology.p1,
+        t.services.kinesiology.p2,
+        t.services.kinesiology.p3,
+        t.services.kinesiology.p4,
+        t.services.kinesiology.p5,
       ]
     },
     {
       id: 'needling',
-      title: 'Dry Needling',
-      description: 'A modern clinical treatment based on neurobiology. Using thin filiform needles to target myofascial trigger points ("muscle knots").',
+      title: t.services.needling.title,
+      description: t.services.needling.desc,
       image: 'dry-needling',
       icon: Syringe,
       points: [
-        'Rapid Pain Relief by deactivating muscular pain sources',
-        'Improved Range of Motion by releasing tight muscle bands',
-        'Accelerated Healing through localized micro-trauma response',
-        'Neurological Reset to interrupt the pain-spasm cycle',
-        'Recovery for Athletes (Post-training recovery & DOMS reduction)'
+        t.services.needling.p1,
+        t.services.needling.p2,
+        t.services.needling.p3,
+        t.services.needling.p4,
+        t.services.needling.p5,
       ]
     },
     {
       id: 'manipulation',
-      title: 'Therapeutic Manipulation',
-      description: 'Controlled HVLA (High-Velocity, Low-Amplitude) thrust techniques applied to joints to restore range of motion and neurological health.',
+      title: t.services.manipulation.title,
+      description: t.services.manipulation.desc,
       image: 'treatment-room',
       icon: Activity,
       points: [
-        'Spinal Manipulation (Cervical, Thoracic, Lumbar)',
-        'Peripheral Joint Manipulation (Shoulders, Hips, Knees)',
-        'Osteopathic Manual Manipulation (OMM)',
-        'Muscle Energy Technique (MET)',
-        'Instrument-Assisted Manipulation (Activator methods)'
+        t.services.manipulation.p1,
+        t.services.manipulation.p2,
+        t.services.manipulation.p3,
+        t.services.manipulation.p4,
+        t.services.manipulation.p5,
       ]
     },
     {
       id: 'hbot',
-      title: 'Specialized Care',
-      description: 'Upgraded facilities for advanced holistic and recovery treatments including 2ATA Hyperbaric oxygen chambers.',
+      title: t.services.hbot.title,
+      description: t.services.hbot.desc,
       image: 'hbot-chamber',
       icon: Wind,
       points: [
-        'HBOT (Hyperbaric Oxygen Therapy) 2ATA Chamber',
-        'Hydrocolon Therapy for detoxification',
-        'Traditional Panchakarma Detoxification',
-        'Sports Rehabilitation and Biomechanical Training',
-        'Pain Management for Spinal Disorders & Arthritis'
+        t.services.hbot.p1,
+        t.services.hbot.p2,
+        t.services.hbot.p3,
+        t.services.hbot.p4,
+        t.services.hbot.p5,
       ]
     }
   ];
@@ -76,10 +80,10 @@ export default function ServicesPage() {
     <div className="bg-background min-h-screen py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <header className="mb-16 text-center space-y-4">
-          <Badge className="bg-accent text-accent-foreground">Our Expertise</Badge>
-          <h1 className="text-4xl md:text-5xl font-headline font-bold text-primary">Advanced Therapeutic Services</h1>
+          <Badge className="bg-accent text-accent-foreground">{t.services.badge}</Badge>
+          <h1 className="text-4xl md:text-5xl font-headline font-bold text-primary">{t.services.title}</h1>
           <p className="text-lg text-foreground/60 max-w-2xl mx-auto">
-            Combining traditional Ayush medicine with modern sports science for precise, personalized care.
+            {t.services.desc}
           </p>
         </header>
 

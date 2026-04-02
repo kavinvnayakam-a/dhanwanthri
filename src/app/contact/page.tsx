@@ -8,7 +8,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { 
   Phone, 
-  Mail, 
   MapPin, 
   Calendar, 
   Send, 
@@ -18,8 +17,10 @@ import {
   Facebook
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function ContactPage() {
+  const { t } = useLanguage();
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -34,12 +35,12 @@ export default function ContactPage() {
           <div className="flex justify-center">
             <CheckCircle2 className="h-20 w-20 text-accent" />
           </div>
-          <h1 className="text-3xl font-headline font-bold text-primary">Inquiry Sent!</h1>
+          <h1 className="text-3xl font-headline font-bold text-primary">{t.contact.successTitle}</h1>
           <p className="text-foreground/60">
-            Thank you for reaching out to Dhanwanthri Healing. Our clinical coordinators will contact you within 24 hours to confirm your appointment.
+            {t.contact.successDesc}
           </p>
           <Button onClick={() => setSubmitted(false)} variant="outline" className="border-primary text-primary">
-            Send another inquiry
+            {t.contact.successBtn}
           </Button>
         </div>
       </div>
@@ -54,10 +55,10 @@ export default function ContactPage() {
           {/* Contact Information */}
           <div className="lg:col-span-2 space-y-12">
             <div className="space-y-4">
-              <Badge className="bg-accent text-accent-foreground">Reach Out</Badge>
-              <h1 className="text-4xl font-headline font-bold text-primary">Get in Touch</h1>
+              <Badge className="bg-accent text-accent-foreground">{t.contact.badge}</Badge>
+              <h1 className="text-4xl font-headline font-bold text-primary">{t.contact.title}</h1>
               <p className="text-lg text-foreground/60 leading-relaxed">
-                Whether you have questions about specific treatments or wish to book a consultation with Dr. Dharmesh, we are here to help.
+                {t.contact.desc}
               </p>
             </div>
 
@@ -67,9 +68,9 @@ export default function ContactPage() {
                   <MapPin className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-primary font-headline">Location</h4>
-                  <p className="text-foreground/60">Chennai, Tamil Nadu, India</p>
-                  <p className="text-xs text-accent font-bold mt-1 hover:underline cursor-pointer">View on Map</p>
+                  <h4 className="font-bold text-primary font-headline">{t.contact.loc}</h4>
+                  <p className="text-foreground/60">{t.contact.locVal}</p>
+                  <p className="text-xs text-accent font-bold mt-1 hover:underline cursor-pointer">{t.contact.viewMap}</p>
                 </div>
               </div>
 
@@ -78,9 +79,9 @@ export default function ContactPage() {
                   <Phone className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-primary font-headline">Phone</h4>
-                  <p className="text-foreground/60">+91 XXX XXX XXXX</p>
-                  <p className="text-xs text-foreground/40 italic">24/7 Availability for inquiries</p>
+                  <h4 className="font-bold text-primary font-headline">{t.contact.phone}</h4>
+                  <p className="text-foreground/60">{t.contact.phoneVal}</p>
+                  <p className="text-xs text-foreground/40 italic">{t.contact.phoneSub}</p>
                 </div>
               </div>
 
@@ -89,15 +90,15 @@ export default function ContactPage() {
                   <Clock className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-primary font-headline">Clinic Hours</h4>
-                  <p className="text-foreground/60">7:00 AM — 9:00 PM</p>
-                  <p className="text-foreground/40 text-sm">Monday through Sunday</p>
+                  <h4 className="font-bold text-primary font-headline">{t.contact.hours}</h4>
+                  <p className="text-foreground/60">{t.contact.hoursVal}</p>
+                  <p className="text-foreground/40 text-sm">{t.contact.hoursSub}</p>
                 </div>
               </div>
             </div>
 
             <div className="pt-8 border-t">
-              <p className="font-bold text-primary mb-4 font-headline">Social Links</p>
+              <p className="font-bold text-primary mb-4 font-headline">{t.contact.social}</p>
               <div className="flex gap-4">
                 <Button variant="ghost" size="icon" className="rounded-full bg-white shadow-sm hover:text-accent"><Instagram className="h-5 w-5" /></Button>
                 <Button variant="ghost" size="icon" className="rounded-full bg-white shadow-sm hover:text-accent"><Facebook className="h-5 w-5" /></Button>
@@ -111,53 +112,51 @@ export default function ContactPage() {
               <CardHeader className="bg-primary p-8 text-primary-foreground">
                 <div className="flex items-center gap-3">
                   <Calendar className="h-6 w-6 text-accent" />
-                  <CardTitle className="font-headline text-2xl">Book Appointment</CardTitle>
+                  <CardTitle className="font-headline text-2xl">{t.contact.formTitle}</CardTitle>
                 </div>
                 <CardDescription className="text-primary-foreground/70">
-                  Fill out the form below to request a consultation.
+                  {t.contact.formDesc}
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-8">
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid sm:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label className="text-sm font-bold text-primary">Full Name</label>
+                      <label className="text-sm font-bold text-primary">{t.contact.name}</label>
                       <Input placeholder="John Doe" required className="border-primary/10" />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-sm font-bold text-primary">Phone Number</label>
+                      <label className="text-sm font-bold text-primary">{t.contact.phoneLabel}</label>
                       <Input type="tel" placeholder="+91 XXXXX XXXXX" required className="border-primary/10" />
                     </div>
                   </div>
                   
                   <div className="space-y-2">
-                    <label className="text-sm font-bold text-primary">Email Address</label>
+                    <label className="text-sm font-bold text-primary">{t.contact.email}</label>
                     <Input type="email" placeholder="john@example.com" required className="border-primary/10" />
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-sm font-bold text-primary">Preferred Service</label>
+                    <label className="text-sm font-bold text-primary">{t.contact.service}</label>
                     <select className="flex h-10 w-full rounded-md border border-primary/10 bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
-                      <option>General Consultation</option>
-                      <option>Advanced Kinesiology</option>
-                      <option>Dry Needling</option>
-                      <option>Joint Manipulation</option>
-                      <option>Ayurveda Panchakarma</option>
-                      <option>HBOT (Hyperbaric Oxygen)</option>
+                      <option>{t.services.kinesiology.title}</option>
+                      <option>{t.services.needling.title}</option>
+                      <option>{t.services.manipulation.title}</option>
+                      <option>{t.services.hbot.title}</option>
                     </select>
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-sm font-bold text-primary">Your Inquiry / Symptoms</label>
+                    <label className="text-sm font-bold text-primary">{t.contact.message}</label>
                     <Textarea 
-                      placeholder="Please describe your condition or treatment you are interested in..." 
+                      placeholder="Please describe your condition..." 
                       className="min-h-[120px] border-primary/10" 
                       required
                     />
                   </div>
 
                   <Button type="submit" size="lg" className="w-full bg-accent text-accent-foreground hover:bg-accent/90 text-lg font-bold py-6">
-                    <Send className="mr-2 h-5 w-5" /> Submit Inquiry
+                    <Send className="mr-2 h-5 w-5" /> {t.contact.submit}
                   </Button>
                 </form>
               </CardContent>
