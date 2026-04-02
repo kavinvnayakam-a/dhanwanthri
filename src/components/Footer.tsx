@@ -1,4 +1,3 @@
-
 import { Mail, Phone, MapPin, Instagram, Facebook, Linkedin, ArrowRight, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -20,7 +19,7 @@ export function Footer() {
             <Button asChild variant="secondary" size="lg" className="rounded-full px-8 font-bold bg-white text-primary hover:bg-white/90">
               <Link href="/contact">Book Your Visit</Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="rounded-full px-8 border-primary-foreground/30 hover:bg-primary-foreground/10">
+            <Button asChild variant="outline" size="lg" className="rounded-full px-8 border-white text-white hover:bg-white hover:text-primary transition-all">
               <Link href="/qa">Ask Our AI</Link>
             </Button>
           </div>
@@ -29,15 +28,15 @@ export function Footer() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 text-center md:text-left">
         {/* Brand Column */}
-        <div className="flex flex-col items-center md:items-start space-y-6">
+        <div className="flex flex-col items-center md:items-start space-y-6 text-center md:text-left">
           <Link href="/" className="flex items-center group">
-            <div className="relative h-34 w-68 bg-white/5 rounded-2xl p-4 transition-transform hover:scale-105 duration-300">
-              {/* Logo size increased by 20% (Approx 230x115) to maintain 2:1 (1080x520 is ~2:1) */}
+            <div className="relative bg-white/5 rounded-2xl p-4 transition-transform hover:scale-105 duration-300">
+              {/* Logo size increased by 20% (Approx 276x138) to maintain 2:1 aspect ratio */}
               <Image 
                 src={whiteLogoUrl}
                 alt="Dhanwanthri Healing Logo"
-                width={230}
-                height={115}
+                width={276}
+                height={138}
                 className="object-contain"
               />
             </div>
@@ -45,7 +44,7 @@ export function Footer() {
           <p className="text-primary-foreground/70 text-sm leading-relaxed max-w-sm">
             Bridging the gap between ancient Ayurvedic wisdom and modern sports medicine. Our mission is to restore peak human performance through scientific movement analysis and holistic therapies.
           </p>
-          <div className="flex gap-3">
+          <div className="flex gap-3 justify-center md:justify-start">
             <Link href="#" className="w-10 h-10 rounded-full border border-primary-foreground/20 flex items-center justify-center hover:bg-white hover:text-primary transition-all">
               <Instagram className="h-5 w-5" />
             </Link>
@@ -59,7 +58,7 @@ export function Footer() {
         </div>
 
         {/* Services Column */}
-        <div className="space-y-6">
+        <div className="space-y-6 text-center md:text-left">
           <h4 className="font-headline font-bold uppercase tracking-widest text-white/60 text-sm">Treatments</h4>
           <ul className="space-y-4 text-sm text-primary-foreground/70">
             {[
@@ -80,7 +79,7 @@ export function Footer() {
         </div>
 
         {/* Information Column */}
-        <div className="space-y-6">
+        <div className="space-y-6 text-center md:text-left">
           <h4 className="font-headline font-bold uppercase tracking-widest text-white/60 text-sm">Information</h4>
           <ul className="space-y-4 text-sm text-primary-foreground/70">
             {[
@@ -101,7 +100,7 @@ export function Footer() {
         </div>
 
         {/* Contact Column */}
-        <div className="space-y-6">
+        <div className="space-y-6 text-center md:text-left">
           <h4 className="font-headline font-bold uppercase tracking-widest text-white/60 text-sm">Connect</h4>
           <ul className="space-y-6 text-sm">
             <li className="flex flex-col items-center md:flex-row md:items-start gap-4">
@@ -142,7 +141,7 @@ export function Footer() {
             <span className="flex items-center gap-1"><ShieldCheck className="h-3 w-3" /> Accredited Facility</span>
             <span>&copy; {new Date().getFullYear()} Dhanwanthri Maruthuvam Ayurvedic & Sports Therapy</span>
           </div>
-          <div className="flex gap-8">
+          <div className="flex gap-8 justify-center">
             <Link href="#" className="hover:text-white">Privacy Policy</Link>
             <Link href="#" className="hover:text-white">Cookie Settings</Link>
             <Link href="#" className="hover:text-white">Accessibility</Link>

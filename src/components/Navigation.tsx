@@ -34,7 +34,7 @@ export function Navigation() {
     { name: 'AI Q&A', href: '/qa' },
   ];
 
-  // We use the mounted state to prevent hydration mismatches for scroll-dependent classes
+  // Prevent hydration mismatch for scroll-dependent classes
   const isActuallyScrolled = mounted && scrolled;
 
   return (
@@ -48,11 +48,11 @@ export function Navigation() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
-          {/* Logo - Increased by 20% for better branding visibility */}
+          {/* Logo - Increased by 20% more for enhanced visibility (Total ~2.4x from baseline) */}
           <Link href="/" className="flex items-center group">
             <div className={cn(
               "relative transition-all duration-500 ease-in-out",
-              isActuallyScrolled ? "h-16 w-32" : "h-24 w-48"
+              isActuallyScrolled ? "h-20 w-40" : "h-28 w-56"
             )}>
               <Image 
                 src={logoUrl}
