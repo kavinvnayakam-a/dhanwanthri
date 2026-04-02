@@ -60,13 +60,13 @@ export default function Home() {
               src={heroImg.imageUrl}
               alt={heroImg.description}
               fill
-              className="object-cover opacity-90"
+              className="object-cover"
               priority
               data-ai-hint={heroImg.imageHint}
             />
           )}
-          {/* Subtle overlay for text legibility if needed */}
-          <div className="absolute inset-0 bg-gradient-to-r from-white/80 via-white/40 to-transparent" />
+          {/* Subtle overlay for text legibility - adjusted for "clean" look */}
+          <div className="absolute inset-0 bg-gradient-to-r from-white/60 via-white/20 to-transparent" />
         </div>
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-left">
