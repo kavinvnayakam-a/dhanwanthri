@@ -3,9 +3,9 @@
   "placeholderImages": [
     {
       "id": "hero-clinic",
-      "description": "Modern medical clinic reception",
-      "imageUrl": "https://picsum.photos/seed/clinic1/1200/600",
-      "imageHint": "medical clinic"
+      "description": "Dhanwanthri Healing Clinic Hero",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Images%2FLanding%20page%20hero%20image.webp?alt=media&token=6b702b7d-29eb-4921-affc-6193ed9fcd49",
+      "imageHint": "medical clinic hero"
     },
     {
       "id": "dr-dharmesh",
