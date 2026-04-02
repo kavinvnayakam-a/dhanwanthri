@@ -72,7 +72,7 @@ export default function Home() {
           <div className="max-w-2xl space-y-4 md:space-y-8 animate-in fade-in slide-in-from-left-12 duration-1000 scale-90 md:scale-100 origin-bottom-left">
             <div className="inline-flex items-center gap-2 bg-primary px-3 py-1 md:px-4 md:py-1.5 rounded-full text-white font-bold text-[10px] md:text-xs uppercase tracking-widest shadow-lg">
               <Sparkles className="h-3 w-3 md:h-3.5 md:h-3.5" />
-              Chennai&apos;s Premier Integrative Clinic
+              Chennai&apos;s Foremost Integrative Medical Center
             </div>
             
             <div className="space-y-2 md:space-y-4">

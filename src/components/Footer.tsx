@@ -1,4 +1,3 @@
-
 import { Mail, Phone, MapPin, Instagram, Facebook, Linkedin, ArrowRight, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -20,7 +19,7 @@ export function Footer() {
             <Button asChild variant="secondary" size="lg" className="rounded-full px-8 font-bold bg-white text-primary hover:bg-white/90">
               <Link href="/contact">Book Your Visit</Link>
             </Button>
-            <Button asChild size="lg" className="rounded-full px-8 font-bold bg-white text-primary hover:bg-white/90 shadow-lg">
+            <Button asChild size="lg" className="rounded-full px-8 font-bold bg-white text-primary border-white/20 hover:bg-white/90 shadow-lg">
               <Link href="/qa">Ask Our AI</Link>
             </Button>
           </div>

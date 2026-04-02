@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from 'next/link';
@@ -40,7 +39,7 @@ export function Navigation() {
 
   return (
     <>
-      {/* Spacer to prevent content jump - Matches the max header height */}
+      {/* Spacer to prevent content jump - Fixed to handle absolute navigation */}
       <div className="h-28 md:h-36 w-full shrink-0" />
       
       <nav 
@@ -53,11 +52,11 @@ export function Navigation() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
-            {/* Logo - Increased size with 2:1 aspect ratio */}
+            {/* Logo - Increased size with 2:1 aspect ratio, further 20% increase */}
             <Link href="/" className="flex items-center group">
               <div className={cn(
                 "relative transition-all duration-500 ease-in-out",
-                isActuallyScrolled ? "h-16 w-32 md:h-20 md:w-40" : "h-24 w-48 md:h-28 md:w-56"
+                isActuallyScrolled ? "h-20 w-40 md:h-24 md:w-48" : "h-28 w-56 md:h-32 md:w-64"
               )}>
                 <Image 
                   src={logoUrl}
