@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 
 export function Footer() {
-  const logoUrl = "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Logos%2FDhanwanthiri%20Logo.webp?alt=media&token=31a8ab0e-c431-4ea5-a513-324d630ebce4";
+  const whiteLogoUrl = "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Logos%2FWhite%20Logo-footer.webp?alt=media&token=e7619c5f-8a15-40f6-8a31-e5bc9a233cc5";
 
   return (
     <footer className="bg-primary text-primary-foreground">
@@ -30,9 +30,9 @@ export function Footer() {
         {/* Brand Column */}
         <div className="space-y-6">
           <Link href="/" className="flex items-center group">
-            <div className="relative h-16 w-32 bg-white/5 rounded-xl p-2">
+            <div className="relative h-20 w-40 bg-white/5 rounded-xl p-2 transition-transform hover:scale-105 duration-300">
               <Image 
-                src={logoUrl}
+                src={whiteLogoUrl}
                 alt="Dhanwanthri Healing Logo"
                 fill
                 className="object-contain p-2"
