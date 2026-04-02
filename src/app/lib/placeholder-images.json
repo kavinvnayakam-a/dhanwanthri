@@ -8,6 +8,12 @@
       "imageHint": "medical clinic hero"
     },
     {
+      "id": "hero-mobile",
+      "description": "Dhanwanthri Healing Clinic Mobile Hero",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Images%2FMobile%20hero%20image.webp?alt=media&token=98e9367d-c4e9-4524-ab53-5a6a2160a4ad",
+      "imageHint": "medical clinic mobile"
+    },
+    {
       "id": "dr-dharmesh",
       "description": "Professional portrait of Dr. Dharmesh Kubendiran",
       "imageUrl": "https://picsum.photos/seed/doctor/600/800",

@@ -1,3 +1,4 @@
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -16,6 +17,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export default function Home() {
   const heroImg = PlaceHolderImages.find(img => img.id === 'hero-clinic');
+  const heroMobileImg = PlaceHolderImages.find(img => img.id === 'hero-mobile');
   const interiorImg = PlaceHolderImages.find(i => i.id === 'interior-lobby');
   
   const services = [
@@ -54,15 +56,31 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative w-full h-[85vh] min-h-[600px] md:min-h-[700px] flex items-end pb-12 md:pb-0 md:items-center overflow-hidden bg-background">
         <div className="absolute inset-0 z-0">
+          {/* Desktop Hero Image */}
           {heroImg && (
-            <Image
-              src={heroImg.imageUrl}
-              alt={heroImg.description}
-              fill
-              className="object-cover opacity-100 max-md:object-[10%_center]"
-              priority
-              data-ai-hint={heroImg.imageHint}
-            />
+            <div className="hidden md:block absolute inset-0">
+              <Image
+                src={heroImg.imageUrl}
+                alt={heroImg.description}
+                fill
+                className="object-cover opacity-100"
+                priority
+                data-ai-hint={heroImg.imageHint}
+              />
+            </div>
+          )}
+          {/* Mobile Hero Image */}
+          {heroMobileImg && (
+            <div className="block md:hidden absolute inset-0">
+              <Image
+                src={heroMobileImg.imageUrl}
+                alt={heroMobileImg.description}
+                fill
+                className="object-cover opacity-100"
+                priority
+                data-ai-hint={heroMobileImg.imageHint}
+              />
+            </div>
           )}
           {/* Subtle dark gradient overlay to ensure white text readability */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 md:via-transparent md:bg-gradient-to-r md:from-black/60 md:to-transparent to-transparent" />
