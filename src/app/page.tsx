@@ -52,7 +52,7 @@ export default function Home() {
   return (
     <div className="flex flex-col gap-24 pb-24">
       {/* Hero Section */}
-      <section className="relative w-full h-[85vh] min-h-[700px] flex items-center overflow-hidden bg-background">
+      <section className="relative w-full h-[85vh] min-h-[600px] md:min-h-[700px] flex items-end pb-12 md:pb-0 md:items-center overflow-hidden bg-background">
         <div className="absolute inset-0 z-0">
           {heroImg && (
             <Image
@@ -64,32 +64,32 @@ export default function Home() {
               data-ai-hint={heroImg.imageHint}
             />
           )}
-          {/* Subtle dark gradient overlay from left to ensure white text readability without dulling the image */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent" />
+          {/* Subtle dark gradient overlay to ensure white text readability */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 md:via-transparent md:bg-gradient-to-r md:from-black/60 md:to-transparent to-transparent" />
         </div>
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-left">
-          <div className="max-w-2xl space-y-8 animate-in fade-in slide-in-from-left-12 duration-1000">
-            <div className="inline-flex items-center gap-2 bg-primary px-4 py-1.5 rounded-full text-white font-bold text-xs uppercase tracking-widest shadow-lg">
-              <Sparkles className="h-3.5 w-3.5" />
-              Chennai's Premier Integrative Clinic
+          <div className="max-w-2xl space-y-4 md:space-y-8 animate-in fade-in slide-in-from-left-12 duration-1000 scale-90 md:scale-100 origin-bottom-left">
+            <div className="inline-flex items-center gap-2 bg-primary px-3 py-1 md:px-4 md:py-1.5 rounded-full text-white font-bold text-[10px] md:text-xs uppercase tracking-widest shadow-lg">
+              <Sparkles className="h-3 w-3 md:h-3.5 md:h-3.5" />
+              Chennai&apos;s Premier Integrative Clinic
             </div>
             
-            <div className="space-y-4">
-              <h1 className="text-5xl md:text-7xl font-bold font-headline leading-[1.1] text-white">
+            <div className="space-y-2 md:space-y-4">
+              <h1 className="text-4xl md:text-7xl font-bold font-headline leading-[1.1] text-white">
                 Ancient Wisdom <br />
                 <span className="text-primary italic">Modern Recovery.</span>
               </h1>
-              <p className="text-xl text-white/90 font-body max-w-lg leading-relaxed drop-shadow-sm">
+              <p className="text-sm md:text-xl text-white/90 font-body max-w-lg leading-relaxed drop-shadow-sm">
                 Dhanwanthri Healing integrates traditional Ayurveda with Advanced Sports Therapy and Osteopathic Manipulation for holistic pain management.
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-4 pt-4">
-              <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-white px-8 text-lg h-14 rounded-full shadow-xl shadow-primary/20">
+            <div className="flex flex-wrap gap-3 md:gap-4 pt-2 md:pt-4">
+              <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-white px-6 md:px-8 text-sm md:text-lg h-10 md:h-14 rounded-full shadow-xl shadow-primary/20">
                 <Link href="/contact">Book Consultation</Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-primary px-8 text-lg h-14 rounded-full transition-all">
+              <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-primary px-6 md:px-8 text-sm md:text-lg h-10 md:h-14 rounded-full transition-all">
                 <Link href="/services">View Services</Link>
               </Button>
             </div>
@@ -102,7 +102,7 @@ export default function Home() {
         <div className="space-y-6 text-left">
           <h2 className="text-3xl font-headline font-bold text-primary">Dhanwanthari Maruthuvam</h2>
           <p className="text-lg leading-relaxed text-foreground/70">
-            A premium Ayurvedic and Sports Therapy clinic located in Chennai, it's the first of its kind in Tamilnadu. We specialize in traditional Ayush medicine paired with advanced techniques like Dry Needling and Osteopathic Manipulation.
+            A premium Ayurvedic and Sports Therapy clinic located in Chennai, it&apos;s the first of its kind in Tamilnadu. We specialize in traditional Ayush medicine paired with advanced techniques like Dry Needling and Osteopathic Manipulation.
           </p>
           <div className="grid grid-cols-2 gap-4 pt-4">
             <div className="p-4 bg-white rounded-xl shadow-sm border border-primary/10">
