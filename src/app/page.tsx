@@ -1,4 +1,6 @@
 
+"use client";
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -14,8 +16,10 @@ import {
   UserCheck
 } from 'lucide-react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function Home() {
+  const { t } = useLanguage();
   const heroImg = PlaceHolderImages.find(img => img.id === 'hero-clinic');
   const heroMobileImg = PlaceHolderImages.find(img => img.id === 'hero-mobile');
   const interiorImg = PlaceHolderImages.find(i => i.id === 'interior-lobby');
@@ -58,7 +62,6 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative w-full h-[85vh] min-h-[600px] md:min-h-[700px] flex items-end pb-12 md:pb-0 md:items-center overflow-hidden bg-background">
         <div className="absolute inset-0 z-0">
-          {/* Desktop Hero Image */}
           {heroImg && (
             <div className="hidden md:block absolute inset-0">
               <Image
@@ -71,7 +74,6 @@ export default function Home() {
               />
             </div>
           )}
-          {/* Mobile Hero Image */}
           {heroMobileImg && (
             <div className="block md:hidden absolute inset-0">
               <Image
@@ -84,7 +86,6 @@ export default function Home() {
               />
             </div>
           )}
-          {/* Subtle dark gradient overlay to ensure white text readability */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 md:via-transparent md:bg-gradient-to-r md:from-black/60 md:to-transparent to-transparent" />
         </div>
         
@@ -92,25 +93,25 @@ export default function Home() {
           <div className="max-w-2xl space-y-4 md:space-y-8 animate-in fade-in slide-in-from-left-12 duration-1000 scale-90 md:scale-100 origin-bottom-left">
             <div className="inline-flex items-center gap-2 bg-primary px-3 py-1 md:px-4 md:py-1.5 rounded-full text-white font-bold text-[10px] md:text-xs uppercase tracking-widest shadow-lg">
               <Sparkles className="h-3 w-3 md:h-3.5" />
-              Chennai&apos;s Foremost Integrative Medical Center
+              {t.hero.badge}
             </div>
             
             <div className="space-y-2 md:space-y-4">
               <h1 className="text-4xl md:text-7xl font-bold font-headline leading-[1.1] text-white">
-                Ancient Wisdom <br />
-                <span className="text-primary italic">Modern Recovery.</span>
+                {t.hero.title1} <br />
+                <span className="text-primary italic">{t.hero.title2}</span>
               </h1>
               <p className="text-sm md:text-xl text-white/90 font-body max-w-lg leading-relaxed drop-shadow-sm">
-                Dhanwanthri Healing integrates traditional Ayurveda with Advanced Sports Therapy and Osteopathic Manipulation for holistic pain management.
+                {t.hero.subtitle}
               </p>
             </div>
 
             <div className="flex flex-wrap gap-3 md:gap-4 pt-2 md:pt-4">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-white px-6 md:px-8 text-sm md:text-lg h-10 md:h-14 rounded-full shadow-xl shadow-primary/20">
-                <Link href="/contact">Book Consultation</Link>
+                <Link href="/contact">{t.hero.ctaBook}</Link>
               </Button>
               <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90 px-6 md:px-8 text-sm md:text-lg h-10 md:h-14 rounded-full shadow-xl transition-all">
-                <Link href="/services">View Services</Link>
+                <Link href="/services">{t.hero.ctaServices}</Link>
               </Button>
             </div>
           </div>
@@ -120,22 +121,22 @@ export default function Home() {
       {/* Overview Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-16 items-center">
         <div className="space-y-6 text-left">
-          <h2 className="text-3xl font-headline font-bold text-primary">Dhanwanthari Maruthuvam</h2>
+          <h2 className="text-3xl font-headline font-bold text-primary">{t.home.overviewTitle}</h2>
           <p className="text-lg leading-relaxed text-foreground/70">
-            A premium Ayurvedic and Sports Therapy clinic located in Chennai, it&apos;s the first of its kind in Tamilnadu. We specialize in traditional Ayush medicine paired with advanced techniques like Dry Needling and Osteopathic Manipulation.
+            {t.home.overviewDesc}
           </p>
           <div className="grid grid-cols-2 gap-4 pt-4">
             <div className="p-4 bg-white rounded-xl shadow-sm border border-primary/10">
               <h4 className="font-bold text-primary flex items-center gap-2 text-left">
-                <Clock className="h-4 w-4" /> Hours
+                <Clock className="h-4 w-4" /> {t.home.hours}
               </h4>
-              <p className="text-sm text-foreground/60 text-left">7 AM - 9 PM, Daily</p>
+              <p className="text-sm text-foreground/60 text-left">{t.home.hoursVal}</p>
             </div>
             <div className="p-4 bg-white rounded-xl shadow-sm border border-primary/10">
               <h4 className="font-bold text-primary flex items-center gap-2 text-left">
-                <Sparkles className="h-4 w-4" /> Capacity
+                <Sparkles className="h-4 w-4" /> {t.home.capacity}
               </h4>
-              <p className="text-sm text-foreground/60 text-left">12 Specialized Therapy Rooms</p>
+              <p className="text-sm text-foreground/60 text-left">{t.home.capacityVal}</p>
             </div>
           </div>
         </div>
@@ -156,9 +157,9 @@ export default function Home() {
       <section className="bg-muted/30 py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-            <h2 className="text-4xl font-headline font-bold text-primary">Specialized Treatments</h2>
+            <h2 className="text-4xl font-headline font-bold text-primary">{t.home.servicesTitle}</h2>
             <p className="text-foreground/60 text-lg">
-              Combining evidence-based sports science with holistic rejuvenation for lasting relief.
+              {t.home.servicesDesc}
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -197,13 +198,13 @@ export default function Home() {
               className="object-contain"
             />
           </div>
-          <h2 className="text-3xl font-headline font-bold text-primary mb-6">Exciting Upgrades!</h2>
+          <h2 className="text-3xl font-headline font-bold text-primary mb-6">{t.home.upgradeTitle}</h2>
           <p className="text-xl text-primary/80 mb-8 max-w-2xl mx-auto">
-            We are expanding from a 5-room facility to 12 exclusive therapy rooms, featuring specialized spaces for Panchakarma, HBOT, and Hydrocolon therapy.
+            {t.home.upgradeDesc}
           </p>
           <div className="flex justify-center gap-4">
             <Button asChild size="lg" className="bg-primary text-white hover:bg-primary/90 rounded-full px-8">
-              <Link href="/gallery">Tour Facilities</Link>
+              <Link href="/gallery">{t.home.tourBtn}</Link>
             </Button>
           </div>
         </div>

@@ -1,15 +1,20 @@
+
+"use client";
+
 import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { GraduationCap, Award, BookOpen, Microscope } from 'lucide-react';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function AboutPage() {
+  const { t } = useLanguage();
   const profileImageUrl = "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Images%2FMobile%20hero%202.webp?alt=media&token=5a4225cb-da49-4d62-970b-4e83c72c0f20";
   
   const qualifications = [
     { icon: GraduationCap, label: "Degree", value: "BAMS (Ayurveda)" },
-    { icon: Award, label: "Doctorate", value: "PhD in Sports Method and Training" },
-    { icon: Microscope, label: "Specialization", value: "Sports Scientist & Biomechanist" },
+    { icon: Award, label: "Doctorate", value: "PhD in Sports Training" },
+    { icon: Microscope, label: "Specialization", value: "Biomechanist" },
     { icon: BookOpen, label: "Expertise", value: "Sports Kinesiology" },
   ];
 
@@ -17,21 +22,20 @@ export default function AboutPage() {
     <div className="min-h-screen bg-background py-8 md:py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Mobile Header - Visible only on small screens */}
+        {/* Mobile Header */}
         <div className="lg:hidden mb-8 space-y-4">
-          <Badge className="bg-primary text-primary-foreground">Primary Physician</Badge>
-          <h1 className="text-3xl font-headline font-bold text-primary leading-tight">Dr. Dharmesh Kubendiran</h1>
-          <p className="text-lg text-accent font-bold">Leading Expert in Integrative Sports Medicine</p>
+          <Badge className="bg-primary text-primary-foreground">{t.about.badge}</Badge>
+          <h1 className="text-3xl font-headline font-bold text-primary leading-tight">{t.about.name}</h1>
+          <p className="text-lg text-accent font-bold">{t.about.title}</p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8 md:gap-16 items-start">
           
-          {/* Profile Image & Quick Info */}
           <div className="space-y-6 md:space-y-8 lg:sticky lg:top-24">
             <div className="relative aspect-[3/4] md:aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl">
               <Image
                 src={profileImageUrl}
-                alt="Dr. Dharmesh Kubendiran"
+                alt={t.about.name}
                 fill
                 className="object-cover"
                 data-ai-hint="doctor portrait"
@@ -39,7 +43,6 @@ export default function AboutPage() {
               />
             </div>
             
-            {/* Qualifications Grid */}
             <div className="grid grid-cols-2 gap-3 md:gap-4">
               {qualifications.map((q, idx) => (
                 <Card key={idx} className="bg-white border-none shadow-sm hover:shadow-md transition-shadow">
@@ -55,55 +58,35 @@ export default function AboutPage() {
             </div>
           </div>
 
-          {/* Biography & Philosophy */}
           <div className="space-y-8">
-            {/* Desktop Header - Hidden on small screens */}
             <div className="hidden lg:block space-y-4">
-              <Badge className="bg-primary text-primary-foreground">Primary Physician</Badge>
-              <h1 className="text-5xl font-headline font-bold text-primary">Dr. Dharmesh Kubendiran</h1>
-              <p className="text-xl text-accent font-bold">Leading Expert in Integrative Sports Medicine</p>
+              <Badge className="bg-primary text-primary-foreground">{t.about.badge}</Badge>
+              <h1 className="text-5xl font-headline font-bold text-primary">{t.about.name}</h1>
+              <p className="text-xl text-accent font-bold">{t.about.title}</p>
             </div>
 
             <div className="prose prose-lg text-foreground/70 space-y-6">
               <p className="leading-relaxed">
-                Dr. Dharmesh Kubendiran is a visionary in the field of Ayush medicine, bridging the gap between ancient Ayurvedic healing and modern sports science. With a BAMS degree and a PhD in Sports Method and Training, he brings a unique scientific perspective to traditional therapies.
+                {t.about.bio1}
               </p>
               <p className="leading-relaxed">
-                As a dedicated Sports Scientist and Biomechanist, Dr. Dharmesh focuses on analyzing gait patterns, muscle mechanics, and neurological communication to resolve chronic pain at its source.
+                {t.about.bio2}
               </p>
               
-              <h3 className="text-2xl font-headline font-bold text-primary pt-4 border-l-4 border-accent pl-4">Professional Philosophy</h3>
+              <h3 className="text-2xl font-headline font-bold text-primary pt-4 border-l-4 border-accent pl-4">{t.about.philosophy}</h3>
               <p className="italic bg-accent/5 p-4 rounded-xl text-primary font-medium">
-                "Our approach isn't just about suppressing symptoms; it's about optimizing the human machine. By integrating Kinesiology with Siddha and Ayurveda, we reset the body's natural healing systems and restore peak functional performance."
+                {t.about.quote}
               </p>
 
               <div className="bg-white p-6 md:p-8 rounded-3xl border border-primary/10 shadow-sm space-y-6">
-                <h4 className="font-headline font-bold text-primary text-xl">Key Expertise:</h4>
+                <h4 className="font-headline font-bold text-primary text-xl">{t.about.expertiseTitle}</h4>
                 <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm md:text-base font-medium">
-                  <li className="flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-accent shrink-0" /> 
-                    <span>Spinal Disorders & Arthritis</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-accent shrink-0" /> 
-                    <span>Neuromusculoskeletal Pain</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-accent shrink-0" /> 
-                    <span>Gait Pattern Correction</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-accent shrink-0" /> 
-                    <span>Advanced Sports Rehabilitation</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-accent shrink-0" /> 
-                    <span>Myofascial Trigger Therapy</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-accent shrink-0" /> 
-                    <span>Metabolic Recovery</span>
-                  </li>
+                  {[t.about.exp1, t.about.exp2, t.about.exp3, t.about.exp4, t.about.exp5, t.about.exp6].map((exp, i) => (
+                    <li key={i} className="flex items-center gap-3">
+                      <div className="w-2 h-2 rounded-full bg-accent shrink-0" /> 
+                      <span>{exp}</span>
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>
