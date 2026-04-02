@@ -30,7 +30,7 @@ export function Footer() {
         {/* Brand Column */}
         <div className="space-y-6">
           <Link href="/" className="flex items-center group">
-            <div className="relative h-20 w-40 bg-white/5 rounded-xl p-2 transition-transform hover:scale-105 duration-300">
+            <div className="relative h-24 w-48 bg-white/5 rounded-xl p-2 transition-transform hover:scale-105 duration-300">
               <Image 
                 src={whiteLogoUrl}
                 alt="Dhanwanthri Healing Logo"
