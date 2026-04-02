@@ -69,7 +69,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-r from-white/80 via-white/40 to-transparent" />
         </div>
         
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-left">
           <div className="max-w-2xl space-y-8 animate-in fade-in slide-in-from-left-12 duration-1000">
             <Badge variant="outline" className="border-primary text-primary px-4 py-1 bg-white/50 backdrop-blur-sm">
               Chennai's Premier Integrative Clinic
