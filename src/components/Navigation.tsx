@@ -11,15 +11,18 @@ import { cn } from '@/lib/utils';
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
 
   const logoUrl = "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Logos%2FDhanwanthiri%20Logo.webp?alt=media&token=31a8ab0e-c431-4ea5-a513-324d630ebce4";
 
   useEffect(() => {
+    setMounted(true);
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
     window.addEventListener('scroll', handleScroll);
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -31,11 +34,14 @@ export function Navigation() {
     { name: 'AI Q&A', href: '/qa' },
   ];
 
+  // We use the mounted state to prevent hydration mismatches for scroll-dependent classes
+  const isActuallyScrolled = mounted && scrolled;
+
   return (
     <nav 
       className={cn(
         "sticky top-0 z-50 w-full transition-all duration-300 border-b",
-        scrolled 
+        isActuallyScrolled 
           ? "bg-background/95 backdrop-blur-md shadow-sm py-2" 
           : "bg-background py-4"
       )}
@@ -46,7 +52,7 @@ export function Navigation() {
           <Link href="/" className="flex items-center group">
             <div className={cn(
               "relative transition-all duration-500 ease-in-out",
-              scrolled ? "h-16 w-16" : "h-24 w-24"
+              isActuallyScrolled ? "h-16 w-16" : "h-24 w-24"
             )}>
               <Image 
                 src={logoUrl}

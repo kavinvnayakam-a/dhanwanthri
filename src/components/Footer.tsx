@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin, Instagram, Facebook, Linkedin, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Mail, Phone, MapPin, Instagram, Facebook, Linkedin, ArrowRight, ShieldCheck, HeartPulse } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -29,14 +29,9 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16">
         {/* Brand Column */}
         <div className="space-y-6">
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative h-12 w-12 overflow-hidden rounded-xl bg-white/10 p-1">
-              <Image 
-                src={logoUrl}
-                alt="Dhanwanthri Healing Logo"
-                fill
-                className="object-contain p-1"
-              />
+          <Link href="/" className="flex items-center gap-2 group">
+            <div className="bg-white/10 p-2 rounded-xl">
+              <HeartPulse className="h-6 w-6 text-accent" />
             </div>
             <div className="flex flex-col">
               <span className="font-headline font-bold text-xl leading-none tracking-tighter">DHANWANTHRI</span>
@@ -47,15 +42,15 @@ export function Footer() {
             Bridging the gap between ancient Ayurvedic wisdom and modern sports medicine. Our mission is to restore peak human performance through scientific movement analysis and holistic therapies.
           </p>
           <div className="flex gap-3">
-            {[Instagram, Facebook, Linkedin].map((Icon, i) => (
-              <Link 
-                key={i} 
-                href="#" 
-                className="w-10 h-10 rounded-full border border-primary-foreground/20 flex items-center justify-center hover:bg-accent hover:border-accent hover:text-accent-foreground transition-all"
-              >
-                <Icon className="h-5 w-5" />
-              </Link>
-            ))}
+            <Link href="#" className="w-10 h-10 rounded-full border border-primary-foreground/20 flex items-center justify-center hover:bg-accent hover:border-accent hover:text-accent-foreground transition-all">
+              <Instagram className="h-5 w-5" />
+            </Link>
+            <Link href="#" className="w-10 h-10 rounded-full border border-primary-foreground/20 flex items-center justify-center hover:bg-accent hover:border-accent hover:text-accent-foreground transition-all">
+              <Facebook className="h-5 w-5" />
+            </Link>
+            <Link href="#" className="w-10 h-10 rounded-full border border-primary-foreground/20 flex items-center justify-center hover:bg-accent hover:border-accent hover:text-accent-foreground transition-all">
+              <Linkedin className="h-5 w-5" />
+            </Link>
           </div>
         </div>
 
