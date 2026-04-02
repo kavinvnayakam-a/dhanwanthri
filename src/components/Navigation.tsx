@@ -48,11 +48,11 @@ export function Navigation() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
-          {/* Logo - Text removed, size increased and aspect ratio corrected (1080x520) */}
+          {/* Logo - Increased by 20% for better branding visibility */}
           <Link href="/" className="flex items-center group">
             <div className={cn(
               "relative transition-all duration-500 ease-in-out",
-              isActuallyScrolled ? "h-14 w-28" : "h-20 w-40"
+              isActuallyScrolled ? "h-16 w-32" : "h-24 w-48"
             )}>
               <Image 
                 src={logoUrl}
