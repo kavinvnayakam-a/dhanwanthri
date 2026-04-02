@@ -20,7 +20,7 @@ export const translations = {
       ctaServices: "View Services"
     },
     home: {
-      overviewTitle: "Dhanwanthari Maruthuvam",
+      overviewTitle: "Dhanwanthri Maruthuvam",
       overviewDesc: "A premium Ayurvedic and Sports Therapy clinic located in Chennai, it's the first of its kind in Tamilnadu. We specialize in traditional Ayush medicine paired with advanced techniques like Dry Needling and Osteopathic Manipulation.",
       hours: "Hours",
       hoursVal: "7 AM - 9 PM, Daily",
@@ -92,7 +92,7 @@ export const translations = {
     gallery: {
       badge: "Visual Tour",
       title: "Clinic & Procedures",
-      desc: "Experience the sophisticated environment and precision-driven treatments at Dhanwanthri Healing.",
+      desc: "Experience the sophisticated environment and precision-driven treatments at Dhanwanthri Maruthuvam.",
       videoTitle: "Video Demonstrations",
       v1Title: "Advanced Kinesiology Overview",
       v1Sub: "Clinical Tutorial",
@@ -153,7 +153,7 @@ export const translations = {
       successTitle: "Inquiry Sent!",
       successDesc: "Thank you for reaching out. Our clinical coordinators will contact you within 24 hours.",
       successBtn: "Send another inquiry",
-      whatsappMsg: "Hi, I'd like to book an appointment with Dhanwanthri Healing."
+      whatsappMsg: "Hi, I'd like to book an appointment with Dhanwanthri Maruthuvam."
     },
     footer: {
       ctaTitle: "Ready to start your recovery?",
@@ -257,7 +257,7 @@ export const translations = {
     gallery: {
       badge: "காட்சிப் பயணம்",
       title: "கிளினிக் மற்றும் நடைமுறைகள்",
-      desc: "தன்வந்திரி ஹீலிங்கில் அதிநவீன சூழல் மற்றும் துல்லியமான சிகிச்சைகளை அனுபவியுங்கள்.",
+      desc: "தன்வந்திரி மருத்துவத்தில் அதிநவீன சூழல் மற்றும் துல்லியமான சிகிச்சைகளை அனுபவியுங்கள்.",
       videoTitle: "வீடியோ விளக்கங்கள்",
       v1Title: "மேம்பட்ட கினீசியாலஜி கண்ணோட்டம்",
       v1Sub: "மருத்துவ பயிற்சி",
@@ -318,7 +318,7 @@ export const translations = {
       successTitle: "விசாரணை அனுப்பப்பட்டது!",
       successDesc: "தொடர்பு கொண்டதற்கு நன்றி. எங்கள் மருத்துவ ஒருங்கிணைப்பாளர்கள் 24 மணி நேரத்திற்குள் உங்களைத் தொடர்புகொள்வார்கள்.",
       successBtn: "மற்றொரு விசாரணையை அனுப்பவும்",
-      whatsappMsg: "வணக்கம், நான் தன்வந்திரி ஹீலிங்கில் ஒரு அப்பாயிண்ட்மெண்ட் பதிவு செய்ய விரும்புகிறேன்."
+      whatsappMsg: "வணக்கம், நான் தன்வந்திரி மருத்துவத்தில் ஒரு அப்பாயிண்ட்மெண்ட் பதிவு செய்ய விரும்புகிறேன்."
     },
     footer: {
       ctaTitle: "உங்கள் மீட்சியைத் தொடங்கத் தயாரா?",

@@ -6,7 +6,7 @@ import {Footer} from '@/components/Footer';
 import {LanguageProvider} from '@/context/LanguageContext';
 
 export const metadata: Metadata = {
-  title: 'Dhanwanthri Healing | Ayurvedic & Sports Therapy Clinic',
+  title: 'Dhanwanthri Maruthuvam | Ayurvedic & Sports Therapy Clinic',
   description: 'Premium Ayurvedic and Advanced Sports Therapy clinic in Chennai specializing in holistic pain management and sports recovery.',
   icons: {
     icon: 'https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Logos%2FFavicon-dhanwanthiri.webp?alt=media&token=622c5a27-8aa9-40a8-beeb-76dfd3f97cd2',
