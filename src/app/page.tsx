@@ -20,6 +20,8 @@ export default function Home() {
   const heroMobileImg = PlaceHolderImages.find(img => img.id === 'hero-mobile');
   const interiorImg = PlaceHolderImages.find(i => i.id === 'interior-lobby');
   
+  const faviconUrl = "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Logos%2FFavicon-dhanwanthiri.webp?alt=media&token=622c5a27-8aa9-40a8-beeb-76dfd3f97cd2";
+
   const services = [
     {
       title: 'Advanced Kinesiology',
@@ -187,7 +189,13 @@ export default function Home() {
       <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-primary/5 rounded-3xl p-12 text-center border border-primary/10 relative overflow-hidden">
           <div className="absolute top-0 right-0 p-4 opacity-10">
-            <Sparkles className="h-24 w-24 text-primary" />
+            <Image 
+              src={faviconUrl}
+              alt="Dhanwanthri Icon"
+              width={96}
+              height={96}
+              className="object-contain"
+            />
           </div>
           <h2 className="text-3xl font-headline font-bold text-primary mb-6">Exciting Upgrades!</h2>
           <p className="text-xl text-primary/80 mb-8 max-w-2xl mx-auto">
