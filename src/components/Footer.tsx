@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin, Instagram, Facebook, Linkedin, ArrowRight, ShieldCheck, HeartPulse } from 'lucide-react';
+import { Mail, Phone, MapPin, Instagram, Facebook, Linkedin, ArrowRight, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -29,13 +29,14 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16">
         {/* Brand Column */}
         <div className="space-y-6">
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="bg-white/10 p-2 rounded-xl">
-              <HeartPulse className="h-6 w-6 text-accent" />
-            </div>
-            <div className="flex flex-col">
-              <span className="font-headline font-bold text-xl leading-none tracking-tighter">DHANWANTHRI</span>
-              <span className="text-[10px] font-bold text-accent/80 tracking-[0.2em] uppercase">Healing Arts</span>
+          <Link href="/" className="flex items-center group">
+            <div className="relative h-16 w-32 bg-white/5 rounded-xl p-2">
+              <Image 
+                src={logoUrl}
+                alt="Dhanwanthri Healing Logo"
+                fill
+                className="object-contain p-2"
+              />
             </div>
           </Link>
           <p className="text-primary-foreground/70 text-sm leading-relaxed">
