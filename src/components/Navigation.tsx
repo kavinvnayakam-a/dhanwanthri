@@ -34,7 +34,7 @@ export function Navigation() {
     { name: 'AI Q&A', href: '/qa' },
   ];
 
-  // Prevent hydration mismatch by rendering a consistent height shell
+  // Prevent hydration mismatch by using CSS for scroll state visibility
   const isActuallyScrolled = mounted && scrolled;
 
   return (
