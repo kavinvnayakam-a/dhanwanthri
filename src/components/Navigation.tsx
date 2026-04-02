@@ -1,10 +1,10 @@
-
 "use client";
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { Menu, X, HeartPulse, PhoneCall, Calendar } from 'lucide-react';
+import { Menu, X, PhoneCall, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -12,6 +12,8 @@ export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+
+  const logoUrl = "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Logos%2FDhanwanthiri%20Logo.webp?alt=media&token=31a8ab0e-c431-4ea5-a513-324d630ebce4";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -41,9 +43,14 @@ export function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="bg-primary/10 p-2 rounded-xl group-hover:bg-primary/20 transition-colors">
-              <HeartPulse className="h-7 w-7 text-primary" />
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="relative h-12 w-12 overflow-hidden rounded-xl">
+              <Image 
+                src={logoUrl}
+                alt="Dhanwanthri Healing Logo"
+                fill
+                className="object-contain"
+              />
             </div>
             <div className="flex flex-col">
               <span className="font-headline font-bold text-xl leading-none tracking-tighter text-primary">DHANWANTHRI</span>

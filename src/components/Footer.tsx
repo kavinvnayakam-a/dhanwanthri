@@ -1,9 +1,11 @@
-
-import { HeartPulse, Mail, Phone, MapPin, Instagram, Facebook, Linkedin, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Mail, Phone, MapPin, Instagram, Facebook, Linkedin, ArrowRight, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 
 export function Footer() {
+  const logoUrl = "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Logos%2FDhanwanthiri%20Logo.webp?alt=media&token=31a8ab0e-c431-4ea5-a513-324d630ebce4";
+
   return (
     <footer className="bg-primary text-primary-foreground">
       {/* Upper CTA Section */}
@@ -27,9 +29,14 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16">
         {/* Brand Column */}
         <div className="space-y-6">
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="bg-white/10 p-2 rounded-xl">
-              <HeartPulse className="h-6 w-6 text-accent" />
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="relative h-12 w-12 overflow-hidden rounded-xl bg-white/10 p-1">
+              <Image 
+                src={logoUrl}
+                alt="Dhanwanthri Healing Logo"
+                fill
+                className="object-contain p-1"
+              />
             </div>
             <div className="flex flex-col">
               <span className="font-headline font-bold text-xl leading-none tracking-tighter">DHANWANTHRI</span>
