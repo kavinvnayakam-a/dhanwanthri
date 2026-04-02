@@ -28,9 +28,9 @@ export function Footer() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16">
         {/* Brand Column */}
-        <div className="space-y-6">
+        <div className="flex flex-col items-center text-center md:items-start md:text-left space-y-6">
           <Link href="/" className="flex items-center group">
-            <div className="relative h-24 w-48 bg-white/5 rounded-xl p-2 transition-transform hover:scale-105 duration-300">
+            <div className="relative h-28 w-56 bg-white/5 rounded-xl p-2 transition-transform hover:scale-105 duration-300">
               <Image 
                 src={whiteLogoUrl}
                 alt="Dhanwanthri Healing Logo"
@@ -39,10 +39,10 @@ export function Footer() {
               />
             </div>
           </Link>
-          <p className="text-primary-foreground/70 text-sm leading-relaxed">
+          <p className="text-primary-foreground/70 text-sm leading-relaxed max-w-sm">
             Bridging the gap between ancient Ayurvedic wisdom and modern sports medicine. Our mission is to restore peak human performance through scientific movement analysis and holistic therapies.
           </p>
-          <div className="flex gap-3">
+          <div className="flex justify-center md:justify-start gap-3">
             <Link href="#" className="w-10 h-10 rounded-full border border-primary-foreground/20 flex items-center justify-center hover:bg-accent hover:border-accent hover:text-accent-foreground transition-all">
               <Instagram className="h-5 w-5" />
             </Link>
@@ -56,8 +56,8 @@ export function Footer() {
         </div>
 
         {/* Services Column */}
-        <div className="space-y-6">
-          <h4 className="font-headline font-bold text-lg uppercase tracking-widest text-accent text-sm">Treatments</h4>
+        <div className="text-center md:text-left space-y-6">
+          <h4 className="font-headline font-bold uppercase tracking-widest text-accent text-sm">Treatments</h4>
           <ul className="space-y-4 text-sm text-primary-foreground/70">
             {[
               { name: 'Advanced Kinesiology', href: '/services#kinesiology' },
@@ -67,8 +67,8 @@ export function Footer() {
               { name: 'Ayurveda Panchakarma', href: '/services#ayurveda' }
             ].map((link) => (
               <li key={link.name}>
-                <Link href={link.href} className="hover:text-accent flex items-center gap-2 group transition-colors">
-                  <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-all -ml-5 group-hover:ml-0" />
+                <Link href={link.href} className="hover:text-accent flex items-center justify-center md:justify-start gap-2 group transition-colors">
+                  <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-all hidden md:block" />
                   {link.name}
                 </Link>
               </li>
@@ -77,8 +77,8 @@ export function Footer() {
         </div>
 
         {/* Information Column */}
-        <div className="space-y-6">
-          <h4 className="font-headline font-bold text-lg uppercase tracking-widest text-accent text-sm">Information</h4>
+        <div className="text-center md:text-left space-y-6">
+          <h4 className="font-headline font-bold uppercase tracking-widest text-accent text-sm">Information</h4>
           <ul className="space-y-4 text-sm text-primary-foreground/70">
             {[
               { name: 'Meet Dr. Dharmesh', href: '/about' },
@@ -88,8 +88,8 @@ export function Footer() {
               { name: 'Terms of Care', href: '#' }
             ].map((link) => (
               <li key={link.name}>
-                <Link href={link.href} className="hover:text-accent flex items-center gap-2 group transition-colors">
-                  <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-all -ml-5 group-hover:ml-0" />
+                <Link href={link.href} className="hover:text-accent flex items-center justify-center md:justify-start gap-2 group transition-colors">
+                  <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-all hidden md:block" />
                   {link.name}
                 </Link>
               </li>
@@ -98,10 +98,10 @@ export function Footer() {
         </div>
 
         {/* Contact Column */}
-        <div className="space-y-6">
-          <h4 className="font-headline font-bold text-lg uppercase tracking-widest text-accent text-sm">Connect</h4>
+        <div className="text-center md:text-left space-y-6">
+          <h4 className="font-headline font-bold uppercase tracking-widest text-accent text-sm">Connect</h4>
           <ul className="space-y-6 text-sm">
-            <li className="flex gap-4">
+            <li className="flex flex-col items-center md:flex-row md:items-start md:text-left gap-4">
               <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center shrink-0">
                 <MapPin className="h-5 w-5 text-accent" />
               </div>
@@ -110,7 +110,7 @@ export function Footer() {
                 <p>Tamil Nadu, India</p>
               </div>
             </li>
-            <li className="flex gap-4">
+            <li className="flex flex-col items-center md:flex-row md:items-start md:text-left gap-4">
               <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center shrink-0">
                 <Phone className="h-5 w-5 text-accent" />
               </div>
@@ -119,7 +119,7 @@ export function Footer() {
                 <p>Clinic Desk</p>
               </div>
             </li>
-            <li className="flex gap-4">
+            <li className="flex flex-col items-center md:flex-row md:items-start md:text-left gap-4">
               <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center shrink-0">
                 <Mail className="h-5 w-5 text-accent" />
               </div>
@@ -135,9 +135,9 @@ export function Footer() {
       {/* Bottom Bar */}
       <div className="border-t border-primary-foreground/10 bg-primary/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-primary-foreground/50">
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col md:flex-row items-center gap-4">
             <span className="flex items-center gap-1"><ShieldCheck className="h-3 w-3" /> Accredited Facility</span>
-            <span>&copy; {new Date().getFullYear()} Dhanwanthri Healing Arts</span>
+            <span className="text-center md:text-left">&copy; {new Date().getFullYear()} Dhanwanthri Maruthuvam Ayurvedic & Sports Therapy</span>
           </div>
           <div className="flex gap-8">
             <Link href="#" className="hover:text-primary-foreground">Privacy Policy</Link>
