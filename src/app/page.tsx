@@ -89,7 +89,7 @@ export default function Home() {
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-left">
           <div className="max-w-2xl space-y-4 md:space-y-8 animate-in fade-in slide-in-from-left-12 duration-1000 scale-90 md:scale-100 origin-bottom-left">
             <div className="inline-flex items-center gap-2 bg-primary px-3 py-1 md:px-4 md:py-1.5 rounded-full text-white font-bold text-[10px] md:text-xs uppercase tracking-widest shadow-lg">
-              <Sparkles className="h-3 w-3 md:h-3.5 md:h-3.5" />
+              <Sparkles className="h-3 w-3 md:h-3.5" />
               Chennai&apos;s Foremost Integrative Medical Center
             </div>
             
@@ -107,7 +107,7 @@ export default function Home() {
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-white px-6 md:px-8 text-sm md:text-lg h-10 md:h-14 rounded-full shadow-xl shadow-primary/20">
                 <Link href="/contact">Book Consultation</Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-primary px-6 md:px-8 text-sm md:text-lg h-10 md:h-14 rounded-full transition-all">
+              <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90 px-6 md:px-8 text-sm md:text-lg h-10 md:h-14 rounded-full shadow-xl transition-all">
                 <Link href="/services">View Services</Link>
               </Button>
             </div>
