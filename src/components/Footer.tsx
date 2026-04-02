@@ -1,7 +1,7 @@
 
 "use client";
 
-import { Mail, Phone, MapPin, Instagram, Facebook, Linkedin, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Mail, Phone, MapPin, Instagram, Facebook, Linkedin, ArrowRight, ShieldCheck, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,10 @@ import { useLanguage } from '@/context/LanguageContext';
 export function Footer() {
   const { t } = useLanguage();
   const whiteLogoUrl = "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Logos%2FWhite%20Logo-footer.webp?alt=media&token=e7619c5f-8a15-40f6-8a31-e5bc9a233cc5";
+
+  // WhatsApp Config
+  const whatsappNumber = "918608174673";
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(t.contact.whatsappMsg)}`;
 
   return (
     <footer className="bg-primary text-primary-foreground">
@@ -21,7 +25,10 @@ export function Footer() {
           </div>
           <div className="flex flex-wrap justify-center gap-4">
             <Button asChild variant="secondary" size="lg" className="rounded-full px-8 font-bold bg-white text-primary hover:bg-white/90">
-              <Link href="/contact">{t.footer.ctaBook}</Link>
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                <MessageSquare className="h-5 w-5" />
+                {t.footer.ctaBook}
+              </a>
             </Button>
             <Button asChild size="lg" className="rounded-full px-8 font-bold bg-white text-primary border-white/20 hover:bg-white/90 shadow-lg">
               <Link href="/qa">{t.footer.ctaAI}</Link>
@@ -86,8 +93,8 @@ export function Footer() {
               { name: t.nav.about, href: '/about' },
               { name: t.nav.gallery, href: '/gallery' },
               { name: t.nav.qa, href: '/qa' },
-              { name: 'Patient Privacy', href: '#' },
-              { name: 'Terms of Care', href: '#' }
+              { name: 'Contact', href: '/contact' },
+              { name: 'Patient Privacy', href: '#' }
             ].map((link) => (
               <li key={link.name}>
                 <Link href={link.href} className="hover:text-white flex items-center justify-center md:justify-start gap-2 group transition-colors">
@@ -107,8 +114,8 @@ export function Footer() {
                 <MapPin className="h-5 w-5" />
               </div>
               <div className="text-primary-foreground/70">
-                <p className="font-bold text-primary-foreground">Chennai Clinic</p>
-                <p>Tamil Nadu, India</p>
+                <p className="font-bold text-primary-foreground">Ashok Nagar Clinic</p>
+                <p>{t.contact.locVal}</p>
               </div>
             </li>
             <li className="flex flex-col items-center md:flex-row md:items-start gap-4">
@@ -116,7 +123,7 @@ export function Footer() {
                 <Phone className="h-5 w-5" />
               </div>
               <div className="text-primary-foreground/70">
-                <p className="font-bold text-primary-foreground">+91 XXX XXX XXXX</p>
+                <p className="font-bold text-primary-foreground">{t.contact.phoneVal}</p>
                 <p>Clinic Desk</p>
               </div>
             </li>

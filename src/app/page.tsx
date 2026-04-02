@@ -13,7 +13,8 @@ import {
   Sparkles, 
   Clock, 
   ChevronRight,
-  UserCheck
+  UserCheck,
+  MessageSquare
 } from 'lucide-react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { useLanguage } from '@/context/LanguageContext';
@@ -25,6 +26,10 @@ export default function Home() {
   const interiorImg = PlaceHolderImages.find(i => i.id === 'interior-lobby');
   
   const faviconUrl = "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Logos%2FFavicon-dhanwanthiri.webp?alt=media&token=622c5a27-8aa9-40a8-beeb-76dfd3f97cd2";
+
+  // WhatsApp Config
+  const whatsappNumber = "918608174673";
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(t.contact.whatsappMsg)}`;
 
   const services = [
     {
@@ -108,7 +113,10 @@ export default function Home() {
 
             <div className="flex flex-wrap gap-3 md:gap-4 pt-2 md:pt-4">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-white px-6 md:px-8 text-sm md:text-lg h-10 md:h-14 rounded-full shadow-xl shadow-primary/20">
-                <Link href="/contact">{t.hero.ctaBook}</Link>
+                <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+                  <MessageSquare className="mr-2 h-5 w-5" />
+                  {t.hero.ctaBook}
+                </a>
               </Button>
               <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90 px-6 md:px-8 text-sm md:text-lg h-10 md:h-14 rounded-full shadow-xl transition-all">
                 <Link href="/services">{t.hero.ctaServices}</Link>

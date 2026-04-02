@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { Menu, X, PhoneCall, Calendar, Globe } from 'lucide-react';
+import { Menu, X, Globe, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/context/LanguageContext';
@@ -18,6 +18,10 @@ export function Navigation() {
   const { language, setLanguage, t } = useLanguage();
 
   const logoUrl = "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Logos%2FDhanwanthiri%20Logo.webp?alt=media&token=31a8ab0e-c431-4ea5-a513-324d630ebce4";
+
+  // WhatsApp Config
+  const whatsappNumber = "918608174673";
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(t.contact.whatsappMsg)}`;
 
   useEffect(() => {
     setMounted(true);
@@ -35,6 +39,7 @@ export function Navigation() {
     { name: t.nav.about, href: '/about' },
     { name: t.nav.gallery, href: '/gallery' },
     { name: t.nav.qa, href: '/qa' },
+    { name: 'Contact', href: '/contact' },
   ];
 
   if (!mounted) return <div className="h-20 md:h-24 w-full" />;
@@ -86,7 +91,6 @@ export function Navigation() {
               
               <div className="h-6 w-px bg-border mx-4" />
               
-              {/* Language Switcher */}
               <Button
                 variant="ghost"
                 size="sm"
@@ -100,10 +104,10 @@ export function Navigation() {
               <div className="h-6 w-px bg-border mx-4" />
               
               <Button asChild className="bg-primary hover:bg-primary/90 rounded-full px-6 shadow-md shadow-primary/20">
-                <Link href="/contact" className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4" />
+                <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                  <MessageSquare className="h-4 w-4" />
                   <span>{t.nav.book}</span>
-                </Link>
+                </a>
               </Button>
             </div>
 
@@ -146,7 +150,9 @@ export function Navigation() {
               ))}
               <div className="pt-4 border-t mt-4">
                 <Button asChild className="w-full bg-primary py-6 text-lg rounded-2xl">
-                  <Link href="/contact" onClick={() => setIsOpen(false)}>{t.nav.book}</Link>
+                  <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" onClick={() => setIsOpen(false)}>
+                    {t.nav.book}
+                  </a>
                 </Button>
               </div>
             </div>

@@ -14,7 +14,8 @@ import {
   CheckCircle2, 
   Clock,
   Instagram,
-  Facebook
+  Facebook,
+  MessageSquare
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useLanguage } from '@/context/LanguageContext';
@@ -22,6 +23,9 @@ import { useLanguage } from '@/context/LanguageContext';
 export default function ContactPage() {
   const { t } = useLanguage();
   const [submitted, setSubmitted] = useState(false);
+
+  const whatsappNumber = "918608174673";
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(t.contact.whatsappMsg)}`;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,7 +74,6 @@ export default function ContactPage() {
                 <div>
                   <h4 className="font-bold text-primary font-headline">{t.contact.loc}</h4>
                   <p className="text-foreground/60">{t.contact.locVal}</p>
-                  <p className="text-xs text-accent font-bold mt-1 hover:underline cursor-pointer">{t.contact.viewMap}</p>
                 </div>
               </div>
 
@@ -94,6 +97,15 @@ export default function ContactPage() {
                   <p className="text-foreground/60">{t.contact.hoursVal}</p>
                   <p className="text-foreground/40 text-sm">{t.contact.hoursSub}</p>
                 </div>
+              </div>
+
+              <div className="pt-4">
+                <Button asChild size="lg" className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-6 rounded-2xl shadow-lg">
+                  <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-3">
+                    <MessageSquare className="h-6 w-6" />
+                    Book via WhatsApp
+                  </a>
+                </Button>
               </div>
             </div>
 
