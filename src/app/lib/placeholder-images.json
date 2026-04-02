@@ -51,9 +51,9 @@
     },
     {
       "id": "interior-lobby",
-      "description": "Modern and clean clinic interior lobby",
-      "imageUrl": "https://picsum.photos/seed/interior/800/600",
-      "imageHint": "clinic interior"
+      "description": "Modern and clean clinic indoor facility",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Images%2FIndoor%20Clinic%20Image.webp?alt=media&token=b16805f4-7e14-42d6-8ab3-c3474e6b1bef",
+      "imageHint": "clinic indoor"
     },
     {
       "id": "treatment-room",
