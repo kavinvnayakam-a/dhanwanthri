@@ -1,4 +1,3 @@
-
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -60,36 +59,37 @@ export default function Home() {
               src={heroImg.imageUrl}
               alt={heroImg.description}
               fill
-              className="object-cover"
+              className="object-cover opacity-100"
               priority
               data-ai-hint={heroImg.imageHint}
             />
           )}
-          {/* Subtle overlay for text legibility - adjusted for "clean" look */}
-          <div className="absolute inset-0 bg-gradient-to-r from-white/60 via-white/20 to-transparent" />
+          {/* Subtle dark gradient overlay from left to ensure white text readability without dulling the image */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent" />
         </div>
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-left">
           <div className="max-w-2xl space-y-8 animate-in fade-in slide-in-from-left-12 duration-1000">
-            <Badge variant="outline" className="border-primary text-primary px-4 py-1 bg-white/50 backdrop-blur-sm">
+            <div className="inline-flex items-center gap-2 bg-primary px-4 py-1.5 rounded-full text-white font-bold text-xs uppercase tracking-widest shadow-lg">
+              <Sparkles className="h-3.5 w-3.5" />
               Chennai's Premier Integrative Clinic
-            </Badge>
+            </div>
             
             <div className="space-y-4">
-              <h1 className="text-5xl md:text-7xl font-bold font-headline leading-[1.1] text-primary">
+              <h1 className="text-5xl md:text-7xl font-bold font-headline leading-[1.1] text-white">
                 Ancient Wisdom <br />
-                <span className="text-accent italic opacity-90">Modern Recovery.</span>
+                <span className="text-primary italic">Modern Recovery.</span>
               </h1>
-              <p className="text-xl text-foreground/80 font-body max-w-lg leading-relaxed">
+              <p className="text-xl text-white/90 font-body max-w-lg leading-relaxed drop-shadow-sm">
                 Dhanwanthri Healing integrates traditional Ayurveda with Advanced Sports Therapy and Osteopathic Manipulation for holistic pain management.
               </p>
             </div>
 
             <div className="flex flex-wrap gap-4 pt-4">
-              <Button asChild size="lg" className="bg-primary hover:bg-primary/90 px-8 text-lg h-14 rounded-full shadow-lg shadow-primary/20">
+              <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-white px-8 text-lg h-14 rounded-full shadow-xl shadow-primary/20">
                 <Link href="/contact">Book Consultation</Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="border-primary text-primary hover:bg-primary/5 px-8 text-lg h-14 rounded-full backdrop-blur-sm bg-white/10">
+              <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-primary px-8 text-lg h-14 rounded-full transition-all">
                 <Link href="/services">View Services</Link>
               </Button>
             </div>
@@ -99,23 +99,23 @@ export default function Home() {
 
       {/* Overview Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-16 items-center">
-        <div className="space-y-6">
+        <div className="space-y-6 text-left">
           <h2 className="text-3xl font-headline font-bold text-primary">Dhanwanthari Maruthuvam</h2>
           <p className="text-lg leading-relaxed text-foreground/70">
             A premium Ayurvedic and Sports Therapy clinic located in Chennai, it's the first of its kind in Tamilnadu. We specialize in traditional Ayush medicine paired with advanced techniques like Dry Needling and Osteopathic Manipulation.
           </p>
           <div className="grid grid-cols-2 gap-4 pt-4">
             <div className="p-4 bg-white rounded-xl shadow-sm border border-primary/10">
-              <h4 className="font-bold text-primary flex items-center gap-2">
+              <h4 className="font-bold text-primary flex items-center gap-2 text-left">
                 <Clock className="h-4 w-4" /> Hours
               </h4>
-              <p className="text-sm text-foreground/60">7 AM - 9 PM, Daily</p>
+              <p className="text-sm text-foreground/60 text-left">7 AM - 9 PM, Daily</p>
             </div>
             <div className="p-4 bg-white rounded-xl shadow-sm border border-primary/10">
-              <h4 className="font-bold text-primary flex items-center gap-2">
+              <h4 className="font-bold text-primary flex items-center gap-2 text-left">
                 <Sparkles className="h-4 w-4" /> Capacity
               </h4>
-              <p className="text-sm text-foreground/60">12 Specialized Therapy Rooms</p>
+              <p className="text-sm text-foreground/60 text-left">12 Specialized Therapy Rooms</p>
             </div>
           </div>
         </div>
@@ -148,8 +148,8 @@ export default function Home() {
                   <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${service.color}`}>
                     <service.icon className="h-6 w-6" />
                   </div>
-                  <h3 className="text-xl font-headline font-bold">{service.title}</h3>
-                  <p className="text-sm text-foreground/60 leading-relaxed">
+                  <h3 className="text-xl font-headline font-bold text-left">{service.title}</h3>
+                  <p className="text-sm text-foreground/60 leading-relaxed text-left">
                     {service.desc}
                   </p>
                   <Link 
@@ -176,7 +176,7 @@ export default function Home() {
             We are expanding from a 5-room facility to 12 exclusive therapy rooms, featuring specialized spaces for Panchakarma, HBOT, and Hydrocolon therapy.
           </p>
           <div className="flex justify-center gap-4">
-            <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-8">
+            <Button asChild size="lg" className="bg-primary text-white hover:bg-primary/90 rounded-full px-8">
               <Link href="/gallery">Tour Facilities</Link>
             </Button>
           </div>
