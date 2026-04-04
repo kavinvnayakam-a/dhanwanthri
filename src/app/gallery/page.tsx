@@ -12,13 +12,17 @@ export default function GalleryPage() {
   const { t } = useLanguage();
 
   const galleryItems = [
-    { id: 'interior-lobby', title: t.gallery.item1, category: t.gallery.cat1 },
-    { id: 'ayurveda-therapy', title: t.gallery.item2, category: t.gallery.cat2 },
-    { id: 'hbot-chamber', title: t.gallery.item3, category: t.gallery.cat3 },
-    { id: 'hydrocolon-room', title: t.gallery.item4, category: t.gallery.cat4 },
-    { id: 'dry-needling', title: t.gallery.item5, category: t.gallery.cat2 },
-    { id: 'treatment-room', title: t.gallery.item6, category: t.gallery.cat1 },
-    { id: 'sports-rehab', title: t.gallery.item7, category: t.gallery.cat3 },
+    { id: 'gallery-1', title: t.gallery.item1, category: t.gallery.cat1 },
+    { id: 'gallery-2', title: t.gallery.item2, category: t.gallery.cat2 },
+    { id: 'gallery-3', title: t.gallery.item3, category: t.gallery.cat2 },
+    { id: 'gallery-4', title: t.gallery.item4, category: t.gallery.cat4 },
+    { id: 'gallery-5', title: t.gallery.item5, category: t.gallery.cat2 },
+    { id: 'gallery-6', title: t.gallery.item6, category: t.gallery.cat1 },
+    { id: 'gallery-7', title: t.gallery.item7, category: t.gallery.cat1 },
+    { id: 'gallery-8', title: t.gallery.item8, category: t.gallery.cat2 },
+    { id: 'gallery-9', title: t.gallery.item9, category: t.gallery.cat1 },
+    { id: 'gallery-10', title: t.gallery.item10, category: t.gallery.cat4 },
+    { id: 'gallery-11', title: t.gallery.item11, category: t.gallery.cat1 },
   ];
 
   return (
@@ -40,7 +44,7 @@ export default function GalleryPage() {
           <div className="grid md:grid-cols-2 gap-8">
             <Card className="overflow-hidden bg-black border-none rounded-3xl shadow-xl group cursor-pointer relative aspect-video">
               <Image 
-                src="https://picsum.photos/seed/vid1/800/450" 
+                src="https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Interior%20images%2FWhatsApp%20Image%202026-04-04%20at%2012.32.44%20(1).webp?alt=media&token=06e55e68-d4c0-4639-a5d0-3ad117062176" 
                 alt="Sports Therapy Intro" 
                 fill 
                 className="object-cover opacity-60 group-hover:scale-105 transition-transform duration-500" 
@@ -53,7 +57,7 @@ export default function GalleryPage() {
             </Card>
             <Card className="overflow-hidden bg-black border-none rounded-3xl shadow-xl group cursor-pointer relative aspect-video">
               <Image 
-                src="https://picsum.photos/seed/vid2/800/450" 
+                src="https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Interior%20images%2FWhatsApp%20Image%202026-04-04%20at%2012.32.46.webp?alt=media&token=e239a143-369e-4074-b1c7-e4a4859bcf6c" 
                 alt="Ayurveda Tour" 
                 fill 
                 className="object-cover opacity-60 group-hover:scale-105 transition-transform duration-500" 

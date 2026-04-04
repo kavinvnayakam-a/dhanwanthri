@@ -22,7 +22,7 @@ export default function ServicesPage() {
       id: 'kinesiology',
       title: t.services.kinesiology.title,
       description: t.services.kinesiology.desc,
-      image: 'ayurveda-therapy',
+      image: 'gallery-2',
       icon: Move,
       points: [
         t.services.kinesiology.p1,
@@ -36,7 +36,7 @@ export default function ServicesPage() {
       id: 'needling',
       title: t.services.needling.title,
       description: t.services.needling.desc,
-      image: 'dry-needling',
+      image: 'gallery-4',
       icon: Syringe,
       points: [
         t.services.needling.p1,
@@ -50,7 +50,7 @@ export default function ServicesPage() {
       id: 'manipulation',
       title: t.services.manipulation.title,
       description: t.services.manipulation.desc,
-      image: 'treatment-room',
+      image: 'gallery-5',
       icon: Activity,
       points: [
         t.services.manipulation.p1,
@@ -64,7 +64,7 @@ export default function ServicesPage() {
       id: 'hbot',
       title: t.services.hbot.title,
       description: t.services.hbot.desc,
-      image: 'hbot-chamber',
+      image: 'gallery-10',
       icon: Wind,
       points: [
         t.services.hbot.p1,

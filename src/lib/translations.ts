@@ -110,7 +110,11 @@ export const translations = {
       item4: "Hydrocolon Therapy",
       item5: "Clinical Procedure",
       item6: "Private Recovery Suite",
-      item7: "Functional Rehab Area"
+      item7: "Functional Rehab Area",
+      item8: "Therapy Consultation",
+      item9: "Patient Waiting Area",
+      item10: "Modern Clinical Space",
+      item11: "Recovery Suite Detail"
     },
     qa: {
       badge: "AI Assistant",
@@ -275,7 +279,11 @@ export const translations = {
       item4: "ஹைட்ரோகோலன் சிகிச்சை",
       item5: "மருத்துவ நடைமுறை",
       item6: "தனியார் மீட்பு அறை",
-      item7: "செயல்பாட்டு மறுவாழ்வு பகுதி"
+      item7: "செயல்பாட்டு மறுவாழ்வு பகுதி",
+      item8: "சிகிச்சை ஆலோசனை",
+      item9: "நோயாளி காத்திருப்பு பகுதி",
+      item10: "நவீன மருத்துவ இடம்",
+      item11: "மீட்பு அறை விவரம்"
     },
     qa: {
       badge: "AI உதவியாளர்",

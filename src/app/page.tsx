@@ -23,7 +23,7 @@ export default function Home() {
   const { t } = useLanguage();
   const heroImg = PlaceHolderImages.find(img => img.id === 'hero-clinic');
   const heroMobileImg = PlaceHolderImages.find(img => img.id === 'hero-mobile');
-  const interiorImg = PlaceHolderImages.find(i => i.id === 'interior-lobby');
+  const interiorImg = PlaceHolderImages.find(i => i.id === 'gallery-1');
   
   const faviconUrl = "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Logos%2FFavicon-dhanwanthiri.webp?alt=media&token=622c5a27-8aa9-40a8-beeb-76dfd3f97cd2";
 
