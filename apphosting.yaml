@@ -1,13 +1,24 @@
-# Dhanwanthri Maruthuvam - App Hosting Configuration
-# MANDATORY: Standalone output must be enabled in next.config.ts
-
+# Settings for Backend (on Cloud Run).
+# See https://firebase.google.com/docs/app-hosting/configure#cloud-run
 runConfig:
   minInstances: 0
-  maxInstances: 10
-  concurrency: 80
-  cpu: 1
-  memoryMiB: 512
+  # maxInstances: 100
+  # concurrency: 80
+  # cpu: 1
+  # memoryMiB: 512
 
-# Note for Dhanwanthri Healing: 
-# Ensure the service account has 'Logs Writer' role in GCP Console
-# to fix build errors.
+# Environment variables and secrets.
+# env:
+  # Configure environment variables.
+  # See https://firebase.google.com/docs/app-hosting/configure#user-defined-environment
+  # - variable: MESSAGE
+  #   value: Hello world!
+  #   availability:
+  #     - BUILD
+  #     - RUNTIME
+
+  # Grant access to secrets in Cloud Secret Manager.
+  # You can create secrets with the CLI command `firebase apphosting:secrets:set <secretName>`.
+  # See https://firebase.google.com/docs/app-hosting/configure#secret-parameters
+  # - variable: MY_SECRET
+  #   secret: mySecretRef

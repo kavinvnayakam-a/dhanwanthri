@@ -5,17 +5,30 @@
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
   },
-  "apphosting": {
-    "backendId": "dhanwanthribackend",
-    "rootDir": "/",
-    "ignore": [
-      "node_modules",
-      ".git",
-      "firebase-debug.log",
-      "firebase-debug.*.log",
-      "functions"
-    ]
-  },
+  "apphosting": [
+    {
+      "backendId": "dhanwanthribackend",
+      "rootDir": "/",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "functions"
+      ]
+    },
+    {
+      "backendId": "dmbackend",
+      "rootDir": "/",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "functions"
+      ]
+    }
+  ],
   "storage": {
     "rules": "storage.rules"
   },
