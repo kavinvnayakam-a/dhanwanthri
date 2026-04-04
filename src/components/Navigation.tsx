@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from 'next/link';
@@ -44,8 +43,8 @@ export function Navigation() {
 
   return (
     <>
-      {/* Structural spacer - must be consistent between server/client */}
-      <div className="h-28 md:h-36 w-full shrink-0" />
+      {/* Structural spacer - must be consistent between server/client to prevent hydration error */}
+      <div className="h-36 md:h-44 w-full shrink-0" />
       
       <nav 
         className={cn(
