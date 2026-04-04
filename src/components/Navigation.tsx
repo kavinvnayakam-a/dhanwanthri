@@ -42,10 +42,9 @@ export function Navigation() {
     { name: 'Contact', href: '/contact' },
   ];
 
-  if (!mounted) return <div className="h-20 md:h-24 w-full" />;
-
   return (
     <>
+      {/* Structural spacer - must be consistent between server/client */}
       <div className="h-28 md:h-36 w-full shrink-0" />
       
       <nav 
@@ -98,7 +97,9 @@ export function Navigation() {
                 className="flex items-center gap-2 rounded-full border border-primary/20 text-primary hover:bg-primary hover:text-white"
               >
                 <Globe className="h-4 w-4" />
-                <span className="font-bold">{language === 'en' ? 'அ' : 'EN'}</span>
+                <span className="font-bold">
+                  {mounted ? (language === 'en' ? 'அ' : 'EN') : 'அ/EN'}
+                </span>
               </Button>
 
               <div className="h-6 w-px bg-border mx-4" />
@@ -118,7 +119,7 @@ export function Navigation() {
                 onClick={() => setLanguage(language === 'en' ? 'ta' : 'en')}
                 className="text-primary rounded-full border border-primary/20 h-10 w-10 flex items-center justify-center font-bold"
               >
-                {language === 'en' ? 'அ' : 'EN'}
+                {mounted ? (language === 'en' ? 'அ' : 'EN') : 'அ'}
               </Button>
               <button
                 onClick={() => setIsOpen(!isOpen)}
