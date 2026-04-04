@@ -76,8 +76,31 @@ export default function ServicesPage() {
     }
   ];
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "itemListElement": serviceCategories.map((service, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "item": {
+        "@type": "Service",
+        "name": service.title,
+        "description": service.description,
+        "provider": {
+          "@type": "MedicalClinic",
+          "name": "Dhanwanthri Maruthuvam"
+        },
+        "areaServed": "Chennai"
+      }
+    }))
+  };
+
   return (
     <div className="bg-background min-h-screen py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <header className="mb-16 text-center space-y-4">
           <Badge className="bg-accent text-accent-foreground">{t.services.badge}</Badge>

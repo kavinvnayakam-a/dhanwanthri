@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from 'next/image';
@@ -17,8 +18,35 @@ export default function AboutPage() {
     { icon: BookOpen, label: "Expertise", value: "Sports Kinesiology" },
   ];
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Physician",
+    "name": "Dr. Dharmesh Kubendiran",
+    "image": profileImageUrl,
+    "medicalSpecialty": ["Ayurvedic", "Sports Medicine", "Kinesiology"],
+    "description": "Leading Expert in Integrative Sports Medicine with a PhD in Sports Method and Training. Specialist in Biomechanics and Chronic Pain Management.",
+    "memberOf": {
+      "@type": "MedicalClinic",
+      "name": "Dhanwanthri Maruthuvam",
+      "url": "https://www.dhanwanthrimaruthuvam.com"
+    },
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "No.2, 54th street lane, 11th avenue, Ashok Nagar",
+      "addressLocality": "Chennai",
+      "postalCode": "600083",
+      "addressCountry": "IN"
+    },
+    "telephone": "+918608174673",
+    "knowsAbout": ["Ayurveda", "Sports Kinesiology", "Dry Needling", "Osteopathic Manipulation"]
+  };
+
   return (
     <div className="min-h-screen bg-background py-8 md:py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header - Optimized for visibility on all devices */}

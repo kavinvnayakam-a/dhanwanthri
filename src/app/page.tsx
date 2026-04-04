@@ -5,7 +5,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { 
   Stethoscope, 
   Activity, 
@@ -27,7 +26,6 @@ export default function Home() {
   
   const faviconUrl = "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Logos%2FFavicon-dhanwanthiri.webp?alt=media&token=622c5a27-8aa9-40a8-beeb-76dfd3f97cd2";
 
-  // WhatsApp Config
   const whatsappNumber = "918608174673";
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(t.contact.whatsappMsg)}`;
 
@@ -62,8 +60,54 @@ export default function Home() {
     }
   ];
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "MedicalClinic",
+    "name": "Dhanwanthri Maruthuvam",
+    "image": "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Images%2FLanding%20page%20hero%20image.webp?alt=media&token=6b702b7d-29eb-4921-affc-6193ed9fcd49",
+    "@id": "https://www.dhanwanthrimaruthuvam.com",
+    "url": "https://www.dhanwanthrimaruthuvam.com",
+    "telephone": "+918608174673",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "No.2, 54th street lane, 11th avenue, Ashok Nagar",
+      "addressLocality": "Chennai",
+      "postalCode": "600083",
+      "addressCountry": "IN"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 13.0358,
+      "longitude": 80.2123
+    },
+    "openingHoursSpecification": {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday"
+      ],
+      "opens": "07:00",
+      "closes": "21:00"
+    },
+    "medicalSpecialty": ["Ayurvedic", "Sports Medicine", "Physical Therapy"],
+    "founder": {
+      "@type": "Person",
+      "name": "Dr. Dharmesh Kubendiran"
+    }
+  };
+
   return (
     <div className="flex flex-col gap-24 pb-24">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      
       {/* Hero Section */}
       <section className="relative w-full h-[85vh] min-h-[600px] md:min-h-[700px] flex items-end pb-12 md:pb-0 md:items-center overflow-hidden bg-background">
         <div className="absolute inset-0 z-0">

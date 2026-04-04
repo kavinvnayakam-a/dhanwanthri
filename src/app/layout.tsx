@@ -6,8 +6,24 @@ import {Footer} from '@/components/Footer';
 import {LanguageProvider} from '@/context/LanguageContext';
 
 export const metadata: Metadata = {
-  title: 'Dhanwanthri Maruthuvam | Ayurvedic & Sports Therapy Clinic',
-  description: 'Premium Ayurvedic and Advanced Sports Therapy clinic in Chennai specializing in holistic pain management and sports recovery.',
+  metadataBase: new URL('https://www.dhanwanthrimaruthuvam.com'),
+  title: {
+    default: 'Dhanwanthri Maruthuvam | Ayurvedic & Sports Therapy Clinic Chennai',
+    template: '%s | Dhanwanthri Maruthuvam'
+  },
+  description: 'Premium Ayurvedic and Advanced Sports Therapy clinic in Chennai. Dr. Dharmesh Kubendiran (BAMS, PhD) specializes in Kinesiology, Dry Needling, and Osteopathic Manipulation for holistic pain management.',
+  keywords: ['Ayurveda Chennai', 'Sports Therapy Chennai', 'Dry Needling Chennai', 'Kinesiology', 'Osteopathic Manipulation', 'Dr. Dharmesh Kubendiran', 'Pain Management Chennai'],
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: 'Dhanwanthri Maruthuvam | Ayurvedic & Sports Therapy',
+    description: 'Ancient Wisdom, Modern Recovery. Holistic pain management and sports rehabilitation in Ashok Nagar, Chennai.',
+    url: 'https://www.dhanwanthrimaruthuvam.com',
+    siteName: 'Dhanwanthri Maruthuvam',
+    locale: 'en_IN',
+    type: 'website',
+  },
   icons: {
     icon: 'https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Logos%2FFavicon-dhanwanthiri.webp?alt=media&token=622c5a27-8aa9-40a8-beeb-76dfd3f97cd2',
   },

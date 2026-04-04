@@ -32,6 +32,26 @@ export default function ContactPage() {
     setSubmitted(true);
   };
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": "Contact Dhanwanthri Maruthuvam",
+    "description": "Book an appointment or inquire about our Ayurvedic and Sports Therapy treatments in Chennai.",
+    "mainEntity": {
+      "@type": "MedicalClinic",
+      "name": "Dhanwanthri Maruthuvam",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "No.2, 54th street lane, 11th avenue, Ashok Nagar",
+        "addressLocality": "Chennai",
+        "postalCode": "600083",
+        "addressCountry": "IN"
+      },
+      "telephone": "+918608174673",
+      "openingHours": "Mo-Su 07:00-21:00"
+    }
+  };
+
   if (submitted) {
     return (
       <div className="min-h-[70vh] flex items-center justify-center p-8">
@@ -53,6 +73,10 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-background py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-5 gap-16 items-start">
           
@@ -168,7 +192,9 @@ export default function ContactPage() {
                   </div>
 
                   <Button type="submit" size="lg" className="w-full bg-accent text-accent-foreground hover:bg-accent/90 text-lg font-bold py-6">
-                    <Send className="mr-2 h-5 w-5" /> {t.contact.submit}
+                    <span className="flex items-center gap-2">
+                      <Send className="h-5 w-5" /> {t.contact.submit}
+                    </span>
                   </Button>
                 </form>
               </CardContent>
