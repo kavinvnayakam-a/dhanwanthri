@@ -41,17 +41,20 @@ export function Navigation() {
     { name: 'Contact', href: '/contact' },
   ];
 
+  // Logic to prevent hydration mismatch in language button label
+  const langLabel = mounted ? (language === 'en' ? 'அ' : 'EN') : 'அ/EN';
+
   return (
     <>
-      {/* Structural spacer - must be consistent between server/client to prevent hydration error */}
-      <div className="h-36 md:h-44 w-full shrink-0" />
+      {/* Structural spacer - height adjusted for smaller mobile header */}
+      <div className="h-24 md:h-36 w-full shrink-0" />
       
       <nav 
         className={cn(
           "fixed top-0 z-50 w-full transition-all duration-500 ease-in-out border-b bg-background",
           scrolled 
             ? "py-2 shadow-md backdrop-blur-md bg-background/95" 
-            : "py-4 md:py-6"
+            : "py-3 md:py-5"
         )}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -59,7 +62,7 @@ export function Navigation() {
             <Link href="/" className="flex items-center group">
               <div className={cn(
                 "relative transition-all duration-500 ease-in-out",
-                scrolled ? "h-20 w-40 md:h-24 md:w-48" : "h-28 w-56 md:h-32 md:w-64"
+                scrolled ? "h-14 w-32 md:h-16 md:w-40" : "h-16 w-40 md:h-24 md:w-56"
               )}>
                 <Image 
                   src={logoUrl}
@@ -93,11 +96,11 @@ export function Navigation() {
                 variant="ghost"
                 size="sm"
                 onClick={() => setLanguage(language === 'en' ? 'ta' : 'en')}
-                className="flex items-center gap-2 rounded-full border border-primary/20 text-primary hover:bg-primary hover:text-white"
+                className="flex items-center gap-2 rounded-full border border-primary/20 text-primary hover:bg-primary hover:text-white px-4"
               >
                 <Globe className="h-4 w-4" />
-                <span className="font-bold">
-                  {mounted ? (language === 'en' ? 'அ' : 'EN') : 'அ/EN'}
+                <span className="font-bold min-w-[1.5rem] text-center">
+                  {langLabel}
                 </span>
               </Button>
 
@@ -114,11 +117,12 @@ export function Navigation() {
             <div className="md:hidden flex items-center gap-4">
               <Button
                 variant="ghost"
-                size="icon"
+                size="sm"
                 onClick={() => setLanguage(language === 'en' ? 'ta' : 'en')}
-                className="text-primary rounded-full border border-primary/20 h-10 w-10 flex items-center justify-center font-bold"
+                className="text-primary rounded-full border border-primary/20 h-10 px-3 flex items-center justify-center font-bold"
               >
-                {mounted ? (language === 'en' ? 'அ' : 'EN') : 'அ'}
+                <Globe className="h-4 w-4 mr-2" />
+                {langLabel}
               </Button>
               <button
                 onClick={() => setIsOpen(!isOpen)}
