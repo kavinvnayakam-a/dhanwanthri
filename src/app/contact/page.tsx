@@ -19,7 +19,8 @@ import {
   Instagram,
   Facebook,
   MessageSquare,
-  Loader2
+  Loader2,
+  Mail
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useLanguage } from '@/context/LanguageContext';
@@ -143,6 +144,17 @@ export default function ContactPage() {
 
               <div className="flex gap-4 items-start">
                 <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm shrink-0">
+                  <Mail className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-primary font-headline">{t.contact.email}</h4>
+                  <p className="text-foreground/60">{t.contact.emailVal}</p>
+                  <p className="text-xs text-foreground/40 italic">{t.contact.emailSub}</p>
+                </div>
+              </div>
+
+              <div className="flex gap-4 items-start">
+                <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm shrink-0">
                   <Clock className="h-6 w-6 text-primary" />
                 </div>
                 <div>
@@ -210,7 +222,7 @@ export default function ContactPage() {
                   </div>
                   
                   <div className="space-y-2">
-                    <label className="text-sm font-bold text-primary">{t.contact.email}</label>
+                    <label className="text-sm font-bold text-primary">{t.contact.emailLabel}</label>
                     <Input 
                       type="email" 
                       placeholder="email@example.com" 

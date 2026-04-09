@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Mail, Phone, MapPin, Instagram, Facebook, Linkedin, ArrowRight, ShieldCheck, MessageSquare } from 'lucide-react';
@@ -138,7 +139,7 @@ export function Footer() {
               </div>
               <div className="text-primary-foreground/70">
                 <p className="font-bold text-primary-foreground">Email Inquiries</p>
-                <p className="truncate">care@dhanwanthri.com</p>
+                <p className="truncate">admin@dhanwanthrimaruthuvam.com</p>
               </div>
             </li>
           </ul>
