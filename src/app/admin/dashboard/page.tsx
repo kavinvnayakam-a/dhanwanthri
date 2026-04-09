@@ -102,11 +102,6 @@ export default function AdminDashboard() {
     });
   };
 
-  const appointmentDates = appointments.map(apt => {
-    if (!apt.createdAt) return null;
-    return apt.createdAt.toDate ? apt.createdAt.toDate() : new Date(apt.createdAt);
-  }).filter(Boolean) as Date[];
-
   const activeDayAppointments = selectedDate ? getAppointmentsForDate(selectedDate) : [];
 
   if (loading) return <div className="h-screen flex items-center justify-center bg-background text-primary font-bold">Initializing Portal...</div>;
@@ -165,7 +160,7 @@ export default function AdminDashboard() {
           {/* Calendar Sidebar */}
           <div className="lg:col-span-4 space-y-8">
             <Card className="border-none shadow-xl rounded-[2.5rem] bg-white overflow-hidden border border-muted ring-1 ring-black/5">
-              <div className="p-0">
+              <div className="p-2">
                 <Calendar
                   mode="single"
                   selected={selectedDate}
