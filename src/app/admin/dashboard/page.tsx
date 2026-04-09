@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -67,12 +66,16 @@ export default function AdminDashboard() {
   }, [router]);
 
   const fetchData = async () => {
-    const qApt = query(collection(db, 'appointments'), orderBy('createdAt', 'desc'));
-    const snapApt = await getDocs(qApt);
-    setAppointments(snapApt.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    try {
+      const qApt = query(collection(db, 'appointments'), orderBy('createdAt', 'desc'));
+      const snapApt = await getDocs(qApt);
+      setAppointments(snapApt.docs.map(doc => ({ id: doc.id, ...doc.data() })));
 
-    const snapPatients = await getDocs(collection(db, 'patients'));
-    setPatientCount(snapPatients.size);
+      const snapPatients = await getDocs(collection(db, 'patients'));
+      setPatientCount(snapPatients.size);
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error);
+    }
   };
 
   const handleUpdateStatus = async (id: string, status: string) => {
@@ -133,7 +136,7 @@ export default function AdminDashboard() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-8 space-y-8">
-        {/* Modern Stats Grid */}
+        {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
             { label: 'Registered Patients', val: patientCount, icon: Users, color: 'bg-indigo-50 text-indigo-600', border: 'border-indigo-100' },
@@ -158,13 +161,14 @@ export default function AdminDashboard() {
         <div className="grid lg:grid-cols-12 gap-8">
           {/* Calendar Sidebar */}
           <div className="lg:col-span-4 space-y-8">
-            <Card className="border-none shadow-sm rounded-[2rem] bg-white overflow-hidden">
-              <CardHeader className="bg-slate-900 text-white p-6 pb-4">
-                <CardTitle className="text-base flex items-center gap-2 font-bold tracking-tight">
-                  <CalendarIcon className="h-5 w-5 text-accent" /> Appointment Calendar
+            <Card className="border-none shadow-xl rounded-[2rem] bg-white overflow-hidden border border-muted">
+              <CardHeader className="bg-primary text-white p-6">
+                <CardTitle className="text-base flex items-center justify-between font-bold tracking-tight">
+                  <span className="flex items-center gap-2"><CalendarIcon className="h-5 w-5" /> Clinic Planner</span>
+                  <Badge variant="outline" className="bg-white/10 text-white border-white/20">Teal Mode</Badge>
                 </CardTitle>
               </CardHeader>
-              <div className="p-4 bg-white">
+              <div className="p-0">
                 <Calendar
                   mode="single"
                   selected={selectedDate}
@@ -172,7 +176,7 @@ export default function AdminDashboard() {
                   className="w-full"
                   modifiers={{ booked: appointmentDates }}
                   modifiersClassNames={{
-                    booked: "font-bold text-primary underline decoration-accent decoration-2 underline-offset-4"
+                    booked: "text-primary font-black underline decoration-primary decoration-4 underline-offset-4"
                   }}
                 />
               </div>
@@ -220,18 +224,18 @@ export default function AdminDashboard() {
 
           {/* Workflow Queue */}
           <div className="lg:col-span-8 space-y-8">
-            <Card className="border-none shadow-xl rounded-[2rem] bg-white overflow-hidden min-h-[600px]">
-              <CardHeader className="bg-primary text-white p-8">
+            <Card className="border-none shadow-2xl rounded-[2rem] bg-white overflow-hidden min-h-[600px]">
+              <CardHeader className="bg-slate-900 text-white p-8">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                   <div className="space-y-1">
                     <CardTitle className="text-3xl font-headline flex items-center gap-3">
-                      <LayoutDashboard className="h-8 w-8 text-accent" /> Active Patient Flow
+                      <LayoutDashboard className="h-8 w-8 text-primary" /> Active Patient Flow
                     </CardTitle>
-                    <CardDescription className="text-white/70 font-medium">Real-time Clinical Workflow & Queue Control</CardDescription>
+                    <CardDescription className="text-white/50 font-medium">Real-time Clinical Workflow & Queue Control</CardDescription>
                   </div>
                   <div className="flex gap-2">
-                    <Button asChild variant="secondary" className="bg-white/10 hover:bg-white/20 border-white/20 text-white rounded-xl backdrop-blur-md">
-                      <Link href="/admin/appointments">Historical Records</Link>
+                    <Button asChild variant="secondary" className="bg-white/5 hover:bg-white/10 border-white/10 text-white rounded-xl">
+                      <Link href="/admin/appointments">Appointment Registry</Link>
                     </Button>
                   </div>
                 </div>
@@ -242,7 +246,7 @@ export default function AdminDashboard() {
                     <div key={apt.id} className="p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-8 hover:bg-muted/10 transition-all group">
                       <div className="flex items-start gap-5">
                         <div className={cn(
-                          "w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm",
+                          "w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm transition-all",
                           apt.status === 'waiting' ? "bg-amber-100 text-orange-600 animate-pulse" : 
                           apt.status === 'consultation' ? "bg-emerald-100 text-emerald-600" : "bg-slate-100 text-slate-400"
                         )}>
@@ -270,7 +274,7 @@ export default function AdminDashboard() {
                         )}
                         {apt.status === 'waiting' && (
                           <div className="flex items-center gap-3 text-orange-600 font-bold text-sm bg-orange-50 px-5 py-3 rounded-2xl border border-orange-100 shadow-sm">
-                            <Clock className="h-4 w-4 animate-spin-slow" /> Awaiting Physician
+                            <Clock className="h-4 w-4 animate-spin" style={{ animationDuration: '3s' }} /> Awaiting Physician
                           </div>
                         )}
                         {apt.status === 'consultation' && (
@@ -279,7 +283,7 @@ export default function AdminDashboard() {
                           </div>
                         )}
                         {apt.status === 'billing' && (
-                          <Button onClick={() => handleUpdateStatus(apt.id, 'completed')} className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl grow md:grow-0 font-bold shadow-lg shadow-emerald-500/20">
+                          <Button onClick={() => handleUpdateStatus(apt.id, 'completed')} className="bg-primary hover:bg-primary/90 text-white rounded-xl grow md:grow-0 font-bold shadow-lg shadow-primary/20">
                             <CreditCard className="mr-2 h-4 w-4" /> Settle & Close Visit
                           </Button>
                         )}
