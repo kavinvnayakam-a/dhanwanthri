@@ -18,41 +18,38 @@ function Calendar({
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      className={cn("p-0", className)}
+      className={cn("p-6", className)}
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
-        month: "space-y-4 w-full",
-        caption: "flex justify-center pt-1 relative items-center mb-4",
-        caption_label: "text-sm font-bold text-primary uppercase tracking-widest",
-        nav: "space-x-1 flex items-center",
+        month: "space-y-6 w-full",
+        caption: "flex justify-start pt-1 relative items-center mb-4",
+        caption_label: "text-lg font-bold text-accent uppercase tracking-widest",
+        nav: "space-x-1 flex items-center absolute right-0",
         nav_button: cn(
-          buttonVariants({ variant: "outline" }),
-          "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 border-primary/20 hover:border-primary transition-all"
+          buttonVariants({ variant: "ghost" }),
+          "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 transition-all text-primary"
         ),
-        nav_button_previous: "absolute left-1",
-        nav_button_next: "absolute right-1",
+        nav_button_previous: "",
+        nav_button_next: "",
         table: "w-full border-collapse",
-        head_row: "flex w-full",
+        head_row: "grid grid-cols-7 w-full mb-4",
         head_cell:
-          "text-muted-foreground rounded-md w-full font-bold text-[0.7rem] uppercase py-2",
-        row: "flex w-full mt-0 border-t border-muted",
+          "text-muted-foreground font-bold text-sm uppercase text-center",
+        row: "grid grid-cols-7 w-full mt-2",
         cell: cn(
-          "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 w-full aspect-square border-r last:border-r-0 border-muted",
-          props.mode === "range"
-            ? "[&:has(>.day-range-end)]:rounded-r-md [&:has(>.day-range-start)]:rounded-l-md first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md"
-            : "[&:has([aria-selected])]:bg-primary/5"
+          "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 w-full flex justify-center items-center"
         ),
         day: cn(
           buttonVariants({ variant: "ghost" }),
-          "h-full w-full p-0 font-medium aria-selected:opacity-100 rounded-none hover:bg-primary/10 transition-colors"
+          "h-10 w-10 p-0 font-bold aria-selected:opacity-100 rounded-full hover:bg-muted transition-colors text-foreground/80"
         ),
         day_range_start: "day-range-start",
         day_range_end: "day-range-end",
         day_selected:
-          "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground font-bold",
-        day_today: "text-accent border-b-2 border-accent",
+          "bg-accent text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground rounded-full shadow-lg shadow-accent/30",
+        day_today: "text-accent ring-1 ring-accent",
         day_outside:
-          "day-outside text-muted-foreground/30 aria-selected:bg-accent/50 aria-selected:text-muted-foreground",
+          "day-outside text-muted-foreground/20 aria-selected:bg-accent/50 aria-selected:text-muted-foreground",
         day_disabled: "text-muted-foreground opacity-50",
         day_range_middle:
           "aria-selected:bg-accent aria-selected:text-accent-foreground",
@@ -61,10 +58,10 @@ function Calendar({
       }}
       components={{
         IconLeft: ({ className, ...props }) => (
-          <ChevronLeft className={cn("h-4 w-4", className)} {...props} />
+          <ChevronLeft className={cn("h-5 w-5", className)} {...props} />
         ),
         IconRight: ({ className, ...props }) => (
-          <ChevronRight className={cn("h-4 w-4", className)} {...props} />
+          <ChevronRight className={cn("h-5 w-5", className)} {...props} />
         ),
       }}
       {...props}

@@ -38,6 +38,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
@@ -51,6 +52,8 @@ export default function AdminDashboard() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [patientCount, setPatientCount] = useState(0);
   const router = useRouter();
+
+  const logoUrl = "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Logos%2FDhanwanthiri%20Logo.webp?alt=media&token=31a8ab0e-c431-4ea5-a513-324d630ebce4";
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
@@ -99,7 +102,6 @@ export default function AdminDashboard() {
     });
   };
 
-  // Dates that have appointments for calendar highlighting
   const appointmentDates = appointments.map(apt => {
     if (!apt.createdAt) return null;
     return apt.createdAt.toDate ? apt.createdAt.toDate() : new Date(apt.createdAt);
@@ -114,10 +116,11 @@ export default function AdminDashboard() {
       <header className="bg-white border-b px-4 md:px-8 py-4 flex justify-between items-center shadow-sm sticky top-0 z-50">
         <div className="flex items-center gap-8">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary/20">
-              <LayoutDashboard className="h-6 w-6" />
-            </div>
-            <Link href="/admin/dashboard" className="text-xl font-headline font-bold text-primary tracking-tight">Dhanwanthri <span className="text-slate-900">Reception</span></Link>
+            <Link href="/admin/dashboard" className="relative h-10 w-24 md:h-12 md:w-32 transition-all">
+              <Image src={logoUrl} alt="Logo" fill className="object-contain" />
+            </Link>
+            <div className="h-6 w-px bg-muted hidden md:block" />
+            <span className="text-sm font-bold text-primary tracking-tight hidden md:block">Clinical Dashboard</span>
           </div>
           <nav className="hidden md:flex gap-1 bg-muted/50 p-1 rounded-xl border">
             <Link href="/admin/dashboard" className="px-4 py-2 text-sm font-bold bg-white text-primary rounded-lg shadow-sm">Dashboard</Link>
@@ -161,23 +164,13 @@ export default function AdminDashboard() {
         <div className="grid lg:grid-cols-12 gap-8">
           {/* Calendar Sidebar */}
           <div className="lg:col-span-4 space-y-8">
-            <Card className="border-none shadow-xl rounded-[2rem] bg-white overflow-hidden border border-muted">
-              <CardHeader className="bg-primary text-white p-6">
-                <CardTitle className="text-base flex items-center justify-between font-bold tracking-tight">
-                  <span className="flex items-center gap-2"><CalendarIcon className="h-5 w-5" /> Clinic Planner</span>
-                  <Badge variant="outline" className="bg-white/10 text-white border-white/20">Teal Mode</Badge>
-                </CardTitle>
-              </CardHeader>
+            <Card className="border-none shadow-xl rounded-[2.5rem] bg-white overflow-hidden border border-muted ring-1 ring-black/5">
               <div className="p-0">
                 <Calendar
                   mode="single"
                   selected={selectedDate}
                   onSelect={setSelectedDate}
                   className="w-full"
-                  modifiers={{ booked: appointmentDates }}
-                  modifiersClassNames={{
-                    booked: "text-primary font-black underline decoration-primary decoration-4 underline-offset-4"
-                  }}
                 />
               </div>
             </Card>
