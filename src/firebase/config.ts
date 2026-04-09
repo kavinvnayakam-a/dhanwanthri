@@ -6,6 +6,6 @@ export const firebaseConfig = {
   authDomain: "dhanwanthrimaruthuvam-83c7d.firebaseapp.com",
   projectId: "dhanwanthrimaruthuvam-83c7d",
   storageBucket: "dhanwanthrimaruthuvam-83c7d.firebasestorage.app",
-  messagingSenderId: "8608174673", // Using provided number as placeholder if senderId unknown
-  appId: "1:8608174673:web:placeholder" 
+  messagingSenderId: "215807140725", // Using provided number as placeholder if senderId unknown
+  appId: "1:215807140725:web:cc658f6c98bfe4a63ae93c" 
 };
