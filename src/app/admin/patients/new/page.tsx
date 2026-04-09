@@ -23,7 +23,9 @@ export default function NewPatientPage() {
     phone: '',
     email: '',
     dob: '',
+    age: '',
     sex: 'Male',
+    type: 'Out-patient',
     address: '',
     branch: 'Ashok Nagar',
     regNo: `REG-${Date.now().toString().slice(-6)}`
@@ -36,7 +38,8 @@ export default function NewPatientPage() {
     try {
       const docRef = await addDoc(collection(db, 'patients'), {
         ...formData,
-        createdAt: serverTimestamp()
+        createdAt: serverTimestamp(),
+        lastVisit: new Date().toISOString().split('T')[0]
       });
       router.push(`/admin/patients/${docRef.id}`);
     } catch (error) {
@@ -61,8 +64,8 @@ export default function NewPatientPage() {
             <div className="flex items-center gap-3">
               <UserPlus className="h-6 w-6 text-accent" />
               <div>
-                <CardTitle className="text-2xl font-headline">Register New Patient</CardTitle>
-                <CardDescription className="text-primary-foreground/70">Create a permanent medical profile</CardDescription>
+                <CardTitle className="text-2xl font-headline">Register New Profile</CardTitle>
+                <CardDescription className="text-primary-foreground/70">Establish a permanent clinical record</CardDescription>
               </div>
             </div>
           </CardHeader>
@@ -73,24 +76,28 @@ export default function NewPatientPage() {
                 <Input value={formData.regNo} readOnly className="bg-muted border-none font-mono" />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-bold text-primary">Branch</label>
+                <label className="text-sm font-bold text-primary">Clinic Branch</label>
                 <Input value={formData.branch} onChange={(e) => setFormData({...formData, branch: e.target.value})} className="border-primary/10" />
               </div>
               <div className="space-y-2 sm:col-span-2">
-                <label className="text-sm font-bold text-primary">Full Name *</label>
-                <Input required value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} placeholder="Mr./Mrs. Patient Name" className="border-primary/10 h-12" />
+                <label className="text-sm font-bold text-primary">Patient Name *</label>
+                <Input required value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} placeholder="Mr./Mrs./Master Patient Name" className="border-primary/10 h-12" />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-bold text-primary">Contact Number *</label>
-                <Input required type="tel" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} placeholder="+91 XXXXX XXXXX" className="border-primary/10" />
+                <label className="text-sm font-bold text-primary">Mobile Number *</label>
+                <Input required type="tel" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} placeholder="Contact for future lookup" className="border-primary/10" />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-bold text-primary">Email Address</label>
+                <label className="text-sm font-bold text-primary">Email (Optional)</label>
                 <Input type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} placeholder="patient@example.com" className="border-primary/10" />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-bold text-primary">Date of Birth</label>
                 <Input type="date" value={formData.dob} onChange={(e) => setFormData({...formData, dob: e.target.value})} className="border-primary/10" />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-primary">Age</label>
+                <Input type="number" value={formData.age} onChange={(e) => setFormData({...formData, age: e.target.value})} className="border-primary/10" />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-bold text-primary">Sex</label>
@@ -104,11 +111,22 @@ export default function NewPatientPage() {
                   <option>Other</option>
                 </select>
               </div>
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-primary">Status</label>
+                <select 
+                  className="w-full h-10 rounded-md border border-primary/10 bg-white px-3"
+                  value={formData.type}
+                  onChange={(e) => setFormData({...formData, type: e.target.value})}
+                >
+                  <option>Out-patient</option>
+                  <option>In-patient</option>
+                </select>
+              </div>
               <div className="space-y-2 sm:col-span-2">
                 <label className="text-sm font-bold text-primary">Communication Address</label>
                 <textarea 
                   className="w-full min-h-[100px] rounded-md border border-primary/10 bg-white p-3 text-sm"
-                  placeholder="Street, City, Pincode"
+                  placeholder="Street, City, Area Code"
                   value={formData.address}
                   onChange={(e) => setFormData({...formData, address: e.target.value})}
                 />
@@ -116,7 +134,7 @@ export default function NewPatientPage() {
 
               <div className="sm:col-span-2 pt-4">
                 <Button type="submit" className="w-full h-14 rounded-2xl bg-accent text-accent-foreground font-bold text-lg" disabled={loading}>
-                  {loading ? <Loader2 className="animate-spin h-5 w-5" /> : 'Create Profile & Proceed'}
+                  {loading ? <Loader2 className="animate-spin h-5 w-5" /> : 'Create Record & Start Assessment'}
                 </Button>
               </div>
             </form>

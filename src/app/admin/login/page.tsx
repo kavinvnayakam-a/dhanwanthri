@@ -8,8 +8,8 @@ import { initializeApp, getApps } from 'firebase/app';
 import { firebaseConfig } from '@/firebase/config';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Lock, Mail, Loader2, AlertCircle } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Lock, Mail, Loader2, AlertCircle, ShieldCheck } from 'lucide-react';
 import Image from 'next/image';
 
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
@@ -31,7 +31,7 @@ export default function AdminLoginPage() {
       await signInWithEmailAndPassword(auth, email, password);
       router.push('/admin/dashboard');
     } catch (err: any) {
-      setError(err.message || 'Invalid credentials');
+      setError('Access denied. Please check your credentials.');
     } finally {
       setLoading(false);
     }
@@ -49,15 +49,15 @@ export default function AdminLoginPage() {
               className="object-contain"
             />
           </div>
-          <h1 className="text-2xl font-headline font-bold text-primary">Clinical Administration</h1>
-          <p className="text-foreground/60">Secure access for doctors and staff</p>
+          <h1 className="text-2xl font-headline font-bold text-primary">Clinical Portal</h1>
+          <p className="text-foreground/60">Secure provider access for Dhanwanthri Maruthuvam</p>
         </div>
 
         <Card className="border-none shadow-2xl rounded-3xl overflow-hidden bg-white">
           <CardHeader className="bg-primary text-primary-foreground p-8">
             <div className="flex items-center gap-3">
-              <Lock className="h-6 w-6 text-accent" />
-              <CardTitle>Sign In</CardTitle>
+              <ShieldCheck className="h-6 w-6 text-accent" />
+              <CardTitle className="font-headline">Staff Sign In</CardTitle>
             </div>
           </CardHeader>
           <CardContent className="p-8">
@@ -72,11 +72,11 @@ export default function AdminLoginPage() {
               <div className="space-y-2">
                 <label className="text-sm font-bold text-primary">Email Address</label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-primary/40" />
+                  <Mail className="absolute left-3 top-3.5 h-4 w-4 text-primary/40" />
                   <Input 
                     type="email" 
-                    placeholder="admin@dhanwanthri.com" 
-                    className="pl-10 h-12"
+                    placeholder="care@dhanwanthrimaruthuvam.com" 
+                    className="pl-10 h-12 rounded-xl"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -85,13 +85,13 @@ export default function AdminLoginPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-bold text-primary">Password</label>
+                <label className="text-sm font-bold text-primary">Security Token</label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-primary/40" />
+                  <Lock className="absolute left-3 top-3.5 h-4 w-4 text-primary/40" />
                   <Input 
                     type="password" 
                     placeholder="••••••••" 
-                    className="pl-10 h-12"
+                    className="pl-10 h-12 rounded-xl"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -101,14 +101,17 @@ export default function AdminLoginPage() {
 
               <Button 
                 type="submit" 
-                className="w-full h-12 rounded-xl text-lg font-bold bg-accent hover:bg-accent/90"
+                className="w-full h-14 rounded-2xl text-lg font-bold bg-accent hover:bg-accent/90 shadow-lg shadow-accent/20"
                 disabled={loading}
               >
-                {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Log In'}
+                {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Enter Portal'}
               </Button>
             </form>
           </CardContent>
         </Card>
+        <p className="text-center text-xs text-foreground/40 font-medium">
+          Authorized personnel only. Sessions are monitored for clinical safety.
+        </p>
       </div>
     </div>
   );

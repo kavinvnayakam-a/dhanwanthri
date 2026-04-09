@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { initializeApp, getApps } from 'firebase/app';
-import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, doc, updateDoc } from 'firebase/firestore';
 import { firebaseConfig } from '@/firebase/config';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,11 +15,12 @@ import {
   FileText, 
   ArrowLeft, 
   Save, 
-  Heart, 
   Activity, 
   Stethoscope, 
   Waves,
-  Brain
+  Brain,
+  History,
+  Heart
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -32,6 +33,7 @@ export default function NewAssessmentPage() {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<any>({
     date: new Date().toISOString().split('T')[0],
+    visitType: 'Out-patient',
     chiefComplaints: '',
     duration: '',
     associateComplaints: '',
@@ -65,8 +67,15 @@ export default function NewAssessmentPage() {
       piles: false,
       thyroid: false,
       other: '',
+      familyHistory: ''
+    },
+    lifestyle: {
       surgical: '',
-      medical: ''
+      medical: '',
+      diet: '',
+      water: '',
+      addictions: '',
+      physicalActivity: 'No'
     },
     assessment: {
       height: '',
@@ -76,6 +85,7 @@ export default function NewAssessmentPage() {
       pulse: '',
       vision: '',
       physicalExam: '',
+      labInvestigation: '',
       diagnosis: ''
     },
     ayurvedic: {
@@ -105,6 +115,11 @@ export default function NewAssessmentPage() {
     setLoading(true);
     try {
       await addDoc(collection(db, 'patients', id as string, 'assessments'), formData);
+      // Update patient's last visit and type
+      await updateDoc(doc(db, 'patients', id as string), {
+        lastVisit: formData.date,
+        type: formData.visitType
+      });
       router.push(`/admin/patients/${id}`);
     } catch (error) {
       console.error(error);
@@ -128,7 +143,7 @@ export default function NewAssessmentPage() {
             <Link href={`/admin/patients/${id}`}><ArrowLeft className="mr-2 h-4 w-4" /> Back to Profile</Link>
           </Button>
           <Button onClick={handleSubmit} className="bg-primary px-8 rounded-xl shadow-lg" disabled={loading}>
-            {loading ? 'Saving...' : <><Save className="mr-2 h-4 w-4" /> Save Record</>}
+            {loading ? 'Saving...' : <><Save className="mr-2 h-4 w-4" /> Save Assessment</>}
           </Button>
         </div>
 
@@ -137,25 +152,31 @@ export default function NewAssessmentPage() {
             <CardTitle className="text-3xl font-headline flex items-center gap-3">
               <FileText className="h-8 w-8 text-accent" /> HEALTH ASSESSMENT FORM
             </CardTitle>
-            <CardDescription className="text-primary-foreground/70">Clinical data entry for holistic and sports medicine analysis</CardDescription>
+            <CardDescription className="text-primary-foreground/70">Scientific clinical data entry for Dhanwanthri Maruthuvam</CardDescription>
           </CardHeader>
           <CardContent className="p-0">
             <Tabs defaultValue="general" className="w-full">
               <TabsList className="w-full justify-start rounded-none bg-muted/50 p-0 h-auto flex-wrap border-b">
                 <TabsTrigger value="general" className="rounded-none px-8 py-4 data-[state=active]:bg-white data-[state=active]:text-primary font-bold">General</TabsTrigger>
                 <TabsTrigger value="disorders" className="rounded-none px-8 py-4 data-[state=active]:bg-white data-[state=active]:text-primary font-bold">Disorders</TabsTrigger>
-                <TabsTrigger value="history" className="rounded-none px-8 py-4 data-[state=active]:bg-white data-[state=active]:text-primary font-bold">History</TabsTrigger>
+                <TabsTrigger value="history" className="rounded-none px-8 py-4 data-[state=active]:bg-white data-[state=active]:text-primary font-bold">Histories</TabsTrigger>
                 <TabsTrigger value="clinical" className="rounded-none px-8 py-4 data-[state=active]:bg-white data-[state=active]:text-primary font-bold">Clinical</TabsTrigger>
                 <TabsTrigger value="ayurveda" className="rounded-none px-8 py-4 data-[state=active]:bg-white data-[state=active]:text-primary font-bold">Ayurveda</TabsTrigger>
               </TabsList>
 
               <div className="p-10">
-                {/* General Section */}
                 <TabsContent value="general" className="mt-0 space-y-8">
-                  <div className="grid md:grid-cols-2 gap-8">
+                  <div className="grid md:grid-cols-3 gap-8">
                     <div className="space-y-2">
-                      <label className="text-sm font-bold text-primary">Assessment Date</label>
+                      <label className="text-sm font-bold text-primary">Date</label>
                       <Input type="date" value={formData.date} onChange={(e) => setFormData({...formData, date: e.target.value})} />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-bold text-primary">Visit Type</label>
+                      <select className="w-full h-10 border rounded-md px-3" value={formData.visitType} onChange={(e) => setFormData({...formData, visitType: e.target.value})}>
+                        <option>Out-patient</option>
+                        <option>In-patient</option>
+                      </select>
                     </div>
                     <div className="space-y-2">
                       <label className="text-sm font-bold text-primary">Doctor in Chief</label>
@@ -163,16 +184,16 @@ export default function NewAssessmentPage() {
                     </div>
                   </div>
                   
-                  <SectionTitle><Brain className="h-5 w-5" /> Complaints & Duration</SectionTitle>
+                  <SectionTitle><Brain className="h-5 w-5" /> Complaints</SectionTitle>
                   <div className="space-y-6">
                     <div className="space-y-2">
                       <label className="text-sm font-bold">Chief Complaints</label>
-                      <textarea className="w-full min-h-[100px] border rounded-xl p-4 text-sm" value={formData.chiefComplaints} onChange={(e) => setFormData({...formData, chiefComplaints: e.target.value})} placeholder="Describe primary symptoms..." />
+                      <textarea className="w-full min-h-[80px] border rounded-xl p-4 text-sm" value={formData.chiefComplaints} onChange={(e) => setFormData({...formData, chiefComplaints: e.target.value})} placeholder="Describe primary symptoms..." />
                     </div>
                     <div className="grid md:grid-cols-2 gap-8">
                       <div className="space-y-2">
                         <label className="text-sm font-bold">Duration</label>
-                        <Input value={formData.duration} onChange={(e) => setFormData({...formData, duration: e.target.value})} placeholder="e.g. 3 months" />
+                        <Input value={formData.duration} onChange={(e) => setFormData({...formData, duration: e.target.value})} />
                       </div>
                       <div className="space-y-2">
                         <label className="text-sm font-bold">Associate Complaints</label>
@@ -182,15 +203,14 @@ export default function NewAssessmentPage() {
                   </div>
                 </TabsContent>
 
-                {/* Disorders Section */}
-                <TabsContent value="disorders" className="mt-0 space-y-12">
-                  <div className="grid md:grid-cols-2 gap-12">
+                <TabsContent value="disorders" className="mt-0">
+                  <div className="grid md:grid-cols-2 gap-x-12 gap-y-8">
                     <div className="space-y-4">
                       <SectionTitle>Digestive (Rasa)</SectionTitle>
                       {['Indigestion', 'Acidity', 'Ulcer', 'IBS', 'Gastritis', 'GERD'].map((d) => (
                         <div key={d} className="flex items-center space-x-2">
                           <Checkbox id={d} onCheckedChange={() => handleCheckbox('digestive', d)} />
-                          <label htmlFor={d} className="text-sm leading-none">{d}</label>
+                          <label htmlFor={d} className="text-sm">{d}</label>
                         </div>
                       ))}
                     </div>
@@ -199,7 +219,25 @@ export default function NewAssessmentPage() {
                       {['Anemia', 'Varicose vein', 'Triglyceride', 'Hypertension', 'Cholesterol'].map((d) => (
                         <div key={d} className="flex items-center space-x-2">
                           <Checkbox id={d} onCheckedChange={() => handleCheckbox('hematological', d)} />
-                          <label htmlFor={d} className="text-sm leading-none">{d}</label>
+                          <label htmlFor={d} className="text-sm">{d}</label>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="space-y-4">
+                      <SectionTitle>Muscular (Mamsa)</SectionTitle>
+                      {['Obesity', 'Muscle pain', 'Weight Loss', 'Debility'].map((d) => (
+                        <div key={d} className="flex items-center space-x-2">
+                          <Checkbox id={d} onCheckedChange={() => handleCheckbox('muscular', d)} />
+                          <label htmlFor={d} className="text-sm">{d}</label>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="space-y-4">
+                      <SectionTitle>Skin (Medas)</SectionTitle>
+                      {['Itching', 'Vitiligo', 'Psoriasis', 'Discolouration', 'Eczema'].map((d) => (
+                        <div key={d} className="flex items-center space-x-2">
+                          <Checkbox id={d} onCheckedChange={() => handleCheckbox('skin', d)} />
+                          <label htmlFor={d} className="text-sm">{d}</label>
                         </div>
                       ))}
                     </div>
@@ -208,50 +246,65 @@ export default function NewAssessmentPage() {
                       {['Osteo Arthritis', 'Disc prolapse', 'Cervical Spondylosis', 'Rheumatoid arthritis', 'Lumbar Spondylosis', 'Sciatica', 'Gout'].map((d) => (
                         <div key={d} className="flex items-center space-x-2">
                           <Checkbox id={d} onCheckedChange={() => handleCheckbox('skeletal', d)} />
-                          <label htmlFor={d} className="text-sm leading-none">{d}</label>
+                          <label htmlFor={d} className="text-sm">{d}</label>
                         </div>
                       ))}
                     </div>
                     <div className="space-y-4">
                       <SectionTitle>Nervous (Majja)</SectionTitle>
-                      {["Parkinson's disease", "Alzheimer's disease", 'Paralysis', 'Immunity Issues'].map((d) => (
+                      {["Parkinson's disease", "Alzheimer's disease", 'Paralysis', 'Immunity'].map((d) => (
                         <div key={d} className="flex items-center space-x-2">
                           <Checkbox id={d} onCheckedChange={() => handleCheckbox('nervous', d)} />
-                          <label htmlFor={d} className="text-sm leading-none">{d}</label>
+                          <label htmlFor={d} className="text-sm">{d}</label>
                         </div>
                       ))}
                     </div>
                   </div>
                 </TabsContent>
 
-                {/* History Section */}
-                <TabsContent value="history" className="mt-0">
-                  <SectionTitle>Personal History</SectionTitle>
-                  <div className="grid md:grid-cols-3 gap-6">
-                    {['Appetite', 'Bowel', 'Micturition', 'Sleep', 'Pain', 'Stress'].map((h) => (
-                      <div key={h} className="space-y-2">
-                        <label className="text-xs font-bold uppercase text-foreground/40">{h}</label>
-                        <Input className="h-10 text-sm" value={formData.personalHistory[h.toLowerCase()]} onChange={(e) => setFormData({...formData, personalHistory: {...formData.personalHistory, [h.toLowerCase()]: e.target.value}})} />
-                      </div>
-                    ))}
+                <TabsContent value="history" className="mt-0 space-y-12">
+                  <div>
+                    <SectionTitle><History className="h-5 w-5" /> Personal History</SectionTitle>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      <div className="space-y-2"><label className="text-xs font-bold uppercase text-foreground/40">Appetite</label><Input value={formData.personalHistory.appetite} onChange={(e) => setFormData({...formData, personalHistory: {...formData.personalHistory, appetite: e.target.value}})} /></div>
+                      <div className="space-y-2"><label className="text-xs font-bold uppercase text-foreground/40">Bowel</label><Input value={formData.personalHistory.bowel} onChange={(e) => setFormData({...formData, personalHistory: {...formData.personalHistory, bowel: e.target.value}})} /></div>
+                      <div className="space-y-2"><label className="text-xs font-bold uppercase text-foreground/40">Micturition</label><Input value={formData.personalHistory.micturition} onChange={(e) => setFormData({...formData, personalHistory: {...formData.personalHistory, micturition: e.target.value}})} /></div>
+                      <div className="space-y-2"><label className="text-xs font-bold uppercase text-foreground/40">Sleep</label><Input value={formData.personalHistory.sleep} onChange={(e) => setFormData({...formData, personalHistory: {...formData.personalHistory, sleep: e.target.value}})} /></div>
+                      <div className="space-y-2"><label className="text-xs font-bold uppercase text-foreground/40">Pain</label><Input value={formData.personalHistory.pain} onChange={(e) => setFormData({...formData, personalHistory: {...formData.personalHistory, pain: e.target.value}})} /></div>
+                      <div className="space-y-2"><label className="text-xs font-bold uppercase text-foreground/40">Stress</label><Input value={formData.personalHistory.stress} onChange={(e) => setFormData({...formData, personalHistory: {...formData.personalHistory, stress: e.target.value}})} /></div>
+                    </div>
                   </div>
 
-                  <SectionTitle>Medical & Lifestyle</SectionTitle>
-                  <div className="space-y-6">
-                    <div className="space-y-2">
-                      <label className="text-sm font-bold">Past Medical History / Current Prescription</label>
-                      <textarea className="w-full min-h-[80px] border rounded-xl p-4 text-sm" value={formData.pastHistory.medical} onChange={(e) => setFormData({...formData, pastHistory: {...formData.pastHistory, medical: e.target.value}})} />
+                  <div>
+                    <SectionTitle>OB / GYN History (Female Patients)</SectionTitle>
+                    <div className="grid md:grid-cols-3 gap-6">
+                      <div className="space-y-2"><label className="text-xs font-bold">LMPR</label><Input value={formData.obgyn.lmpr} onChange={(e) => setFormData({...formData, obgyn: {...formData.obgyn, lmpr: e.target.value}})} /></div>
+                      <div className="space-y-2"><label className="text-xs font-bold">Menstrual Cycle</label><Input value={formData.obgyn.cycle} onChange={(e) => setFormData({...formData, obgyn: {...formData.obgyn, cycle: e.target.value}})} /></div>
+                      <div className="space-y-2"><label className="text-xs font-bold">Flow</label><Input value={formData.obgyn.flow} onChange={(e) => setFormData({...formData, obgyn: {...formData.obgyn, flow: e.target.value}})} /></div>
                     </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-bold">Surgical History</label>
-                      <textarea className="w-full min-h-[80px] border rounded-xl p-4 text-sm" value={formData.pastHistory.surgical} onChange={(e) => setFormData({...formData, pastHistory: {...formData.pastHistory, surgical: e.target.value}})} />
+                  </div>
+
+                  <div>
+                    <SectionTitle>Past & Lifestyle History</SectionTitle>
+                    <div className="grid md:grid-cols-2 gap-8">
+                      <div className="space-y-4">
+                        {['Hypertension', 'Diabetes', 'Piles', 'Thyroid'].map((h) => (
+                          <div key={h} className="flex items-center space-x-2">
+                            <Checkbox onCheckedChange={(checked) => setFormData({...formData, pastHistory: {...formData.pastHistory, [h.toLowerCase()]: checked}})} />
+                            <label className="text-sm">{h}</label>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="space-y-4">
+                        <div className="space-y-2"><label className="text-xs font-bold">Water Intake</label><Input value={formData.lifestyle.water} onChange={(e) => setFormData({...formData, lifestyle: {...formData.lifestyle, water: e.target.value}})} /></div>
+                        <div className="space-y-2"><label className="text-xs font-bold">Physical Activity</label><Input value={formData.lifestyle.physicalActivity} onChange={(e) => setFormData({...formData, lifestyle: {...formData.lifestyle, physicalActivity: e.target.value}})} /></div>
+                      </div>
                     </div>
                   </div>
                 </TabsContent>
 
-                {/* Clinical Section */}
                 <TabsContent value="clinical" className="mt-0 space-y-8">
-                  <SectionTitle><Stethoscope className="h-5 w-5" /> Physical Assessment</SectionTitle>
+                  <SectionTitle><Heart className="h-5 w-5" /> Medical Assessment</SectionTitle>
                   <div className="grid md:grid-cols-3 gap-6">
                     <div className="space-y-2"><label className="text-sm font-bold">Height</label><Input value={formData.assessment.height} onChange={(e) => setFormData({...formData, assessment: {...formData.assessment, height: e.target.value}})} /></div>
                     <div className="space-y-2"><label className="text-sm font-bold">Weight</label><Input value={formData.assessment.weight} onChange={(e) => setFormData({...formData, assessment: {...formData.assessment, weight: e.target.value}})} /></div>
@@ -260,13 +313,13 @@ export default function NewAssessmentPage() {
                     <div className="space-y-2"><label className="text-sm font-bold">Vision</label><Input value={formData.assessment.vision} onChange={(e) => setFormData({...formData, assessment: {...formData.assessment, vision: e.target.value}})} /></div>
                     <div className="space-y-2"><label className="text-sm font-bold">Skin</label><Input value={formData.assessment.skin} onChange={(e) => setFormData({...formData, assessment: {...formData.assessment, skin: e.target.value}})} /></div>
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold">Final Diagnosis</label>
-                    <textarea className="w-full min-h-[100px] border rounded-xl p-4 text-sm font-bold text-primary" value={formData.assessment.diagnosis} onChange={(e) => setFormData({...formData, assessment: {...formData.assessment, diagnosis: e.target.value}})} />
+                  <div className="space-y-4">
+                    <div className="space-y-2"><label className="text-sm font-bold">Physical Examination</label><textarea className="w-full border rounded-xl p-4 text-sm" value={formData.assessment.physicalExam} onChange={(e) => setFormData({...formData, assessment: {...formData.assessment, physicalExam: e.target.value}})} /></div>
+                    <div className="space-y-2"><label className="text-sm font-bold">Lab Investigation</label><textarea className="w-full border rounded-xl p-4 text-sm" value={formData.assessment.labInvestigation} onChange={(e) => setFormData({...formData, assessment: {...formData.assessment, labInvestigation: e.target.value}})} /></div>
+                    <div className="space-y-2"><label className="text-sm font-bold text-primary">Diagnosis</label><textarea className="w-full border border-primary/20 rounded-xl p-4 text-sm font-bold" value={formData.assessment.diagnosis} onChange={(e) => setFormData({...formData, assessment: {...formData.assessment, diagnosis: e.target.value}})} /></div>
                   </div>
                 </TabsContent>
 
-                {/* Ayurveda Section */}
                 <TabsContent value="ayurveda" className="mt-0 space-y-8">
                   <SectionTitle><Waves className="h-5 w-5" /> Ayurvedic Diagnostics</SectionTitle>
                   <div className="grid md:grid-cols-2 gap-8">
@@ -298,6 +351,10 @@ export default function NewAssessmentPage() {
                   <div className="space-y-2">
                     <label className="text-sm font-bold">Marma / Varma</label>
                     <Input value={formData.ayurvedic.marma} onChange={(e) => setFormData({...formData, ayurvedic: {...formData.ayurvedic, marma: e.target.value}})} placeholder="Specify Marma points..." />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold">Associate Doctor</label>
+                    <Input value={formData.doctorAssociate} onChange={(e) => setFormData({...formData, doctorAssociate: e.target.value})} />
                   </div>
                 </TabsContent>
               </div>
