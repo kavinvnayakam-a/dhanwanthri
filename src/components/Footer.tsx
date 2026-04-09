@@ -1,14 +1,19 @@
-
 "use client";
 
 import { Mail, Phone, MapPin, Instagram, Facebook, Linkedin, ArrowRight, ShieldCheck, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/context/LanguageContext';
 
 export function Footer() {
   const { t } = useLanguage();
+  const pathname = usePathname();
+  const isAdminPath = pathname?.startsWith('/admin');
+
+  if (isAdminPath) return null;
+
   const whiteLogoUrl = "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Logos%2FWhite%20Logo-footer.webp?alt=media&token=e7619c5f-8a15-40f6-8a31-e5bc9a233cc5";
 
   // WhatsApp Config

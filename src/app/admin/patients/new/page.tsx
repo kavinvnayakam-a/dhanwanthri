@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, Suspense } from 'react';
@@ -67,25 +66,25 @@ function RegistrationForm() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12 space-y-8">
+    <div className="max-w-4xl mx-auto px-4 py-8 md:py-12 space-y-8">
       <div className="flex items-center justify-between">
-        <Button asChild variant="ghost" className="rounded-full text-foreground/60">
-          <Link href="/admin/dashboard"><ArrowLeft className="mr-2 h-4 w-4" /> Back to Dashboard</Link>
+        <Button asChild variant="ghost" className="rounded-full text-foreground/60 h-10">
+          <Link href="/admin/dashboard"><ArrowLeft className="mr-2 h-4 w-4" /> <span className="hidden sm:inline">Back to Dashboard</span><span className="sm:hidden">Dashboard</span></Link>
         </Button>
       </div>
 
       <Card className="border-none shadow-2xl rounded-3xl overflow-hidden bg-white">
-        <CardHeader className="bg-primary text-primary-foreground p-8">
+        <CardHeader className="bg-primary text-primary-foreground p-6 md:p-8">
           <div className="flex items-center gap-3">
-            <UserPlus className="h-6 w-6 text-accent" />
+            <UserPlus className="h-6 w-6 text-accent shrink-0" />
             <div>
-              <CardTitle className="text-2xl font-headline">Register New Profile</CardTitle>
-              <CardDescription className="text-primary-foreground/70">Establish a permanent clinical record</CardDescription>
+              <CardTitle className="text-xl md:text-2xl font-headline">Register New Profile</CardTitle>
+              <CardDescription className="text-primary-foreground/70 text-xs md:text-sm">Establish a permanent clinical record</CardDescription>
             </div>
           </div>
         </CardHeader>
-        <CardContent className="p-8">
-          <form onSubmit={handleSubmit} className="grid sm:grid-cols-2 gap-8">
+        <CardContent className="p-6 md:p-8">
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
             <div className="space-y-2">
               <label className="text-sm font-bold text-primary">Registration No. (Auto)</label>
               <Input value={formData.regNo} readOnly className="bg-muted border-none font-mono" />
@@ -96,11 +95,11 @@ function RegistrationForm() {
             </div>
             <div className="space-y-2 sm:col-span-2">
               <label className="text-sm font-bold text-primary">Patient Name *</label>
-              <Input required value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} placeholder="Mr./Mrs./Master Patient Name" className="border-primary/10 h-12" />
+              <Input required value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} placeholder="Full name of the patient" className="border-primary/10 h-12" />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-bold text-primary">Mobile Number *</label>
-              <Input required type="tel" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} placeholder="Contact for future lookup" className="border-primary/10" />
+              <Input required type="tel" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} placeholder="+91 XXXXX XXXXX" className="border-primary/10" />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-bold text-primary">Email (Optional)</label>
@@ -117,7 +116,7 @@ function RegistrationForm() {
             <div className="space-y-2">
               <label className="text-sm font-bold text-primary">Sex</label>
               <select 
-                className="w-full h-10 rounded-md border border-primary/10 bg-white px-3"
+                className="w-full h-10 rounded-md border border-primary/10 bg-white px-3 text-sm"
                 value={formData.sex}
                 onChange={(e) => setFormData({...formData, sex: e.target.value})}
               >
@@ -129,7 +128,7 @@ function RegistrationForm() {
             <div className="space-y-2">
               <label className="text-sm font-bold text-primary">Status</label>
               <select 
-                className="w-full h-10 rounded-md border border-primary/10 bg-white px-3"
+                className="w-full h-10 rounded-md border border-primary/10 bg-white px-3 text-sm"
                 value={formData.type}
                 onChange={(e) => setFormData({...formData, type: e.target.value})}
               >
@@ -162,7 +161,7 @@ function RegistrationForm() {
 export default function NewPatientPage() {
   return (
     <div className="min-h-screen bg-muted/30 pb-20">
-      <Suspense fallback={<div className="p-20 text-center">Loading form...</div>}>
+      <Suspense fallback={<div className="p-20 text-center font-bold text-primary">Loading form details...</div>}>
         <RegistrationForm />
       </Suspense>
     </div>

@@ -16,6 +16,8 @@ export function Navigation() {
   const pathname = usePathname();
   const { language, setLanguage, t } = useLanguage();
 
+  const isAdminPath = pathname?.startsWith('/admin');
+
   const logoUrl = "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Logos%2FDhanwanthiri%20Logo.webp?alt=media&token=31a8ab0e-c431-4ea5-a513-324d630ebce4";
 
   // WhatsApp Config
@@ -32,6 +34,8 @@ export function Navigation() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  if (isAdminPath) return null;
+
   const navLinks = [
     { name: t.nav.home, href: '/' },
     { name: t.nav.services, href: '/services' },
@@ -47,7 +51,7 @@ export function Navigation() {
   return (
     <>
       {/* Structural spacer - height adjusted for smaller mobile header */}
-      <div className="h-24 md:h-36 w-full shrink-0" />
+      <div className="h-20 md:h-36 w-full shrink-0" />
       
       <nav 
         className={cn(
@@ -62,7 +66,7 @@ export function Navigation() {
             <Link href="/" className="flex items-center group">
               <div className={cn(
                 "relative transition-all duration-500 ease-in-out",
-                scrolled ? "h-14 w-32 md:h-16 md:w-40" : "h-16 w-40 md:h-24 md:w-56"
+                scrolled ? "h-12 w-28 md:h-16 md:w-40" : "h-14 w-32 md:h-24 md:w-56"
               )}>
                 <Image 
                   src={logoUrl}
@@ -114,14 +118,14 @@ export function Navigation() {
               </Button>
             </div>
 
-            <div className="md:hidden flex items-center gap-4">
+            <div className="md:hidden flex items-center gap-2">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setLanguage(language === 'en' ? 'ta' : 'en')}
-                className="text-primary rounded-full border border-primary/20 h-10 px-3 flex items-center justify-center font-bold"
+                className="text-primary rounded-full border border-primary/20 h-9 px-2 flex items-center justify-center font-bold text-xs"
               >
-                <Globe className="h-4 w-4 mr-2" />
+                <Globe className="h-3 w-3 mr-1" />
                 {langLabel}
               </Button>
               <button
