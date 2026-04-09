@@ -18,7 +18,7 @@ import {
 import { firebaseConfig } from '@/firebase/config';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
+import { DeliveryScheduler } from '@/components/ui/delivery-scheduler';
 import { Badge } from '@/components/ui/badge';
 import { 
   Users, 
@@ -49,7 +49,7 @@ export default function AdminDashboard() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [appointments, setAppointments] = useState<any[]>([]);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [patientCount, setPatientCount] = useState(0);
   const router = useRouter();
 
@@ -102,7 +102,12 @@ export default function AdminDashboard() {
     });
   };
 
-  const activeDayAppointments = selectedDate ? getAppointmentsForDate(selectedDate) : [];
+  const activeDayAppointments = getAppointmentsForDate(selectedDate);
+
+  const availableTimeSlots = [
+    '07:00 AM', '08:00 AM', '09:00 AM', '10:00 AM', '11:00 AM', 
+    '12:00 PM', '04:00 PM', '05:00 PM', '06:00 PM', '07:00 PM'
+  ];
 
   if (loading) return <div className="h-screen flex items-center justify-center bg-background text-primary font-bold">Initializing Portal...</div>;
 
@@ -157,25 +162,23 @@ export default function AdminDashboard() {
         </div>
 
         <div className="grid lg:grid-cols-12 gap-8">
-          {/* Calendar Sidebar */}
+          {/* Scheduler Sidebar */}
           <div className="lg:col-span-4 space-y-8">
-            <Card className="border-none shadow-xl rounded-[2.5rem] bg-white overflow-hidden border border-muted ring-1 ring-black/5">
-              <div className="p-2">
-                <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={setSelectedDate}
-                  className="w-full"
-                />
-              </div>
-            </Card>
+            <DeliveryScheduler 
+              initialDate={selectedDate}
+              timeSlots={availableTimeSlots}
+              timeZone="Chennai (GMT +5:30)"
+              onSchedule={({ date }) => setSelectedDate(date)}
+              onDateSelect={setSelectedDate}
+              className="border-none shadow-xl rounded-[2.5rem] bg-white ring-1 ring-black/5"
+            />
 
             <Card className="border-none shadow-sm rounded-[2rem] bg-white overflow-hidden">
               <CardHeader className="p-6 border-b bg-muted/30">
                 <div className="flex justify-between items-center">
                   <CardTitle className="text-sm flex items-center gap-2 font-bold text-primary">
                     <Clock className="h-4 w-4 text-accent" />
-                    {selectedDate?.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+                    {selectedDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                   </CardTitle>
                   <Badge variant="outline" className="text-[10px] bg-white">{activeDayAppointments.length} Bookings</Badge>
                 </div>
@@ -203,7 +206,7 @@ export default function AdminDashboard() {
                 ) : (
                   <div className="p-16 text-center text-xs text-foreground/30 italic">
                     <CalendarIcon className="h-8 w-8 mx-auto mb-2 opacity-20" />
-                    No patient activity scheduled for this day.
+                    No activity for this day.
                   </div>
                 )}
               </CardContent>
