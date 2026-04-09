@@ -14,7 +14,7 @@ import {
   deleteDoc 
 } from 'firebase/firestore';
 import { firebaseConfig } from '@/firebase/config';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -24,7 +24,6 @@ import {
   Trash2, 
   ArrowLeft, 
   UserPlus, 
-  Clock, 
   Phone,
   Mail,
   MessageSquare
@@ -103,7 +102,6 @@ export default function AppointmentsManagementPage() {
               <Card key={apt.id} className="border-none shadow-sm rounded-3xl bg-white overflow-hidden group">
                 <CardContent className="p-0">
                   <div className="flex flex-col md:flex-row">
-                    {/* Status Strip */}
                     <div className={`w-2 md:w-3 ${apt.status === 'pending' ? 'bg-orange-500' : apt.status === 'confirmed' ? 'bg-green-500' : 'bg-muted'}`} />
                     
                     <div className="flex-grow p-8 grid md:grid-cols-3 gap-8 items-center">
@@ -187,7 +185,8 @@ export default function AppointmentsManagementPage() {
                   )}
                 </CardContent>
               </Card>
-            )) : (
+            ))
+          ) : (
             <div className="py-32 text-center bg-white rounded-3xl shadow-sm border-2 border-dashed">
               <div className="flex justify-center mb-4">
                 <Calendar className="h-12 w-12 text-muted-foreground/30" />

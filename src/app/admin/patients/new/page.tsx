@@ -33,7 +33,6 @@ function RegistrationForm() {
   });
 
   useEffect(() => {
-    // Prefill form from search params (e.g. from an appointment)
     const nameParam = searchParams.get('name');
     const phoneParam = searchParams.get('phone');
     const emailParam = searchParams.get('email');

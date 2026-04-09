@@ -14,7 +14,6 @@ import {
   Users, 
   Calendar, 
   PlusCircle, 
-  Search, 
   LogOut,
   TrendingUp,
   Activity,
@@ -64,7 +63,6 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-muted/30">
-      {/* Header */}
       <header className="bg-white border-b px-8 py-4 flex justify-between items-center shadow-sm">
         <div className="flex items-center gap-4">
           <Link href="/admin/dashboard" className="text-xl font-headline font-bold text-primary">Dhanwanthri Clinical Portal</Link>
@@ -80,7 +78,6 @@ export default function AdminDashboard() {
       </header>
 
       <main className="max-w-7xl mx-auto px-8 py-12 space-y-12">
-        {/* Quick Actions */}
         <div className="flex flex-wrap gap-4">
           <Button asChild size="lg" className="bg-primary rounded-2xl px-8 shadow-lg shadow-primary/20">
             <Link href="/admin/patients/new">
@@ -94,7 +91,6 @@ export default function AdminDashboard() {
           </Button>
         </div>
 
-        {/* Stats Grid */}
         <div className="grid md:grid-cols-4 gap-6">
           <Card className="border-none shadow-sm rounded-3xl bg-white">
             <CardContent className="p-6 flex items-center gap-4">
@@ -142,9 +138,7 @@ export default function AdminDashboard() {
           </Card>
         </div>
 
-        {/* Content Sections */}
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Recent Online Appointments */}
           <Card className="lg:col-span-2 border-none shadow-xl rounded-3xl bg-white overflow-hidden">
             <CardHeader className="bg-primary text-primary-foreground p-6">
               <CardTitle className="font-headline flex items-center gap-2">
@@ -180,15 +174,14 @@ export default function AdminDashboard() {
             </CardContent>
           </Card>
 
-          {/* Quick Find */}
           <div className="space-y-6">
             <Card className="border-none shadow-sm rounded-3xl bg-accent text-accent-foreground p-8">
               <h3 className="text-xl font-headline font-bold mb-4">Patient Registry</h3>
-              <p className="text-sm opacity-80 mb-6">Instantly retrieve clinical history by mobile number.</p>
+              <p className="text-sm opacity-80 mb-6">Instantly retrieve records by name or mobile number.</p>
               <div className="space-y-4">
                 <Input placeholder="Search name / mobile..." className="bg-white/10 border-white/20 text-white placeholder:text-white/50 h-12" />
                 <Button asChild className="w-full bg-white text-accent hover:bg-white/90 h-12 rounded-xl font-bold">
-                  <Link href="/admin/patients">Open Search</Link>
+                  <Link href="/admin/patients">Search Registry</Link>
                 </Button>
               </div>
             </Card>
