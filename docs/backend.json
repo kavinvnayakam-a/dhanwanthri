@@ -15,7 +15,9 @@
         "phone": { "type": "string" },
         "email": { "type": "string", "format": "email" },
         "branch": { "type": "string" },
-        "createdAt": { "type": "string", "format": "date-time" }
+        "createdAt": { "type": "string", "format": "date-time" },
+        "lastVisit": { "type": "string", "format": "date" },
+        "type": { "type": "string", "enum": ["In-patient", "Out-patient"] }
       },
       "required": ["name", "phone"]
     },
@@ -29,41 +31,14 @@
         "chiefComplaints": { "type": "string" },
         "duration": { "type": "string" },
         "associateComplaints": { "type": "string" },
-        "disorders": {
-          "type": "object",
-          "properties": {
-            "digestive": { "type": "array", "items": { "type": "string" } },
-            "hematological": { "type": "array", "items": { "type": "string" } },
-            "muscular": { "type": "array", "items": { "type": "string" } },
-            "skin": { "type": "array", "items": { "type": "string" } },
-            "skeletal": { "type": "array", "items": { "type": "string" } },
-            "nervous": { "type": "array", "items": { "type": "string" } }
-          }
-        },
-        "history": {
-          "type": "object",
-          "properties": {
-            "personal": { "type": "object" },
-            "obgyn": { "type": "object" },
-            "past": { "type": "object" },
-            "family": { "type": "object" },
-            "surgical": { "type": "string" },
-            "medical": { "type": "string" },
-            "diet": { "type": "string" }
-          }
-        },
-        "ayurvedic": {
-          "type": "object",
-          "properties": {
-            "dosha": { "type": "string" },
-            "dhatu": { "type": "string" },
-            "chakra": { "type": "string" },
-            "marma": { "type": "string" },
-            "kosha": { "type": "string" }
-          }
-        },
+        "disorders": { "type": "object" },
+        "history": { "type": "object" },
+        "ayurvedic": { "type": "object" },
         "doctorChief": { "type": "string" },
-        "doctorAssociate": { "type": "string" }
+        "consultationNotes": { "type": "string" },
+        "prescription": { "type": "string" },
+        "workoutPlan": { "type": "string" },
+        "nextVisitDate": { "type": "string", "format": "date" }
       }
     },
     "Appointment": {
@@ -76,8 +51,13 @@
         "email": { "type": "string" },
         "service": { "type": "string" },
         "message": { "type": "string" },
-        "status": { "type": "string", "enum": ["pending", "confirmed", "completed", "cancelled"] },
-        "createdAt": { "type": "string", "format": "date-time" }
+        "status": { "type": "string", "enum": ["pending", "waiting", "consultation", "billing", "completed", "cancelled"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "assignedDoctor": { "type": "string" },
+        "prescription": { "type": "string" },
+        "workoutPlan": { "type": "string" },
+        "nextVisitDate": { "type": "string", "format": "date" },
+        "followUpDays": { "type": "number" }
       }
     }
   },
@@ -95,7 +75,7 @@
     },
     "/appointments/{appointmentId}": {
       "schema": { "$ref": "#/backend/entities/Appointment" },
-      "description": "Online booking requests"
+      "description": "Online booking requests and clinic queue"
     }
   }
 }
