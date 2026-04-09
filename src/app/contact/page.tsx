@@ -2,6 +2,9 @@
 "use client";
 
 import { useState } from 'react';
+import { initializeApp, getApps } from 'firebase/app';
+import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { firebaseConfig } from '@/firebase/config';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -15,21 +18,47 @@ import {
   Clock,
   Instagram,
   Facebook,
-  MessageSquare
+  MessageSquare,
+  Loader2
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useLanguage } from '@/context/LanguageContext';
 
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+const db = getFirestore(app);
+
 export default function ContactPage() {
   const { t } = useLanguage();
+  const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [form, setForm] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    service: t.services.kinesiology.title,
+    message: ''
+  });
 
   const whatsappNumber = "918608174673";
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(t.contact.whatsappMsg)}`;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setLoading(true);
+    
+    try {
+      await addDoc(collection(db, 'appointments'), {
+        ...form,
+        status: 'pending',
+        createdAt: serverTimestamp()
+      });
+      setSubmitted(true);
+    } catch (error) {
+      console.error(error);
+      alert('Failed to send appointment request. Please try WhatsApp.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const structuredData = {
@@ -159,22 +188,46 @@ export default function ContactPage() {
                   <div className="grid sm:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <label className="text-sm font-bold text-primary">{t.contact.name}</label>
-                      <Input placeholder="John Doe" required className="border-primary/10" />
+                      <Input 
+                        placeholder="Full Name" 
+                        required 
+                        className="border-primary/10" 
+                        value={form.name}
+                        onChange={(e) => setForm({...form, name: e.target.value})}
+                      />
                     </div>
                     <div className="space-y-2">
                       <label className="text-sm font-bold text-primary">{t.contact.phoneLabel}</label>
-                      <Input type="tel" placeholder="+91 XXXXX XXXXX" required className="border-primary/10" />
+                      <Input 
+                        type="tel" 
+                        placeholder="+91 XXXXX XXXXX" 
+                        required 
+                        className="border-primary/10" 
+                        value={form.phone}
+                        onChange={(e) => setForm({...form, phone: e.target.value})}
+                      />
                     </div>
                   </div>
                   
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-primary">{t.contact.email}</label>
-                    <Input type="email" placeholder="john@example.com" required className="border-primary/10" />
+                    <Input 
+                      type="email" 
+                      placeholder="email@example.com" 
+                      required 
+                      className="border-primary/10" 
+                      value={form.email}
+                      onChange={(e) => setForm({...form, email: e.target.value})}
+                    />
                   </div>
 
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-primary">{t.contact.service}</label>
-                    <select className="flex h-10 w-full rounded-md border border-primary/10 bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                    <select 
+                      className="flex h-10 w-full rounded-md border border-primary/10 bg-background px-3 py-2 text-sm"
+                      value={form.service}
+                      onChange={(e) => setForm({...form, service: e.target.value})}
+                    >
                       <option>{t.services.kinesiology.title}</option>
                       <option>{t.services.needling.title}</option>
                       <option>{t.services.manipulation.title}</option>
@@ -188,13 +241,17 @@ export default function ContactPage() {
                       placeholder="Please describe your condition..." 
                       className="min-h-[120px] border-primary/10" 
                       required
+                      value={form.message}
+                      onChange={(e) => setForm({...form, message: e.target.value})}
                     />
                   </div>
 
-                  <Button type="submit" size="lg" className="w-full bg-accent text-accent-foreground hover:bg-accent/90 text-lg font-bold py-6">
-                    <span className="flex items-center gap-2">
-                      <Send className="h-5 w-5" /> {t.contact.submit}
-                    </span>
+                  <Button type="submit" size="lg" className="w-full bg-accent text-accent-foreground hover:bg-accent/90 text-lg font-bold py-6" disabled={loading}>
+                    {loading ? <Loader2 className="animate-spin h-5 w-5" /> : (
+                      <span className="flex items-center gap-2">
+                        <Send className="h-5 w-5" /> {t.contact.submit}
+                      </span>
+                    )}
                   </Button>
                 </form>
               </CardContent>

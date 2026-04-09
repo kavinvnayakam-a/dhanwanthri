@@ -1,0 +1,101 @@
+
+{
+  "entities": {
+    "Patient": {
+      "title": "Patient Profile",
+      "description": "Basic information for a clinical patient",
+      "type": "object",
+      "properties": {
+        "regNo": { "type": "string" },
+        "name": { "type": "string" },
+        "dob": { "type": "string", "format": "date" },
+        "age": { "type": "number" },
+        "sex": { "type": "string", "enum": ["Male", "Female", "Other"] },
+        "address": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "branch": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "phone"]
+    },
+    "Assessment": {
+      "title": "Health Assessment Form",
+      "description": "Comprehensive medical and Ayurvedic assessment record",
+      "type": "object",
+      "properties": {
+        "patientId": { "type": "string" },
+        "date": { "type": "string", "format": "date" },
+        "chiefComplaints": { "type": "string" },
+        "duration": { "type": "string" },
+        "associateComplaints": { "type": "string" },
+        "disorders": {
+          "type": "object",
+          "properties": {
+            "digestive": { "type": "array", "items": { "type": "string" } },
+            "hematological": { "type": "array", "items": { "type": "string" } },
+            "muscular": { "type": "array", "items": { "type": "string" } },
+            "skin": { "type": "array", "items": { "type": "string" } },
+            "skeletal": { "type": "array", "items": { "type": "string" } },
+            "nervous": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "history": {
+          "type": "object",
+          "properties": {
+            "personal": { "type": "object" },
+            "obgyn": { "type": "object" },
+            "past": { "type": "object" },
+            "family": { "type": "object" },
+            "surgical": { "type": "string" },
+            "medical": { "type": "string" },
+            "diet": { "type": "string" }
+          }
+        },
+        "ayurvedic": {
+          "type": "object",
+          "properties": {
+            "dosha": { "type": "string" },
+            "dhatu": { "type": "string" },
+            "chakra": { "type": "string" },
+            "marma": { "type": "string" },
+            "kosha": { "type": "string" }
+          }
+        },
+        "doctorChief": { "type": "string" },
+        "doctorAssociate": { "type": "string" }
+      }
+    },
+    "Appointment": {
+      "title": "Online Appointment",
+      "description": "Booking request from the website contact form",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "service": { "type": "string" },
+        "message": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "confirmed", "completed", "cancelled"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "auth": {
+    "providers": ["emailPassword"]
+  },
+  "firestore": {
+    "/patients/{patientId}": {
+      "schema": { "$ref": "#/backend/entities/Patient" },
+      "description": "Patient directory"
+    },
+    "/patients/{patientId}/assessments/{assessmentId}": {
+      "schema": { "$ref": "#/backend/entities/Assessment" },
+      "description": "Clinical assessments for a patient"
+    },
+    "/appointments/{appointmentId}": {
+      "schema": { "$ref": "#/backend/entities/Appointment" },
+      "description": "Online booking requests"
+    }
+  }
+}
