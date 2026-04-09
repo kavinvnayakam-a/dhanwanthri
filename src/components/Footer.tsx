@@ -1,7 +1,7 @@
 
 "use client";
 
-import { Mail, Phone, MapPin, Instagram, Facebook, Linkedin, ArrowRight, ShieldCheck, MessageSquare } from 'lucide-react';
+import { Mail, Phone, MapPin, Instagram, Facebook, Linkedin, ArrowRight, ShieldCheck, CalendarCheck, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -17,10 +17,6 @@ export function Footer() {
 
   const whiteLogoUrl = "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Logos%2FWhite%20Logo-footer.webp?alt=media&token=e7619c5f-8a15-40f6-8a31-e5bc9a233cc5";
 
-  // WhatsApp Config
-  const whatsappNumber = "918608174673";
-  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(t.contact.whatsappMsg)}`;
-
   return (
     <footer className="bg-primary text-primary-foreground">
       <div className="border-b border-primary-foreground/10">
@@ -31,13 +27,16 @@ export function Footer() {
           </div>
           <div className="flex flex-wrap justify-center gap-4">
             <Button asChild variant="secondary" size="lg" className="rounded-full px-8 font-bold bg-white text-primary hover:bg-white/90">
-              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
-                <MessageSquare className="h-5 w-5" />
+              <Link href="/contact" className="flex items-center gap-2">
+                <CalendarCheck className="h-5 w-5" />
                 {t.footer.ctaBook}
-              </a>
+              </Link>
             </Button>
             <Button asChild size="lg" className="rounded-full px-8 font-bold bg-white text-primary border-white/20 hover:bg-white/90 shadow-lg">
-              <Link href="/qa">{t.footer.ctaAI}</Link>
+              <Link href="/qa" className="flex items-center gap-2">
+                <Sparkles className="h-5 w-5" />
+                {t.footer.ctaAI}
+              </Link>
             </Button>
           </div>
         </div>
