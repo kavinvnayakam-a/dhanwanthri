@@ -33,7 +33,10 @@ import {
   CheckCircle2,
   XCircle,
   CreditCard,
-  UserRound
+  UserRound,
+  LayoutDashboard,
+  Search,
+  ChevronRight
 } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
@@ -64,7 +67,6 @@ export default function AdminDashboard() {
   }, [router]);
 
   const fetchData = async () => {
-    // Fetch all active appointments for the queue
     const qApt = query(collection(db, 'appointments'), orderBy('createdAt', 'desc'));
     const snapApt = await getDocs(qApt);
     setAppointments(snapApt.docs.map(doc => ({ id: doc.id, ...doc.data() })));
@@ -86,7 +88,6 @@ export default function AdminDashboard() {
     auth.signOut().then(() => router.push('/admin/login'));
   };
 
-  // Filter appointments for the calendar view
   const getAppointmentsForDate = (date: Date) => {
     return appointments.filter(apt => {
       if (!apt.createdAt) return false;
@@ -95,45 +96,59 @@ export default function AdminDashboard() {
     });
   };
 
+  // Dates that have appointments for calendar highlighting
+  const appointmentDates = appointments.map(apt => {
+    if (!apt.createdAt) return null;
+    return apt.createdAt.toDate ? apt.createdAt.toDate() : new Date(apt.createdAt);
+  }).filter(Boolean) as Date[];
+
   const activeDayAppointments = selectedDate ? getAppointmentsForDate(selectedDate) : [];
 
   if (loading) return <div className="h-screen flex items-center justify-center bg-background text-primary font-bold">Initializing Portal...</div>;
 
   return (
-    <div className="min-h-screen bg-muted/30">
-      <header className="bg-white border-b px-4 md:px-8 py-4 flex justify-between items-center shadow-sm">
+    <div className="min-h-screen bg-muted/20">
+      <header className="bg-white border-b px-4 md:px-8 py-4 flex justify-between items-center shadow-sm sticky top-0 z-50">
         <div className="flex items-center gap-8">
-          <Link href="/admin/dashboard" className="text-xl font-headline font-bold text-primary">Dhanwanthri Reception</Link>
-          <nav className="hidden md:flex gap-6">
-            <Link href="/admin/patients" className="text-sm font-bold text-foreground/60 hover:text-primary transition-colors">Patients</Link>
-            <Link href="/admin/doctor" className="text-sm font-bold text-foreground/60 hover:text-primary transition-colors">Doctor View</Link>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary/20">
+              <LayoutDashboard className="h-6 w-6" />
+            </div>
+            <Link href="/admin/dashboard" className="text-xl font-headline font-bold text-primary tracking-tight">Dhanwanthri <span className="text-slate-900">Reception</span></Link>
+          </div>
+          <nav className="hidden md:flex gap-1 bg-muted/50 p-1 rounded-xl border">
+            <Link href="/admin/dashboard" className="px-4 py-2 text-sm font-bold bg-white text-primary rounded-lg shadow-sm">Dashboard</Link>
+            <Link href="/admin/patients" className="px-4 py-2 text-sm font-bold text-foreground/60 hover:text-primary transition-colors">Patients</Link>
+            <Link href="/admin/doctor" className="px-4 py-2 text-sm font-bold text-foreground/60 hover:text-primary transition-colors">Doctor View</Link>
           </nav>
         </div>
-        <div className="flex items-center gap-4">
-          <Button asChild size="sm" className="bg-primary rounded-xl hidden sm:flex">
+        <div className="flex items-center gap-3">
+          <Button asChild size="sm" className="bg-primary rounded-xl hidden sm:flex font-bold">
             <Link href="/admin/patients/new"><PlusCircle className="mr-2 h-4 w-4" /> New Patient</Link>
           </Button>
-          <Button variant="ghost" size="icon" onClick={handleLogout} className="text-destructive"><LogOut className="h-5 w-5" /></Button>
+          <Button variant="ghost" size="icon" onClick={handleLogout} className="text-destructive rounded-xl hover:bg-destructive/10">
+            <LogOut className="h-5 w-5" />
+          </Button>
         </div>
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-8 space-y-8">
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Modern Stats Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
-            { label: 'Total Patients', val: patientCount, icon: Users, color: 'bg-blue-50 text-blue-600' },
-            { label: 'Waiting Room', val: appointments.filter(a => a.status === 'waiting').length, icon: Clock, color: 'bg-orange-50 text-orange-600' },
-            { label: 'In Consultation', val: appointments.filter(a => a.status === 'consultation').length, icon: Stethoscope, color: 'bg-green-50 text-green-600' },
-            { label: 'Pending Billing', val: appointments.filter(a => a.status === 'billing').length, icon: CreditCard, color: 'bg-purple-50 text-purple-600' },
+            { label: 'Registered Patients', val: patientCount, icon: Users, color: 'bg-indigo-50 text-indigo-600', border: 'border-indigo-100' },
+            { label: 'Waiting Room', val: appointments.filter(a => a.status === 'waiting').length, icon: Clock, color: 'bg-amber-50 text-orange-600', border: 'border-amber-100' },
+            { label: 'Ongoing Consultations', val: appointments.filter(a => a.status === 'consultation').length, icon: Stethoscope, color: 'bg-emerald-50 text-emerald-600', border: 'border-emerald-100' },
+            { label: 'Pending Settlement', val: appointments.filter(a => a.status === 'billing').length, icon: CreditCard, color: 'bg-rose-50 text-rose-600', border: 'border-rose-100' },
           ].map((stat, i) => (
-            <Card key={i} className="border-none shadow-sm rounded-3xl bg-white">
-              <CardContent className="p-6 flex items-center gap-4">
-                <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center shrink-0", stat.color)}>
-                  <stat.icon className="h-6 w-6" />
+            <Card key={i} className={cn("border bg-white rounded-3xl shadow-sm transition-all hover:shadow-md", stat.border)}>
+              <CardContent className="p-6 flex items-center gap-5">
+                <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 shadow-inner", stat.color)}>
+                  <stat.icon className="h-7 w-7" />
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold text-foreground/40 uppercase tracking-wider">{stat.label}</p>
-                  <p className="text-2xl font-bold text-primary">{stat.val}</p>
+                  <p className="text-[11px] font-bold text-foreground/40 uppercase tracking-widest mb-1">{stat.label}</p>
+                  <p className="text-3xl font-bold text-slate-900 leading-none">{stat.val}</p>
                 </div>
               </CardContent>
             </Card>
@@ -141,118 +156,153 @@ export default function AdminDashboard() {
         </div>
 
         <div className="grid lg:grid-cols-12 gap-8">
-          {/* Left Column: Calendar & Daily List */}
+          {/* Calendar Sidebar */}
           <div className="lg:col-span-4 space-y-8">
-            <Card className="border-none shadow-sm rounded-3xl bg-white overflow-hidden p-4">
-              <Calendar
-                mode="single"
-                selected={selectedDate}
-                onSelect={setSelectedDate}
-                className="w-full"
-              />
-            </Card>
-
-            <Card className="border-none shadow-sm rounded-3xl bg-white overflow-hidden">
-              <CardHeader className="p-6 border-b">
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <Clock className="h-5 w-5 text-accent" />
-                  {selectedDate?.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} Schedule
+            <Card className="border-none shadow-sm rounded-[2rem] bg-white overflow-hidden">
+              <CardHeader className="bg-slate-900 text-white p-6 pb-4">
+                <CardTitle className="text-base flex items-center gap-2 font-bold tracking-tight">
+                  <CalendarIcon className="h-5 w-5 text-accent" /> Appointment Calendar
                 </CardTitle>
               </CardHeader>
-              <CardContent className="p-0">
+              <div className="p-4 bg-white">
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={setSelectedDate}
+                  className="w-full"
+                  modifiers={{ booked: appointmentDates }}
+                  modifiersClassNames={{
+                    booked: "font-bold text-primary underline decoration-accent decoration-2 underline-offset-4"
+                  }}
+                />
+              </div>
+            </Card>
+
+            <Card className="border-none shadow-sm rounded-[2rem] bg-white overflow-hidden">
+              <CardHeader className="p-6 border-b bg-muted/30">
+                <div className="flex justify-between items-center">
+                  <CardTitle className="text-sm flex items-center gap-2 font-bold text-primary">
+                    <Clock className="h-4 w-4 text-accent" />
+                    {selectedDate?.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+                  </CardTitle>
+                  <Badge variant="outline" className="text-[10px] bg-white">{activeDayAppointments.length} Bookings</Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="p-0 max-h-[400px] overflow-y-auto">
                 {activeDayAppointments.length > 0 ? (
-                  <div className="divide-y">
+                  <div className="divide-y divide-slate-100">
                     {activeDayAppointments.map(apt => (
-                      <div key={apt.id} className="p-4 hover:bg-muted/30 transition-colors">
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <p className="font-bold text-sm text-primary">{apt.name}</p>
-                            <p className="text-xs text-foreground/60">{apt.service}</p>
-                          </div>
-                          <Badge className={cn(
-                            "text-[10px] h-5",
-                            apt.status === 'completed' ? 'bg-green-500' : 
-                            apt.status === 'pending' ? 'bg-orange-500' : 'bg-blue-500'
-                          )}>
-                            {apt.status}
-                          </Badge>
+                      <div key={apt.id} className="p-5 hover:bg-muted/30 transition-colors flex justify-between items-center">
+                        <div className="space-y-1">
+                          <p className="font-bold text-sm text-slate-900">{apt.name}</p>
+                          <p className="text-[11px] font-medium text-foreground/50">{apt.service}</p>
                         </div>
+                        <Badge className={cn(
+                          "text-[9px] px-2 h-5 rounded-md border-none",
+                          apt.status === 'completed' ? 'bg-emerald-100 text-emerald-700' : 
+                          apt.status === 'pending' ? 'bg-amber-100 text-amber-700' : 
+                          'bg-blue-100 text-blue-700'
+                        )}>
+                          {apt.status}
+                        </Badge>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="p-12 text-center text-xs text-foreground/40 italic">
-                    No bookings for this date.
+                  <div className="p-16 text-center text-xs text-foreground/30 italic">
+                    <CalendarIcon className="h-8 w-8 mx-auto mb-2 opacity-20" />
+                    No patient activity scheduled for this day.
                   </div>
                 )}
               </CardContent>
             </Card>
           </div>
 
-          {/* Right Column: Queue Management */}
+          {/* Workflow Queue */}
           <div className="lg:col-span-8 space-y-8">
-            <Card className="border-none shadow-xl rounded-3xl bg-white overflow-hidden">
-              <CardHeader className="bg-primary text-primary-foreground p-8">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <CardTitle className="text-2xl font-headline flex items-center gap-3">
-                      <Clock className="h-6 w-6 text-accent" /> Active Queue Master
+            <Card className="border-none shadow-xl rounded-[2rem] bg-white overflow-hidden min-h-[600px]">
+              <CardHeader className="bg-primary text-white p-8">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                  <div className="space-y-1">
+                    <CardTitle className="text-3xl font-headline flex items-center gap-3">
+                      <LayoutDashboard className="h-8 w-8 text-accent" /> Active Patient Flow
                     </CardTitle>
-                    <CardDescription className="text-primary-foreground/70">Reception & Workflow Control</CardDescription>
+                    <CardDescription className="text-white/70 font-medium">Real-time Clinical Workflow & Queue Control</CardDescription>
                   </div>
-                  <Button asChild variant="secondary" className="bg-white text-primary rounded-xl">
-                    <Link href="/admin/appointments">All Bookings</Link>
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button asChild variant="secondary" className="bg-white/10 hover:bg-white/20 border-white/20 text-white rounded-xl backdrop-blur-md">
+                      <Link href="/admin/appointments">Historical Records</Link>
+                    </Button>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="p-0">
-                <div className="divide-y">
+                <div className="divide-y divide-slate-100">
                   {appointments.filter(a => a.status !== 'completed' && a.status !== 'cancelled').map((apt) => (
-                    <div key={apt.id} className="p-6 md:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 hover:bg-muted/20 transition-colors">
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-3">
-                          <p className="text-lg font-bold text-primary">{apt.name}</p>
-                          <Badge variant="outline" className="text-xs">{apt.status}</Badge>
+                    <div key={apt.id} className="p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-8 hover:bg-muted/10 transition-all group">
+                      <div className="flex items-start gap-5">
+                        <div className={cn(
+                          "w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm",
+                          apt.status === 'waiting' ? "bg-amber-100 text-orange-600 animate-pulse" : 
+                          apt.status === 'consultation' ? "bg-emerald-100 text-emerald-600" : "bg-slate-100 text-slate-400"
+                        )}>
+                          <UserRound className="h-6 w-6" />
                         </div>
-                        <p className="text-sm text-foreground/60 font-medium">{apt.phone} • {apt.service}</p>
-                        <p className="text-[10px] font-bold text-foreground/30 uppercase">Booked: {apt.createdAt?.seconds ? new Date(apt.createdAt.seconds * 1000).toLocaleTimeString() : 'Recently'}</p>
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-3">
+                            <p className="text-xl font-bold text-slate-900 tracking-tight">{apt.name}</p>
+                            <Badge variant="secondary" className="text-[10px] uppercase font-bold tracking-widest px-2">{apt.status}</Badge>
+                          </div>
+                          <p className="text-sm text-foreground/60 font-medium">{apt.phone} <span className="mx-2 text-muted-foreground/30">•</span> {apt.service}</p>
+                          <div className="flex items-center gap-4 pt-1">
+                            <p className="text-[10px] font-bold text-foreground/30 uppercase flex items-center gap-1">
+                              <Clock className="h-3 w-3" /> Booked: {apt.createdAt?.seconds ? new Date(apt.createdAt.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Just now'}
+                            </p>
+                          </div>
+                        </div>
                       </div>
 
                       <div className="flex flex-wrap gap-2 w-full md:w-auto">
                         {apt.status === 'pending' && (
-                          <Button onClick={() => handleUpdateStatus(apt.id, 'waiting')} className="bg-orange-500 hover:bg-orange-600 rounded-xl grow md:grow-0">
-                            <Clock className="mr-2 h-4 w-4" /> Move to Waiting Room
+                          <Button onClick={() => handleUpdateStatus(apt.id, 'waiting')} className="bg-orange-500 hover:bg-orange-600 text-white rounded-xl grow md:grow-0 font-bold shadow-lg shadow-orange-500/20">
+                            <UserPlus className="mr-2 h-4 w-4" /> Move to Waiting Room
                           </Button>
                         )}
                         {apt.status === 'waiting' && (
-                          <div className="flex items-center gap-2 text-orange-600 font-bold text-sm bg-orange-50 px-4 py-2 rounded-xl border border-orange-100">
-                            <Clock className="h-4 w-4 animate-pulse" /> Patient Waiting for Doctor
+                          <div className="flex items-center gap-3 text-orange-600 font-bold text-sm bg-orange-50 px-5 py-3 rounded-2xl border border-orange-100 shadow-sm">
+                            <Clock className="h-4 w-4 animate-spin-slow" /> Awaiting Physician
                           </div>
                         )}
                         {apt.status === 'consultation' && (
-                          <div className="flex items-center gap-2 text-green-600 font-bold text-sm bg-green-50 px-4 py-2 rounded-xl border border-green-100">
-                            <Stethoscope className="h-4 w-4 animate-pulse" /> Ongoing Consultation
+                          <div className="flex items-center gap-3 text-emerald-600 font-bold text-sm bg-emerald-50 px-5 py-3 rounded-2xl border border-emerald-100 shadow-sm">
+                            <Stethoscope className="h-4 w-4 animate-pulse" /> In Consultation
                           </div>
                         )}
                         {apt.status === 'billing' && (
-                          <Button onClick={() => handleUpdateStatus(apt.id, 'completed')} className="bg-purple-600 hover:bg-purple-700 rounded-xl grow md:grow-0">
-                            <CheckCircle2 className="mr-2 h-4 w-4" /> Close Visit (Payment Received)
+                          <Button onClick={() => handleUpdateStatus(apt.id, 'completed')} className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl grow md:grow-0 font-bold shadow-lg shadow-emerald-500/20">
+                            <CreditCard className="mr-2 h-4 w-4" /> Settle & Close Visit
                           </Button>
                         )}
-                        <Button asChild variant="outline" size="icon" className="rounded-xl border-primary/10">
-                          <Link href={`/admin/patients/new?name=${encodeURIComponent(apt.name)}&phone=${apt.phone}`}>
-                            <UserPlus className="h-4 w-4 text-primary" />
-                          </Link>
-                        </Button>
-                        <Button variant="ghost" size="icon" onClick={() => handleUpdateStatus(apt.id, 'cancelled')} className="rounded-xl text-destructive">
-                          <XCircle className="h-4 w-4" />
-                        </Button>
+                        
+                        <div className="flex gap-1">
+                          <Button asChild variant="outline" size="icon" className="rounded-xl border-slate-200 hover:border-primary hover:text-primary transition-all">
+                            <Link href={`/admin/patients/new?name=${encodeURIComponent(apt.name)}&phone=${apt.phone}`}>
+                              <UserPlus className="h-4 w-4" />
+                            </Link>
+                          </Button>
+                          <Button variant="ghost" size="icon" onClick={() => handleUpdateStatus(apt.id, 'cancelled')} className="rounded-xl text-slate-300 hover:text-rose-600 hover:bg-rose-50 transition-all">
+                            <XCircle className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   ))}
                   {appointments.filter(a => a.status !== 'completed' && a.status !== 'cancelled').length === 0 && (
-                    <div className="p-20 text-center text-foreground/40 italic">
-                      No active patients in the queue.
+                    <div className="flex flex-col items-center justify-center py-32 text-center space-y-4">
+                      <div className="w-20 h-20 rounded-full bg-slate-50 flex items-center justify-center border border-dashed">
+                        <UserRound className="h-10 w-10 text-slate-200" />
+                      </div>
+                      <p className="text-slate-400 font-medium italic">Clinical queue is currently empty.</p>
                     </div>
                   )}
                 </div>
