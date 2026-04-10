@@ -414,13 +414,13 @@ export default function AdminDashboard() {
           <div className="lg:col-span-8 space-y-8">
             {/* Clinic Intake Section */}
             <Card className="border-none shadow-2xl rounded-[2rem] bg-white overflow-hidden min-h-[400px]">
-              <CardHeader className="bg-slate-900 text-white p-8">
+              <CardHeader className="bg-primary text-primary-foreground p-8">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                   <div className="space-y-1">
                     <CardTitle className="text-3xl font-headline flex items-center gap-3 tracking-tight">
-                      <LayoutDashboard className="h-8 w-8 text-primary" /> Clinic Intake Queue
+                      <LayoutDashboard className="h-8 w-8 text-accent" /> Clinic Intake Queue
                     </CardTitle>
-                    <CardDescription className="text-white/50 font-medium">Patients checked-in and ready for assessment assignment</CardDescription>
+                    <CardDescription className="text-primary-foreground/70 font-medium">Patients checked-in and ready for assessment assignment</CardDescription>
                   </div>
                   <div className="flex gap-2">
                     <Dialog open={isSearchOpen} onOpenChange={setIsSearchOpen}>
@@ -430,7 +430,7 @@ export default function AdminDashboard() {
                         </Button>
                       </DialogTrigger>
                     </Dialog>
-                    <Badge className="bg-primary/20 text-primary border-primary/20 px-4 py-1 font-bold">{admittedPatients.length} Waiting at Desk</Badge>
+                    <Badge className="bg-white/20 text-white border-white/20 px-4 py-1 font-bold">{admittedPatients.length} Waiting at Desk</Badge>
                   </div>
                 </div>
               </CardHeader>
