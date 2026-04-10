@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -103,7 +104,7 @@ export default function AppointmentsManagementPage() {
     switch (status) {
       case 'confirmed': return <Badge className="bg-green-500">Confirmed</Badge>;
       case 'cancelled': return <Badge variant="destructive">Cancelled</Badge>;
-      case 'completed': return <Badge className="bg-blue-500">Admitted</Badge>;
+      case 'admitted': return <Badge className="bg-blue-500">Admitted</Badge>;
       default: return <Badge className="bg-orange-500">Pending</Badge>;
     }
   };
@@ -129,7 +130,7 @@ export default function AppointmentsManagementPage() {
                     <div className={cn(
                       "w-2 md:w-3",
                       apt.status === 'confirmed' ? "bg-green-500" : 
-                      apt.status === 'completed' ? "bg-blue-500" :
+                      apt.status === 'admitted' ? "bg-blue-500" :
                       apt.status === 'cancelled' ? "bg-destructive" : "bg-orange-500"
                     )} />
                     
@@ -221,20 +222,13 @@ export default function AppointmentsManagementPage() {
                           </Button>
                         )}
                         {apt.status === 'confirmed' && (
-                          <Button 
-                            onClick={() => updateStatus(apt.id, 'completed')}
-                            className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl"
-                            size="sm"
-                          >
-                            <CheckCircle2 className="mr-2 h-4 w-4" /> Admit
+                          <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl" size="sm">
+                            <Link href={`/admin/patients/new?name=${encodeURIComponent(apt.name)}&phone=${apt.phone}&email=${apt.email}`}>
+                              <UserPlus className="mr-2 h-4 w-4" /> Admit
+                            </Link>
                           </Button>
                         )}
-                        <Button asChild variant="outline" className="rounded-xl border-primary/10 text-primary" size="sm">
-                          <Link href={`/admin/patients/new?name=${encodeURIComponent(apt.name)}&phone=${apt.phone}&email=${apt.email}`}>
-                            <UserPlus className="mr-2 h-4 w-4" /> Register
-                          </Link>
-                        </Button>
-                        {apt.status !== 'cancelled' && (
+                        {apt.status !== 'cancelled' && apt.status !== 'admitted' && (
                           <Button 
                             variant="ghost" 
                             size="icon" 

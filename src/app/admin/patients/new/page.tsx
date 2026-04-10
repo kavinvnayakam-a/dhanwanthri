@@ -34,7 +34,7 @@ function RegistrationForm() {
     address: '',
     branch: 'Ashok Nagar',
     regNo: `REG-${Date.now().toString().slice(-6)}`,
-    status: 'enrolled' // Ready for Junior Doctor Assessment
+    status: 'admitted' // Patient checked-in at desk, awaiting assignment to Junior Dr
   });
 
   useEffect(() => {
@@ -78,7 +78,8 @@ function RegistrationForm() {
         createdAt: serverTimestamp(),
         lastVisit: new Date().toISOString().split('T')[0]
       });
-      router.push(`/admin/patients/${docRef.id}`);
+      // Redirect back to dashboard where they can "Send for Assessment"
+      router.push(`/admin/dashboard`);
     } catch (error) {
       console.error(error);
       alert('Error creating record');
@@ -101,7 +102,7 @@ function RegistrationForm() {
             <UserPlus className="h-6 w-6 text-accent shrink-0" />
             <div>
               <CardTitle className="text-xl md:text-2xl font-headline">Receptionist Enrollment</CardTitle>
-              <CardDescription className="text-primary-foreground/70 text-xs md:text-sm">Identify existing mobile records or create a new profile</CardDescription>
+              <CardDescription className="text-primary-foreground/70 text-xs md:text-sm">New patient registration and intake</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -113,7 +114,7 @@ function RegistrationForm() {
               <AlertDescription className="text-sm">
                 This mobile number ({formData.phone}) is already linked to: 
                 <span className="font-bold ml-1">{existingFamily.map(f => f.name).join(', ')}</span>. 
-                Proceeding will create a new family member entry.
+                Registering will create a new family profile under this contact.
               </AlertDescription>
             </Alert>
           )}
@@ -191,7 +192,7 @@ function RegistrationForm() {
 
             <div className="sm:col-span-2 pt-4">
               <Button type="submit" className="w-full h-14 rounded-2xl bg-accent text-accent-foreground font-bold text-lg" disabled={loading}>
-                {loading ? <Loader2 className="animate-spin h-5 w-5" /> : 'Enroll Patient & Send to Junior Doctor'}
+                {loading ? <Loader2 className="animate-spin h-5 w-5" /> : 'Check-in Patient at Reception'}
               </Button>
             </div>
           </form>

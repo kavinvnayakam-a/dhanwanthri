@@ -34,7 +34,9 @@ import {
   UserRound,
   LayoutDashboard,
   ClipboardList,
-  Timer
+  Timer,
+  ArrowRight,
+  ShieldCheck
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -48,9 +50,10 @@ export default function AdminDashboard() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [appointments, setAppointments] = useState<any[]>([]);
+  const [admittedPatients, setAdmittedPatients] = useState<any[]>([]);
   const [patientStats, setPatientStats] = useState({
     total: 0,
-    enrolled: 0,
+    admitted: 0,
     waiting: 0,
     billing: 0
   });
@@ -79,13 +82,19 @@ export default function AdminDashboard() {
       setAppointments(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     });
 
+    // Listen for admitted patients (awaiting push to Junior Dr)
+    const qAdmitted = query(collection(db, 'patients'), where('status', '==', 'admitted'), orderBy('lastVisit', 'asc'));
+    const unsubAdmitted = onSnapshot(qAdmitted, (snap) => {
+      setAdmittedPatients(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    });
+
     // Listen for patient stats
     const qPatients = collection(db, 'patients');
     const unsubPatients = onSnapshot(qPatients, (snap) => {
       const docs = snap.docs.map(d => d.data());
       setPatientStats({
         total: snap.size,
-        enrolled: docs.filter(d => d.status === 'enrolled').length,
+        admitted: docs.filter(d => d.status === 'admitted').length,
         waiting: docs.filter(d => d.status === 'waiting').length,
         billing: docs.filter(d => d.status === 'billing').length,
       });
@@ -93,8 +102,20 @@ export default function AdminDashboard() {
 
     return () => {
       unsubApt();
+      unsubAdmitted();
       unsubPatients();
     };
+  };
+
+  const handleSendToJunior = async (patientId: string) => {
+    try {
+      await updateDoc(doc(db, 'patients', patientId), {
+        status: 'registry',
+        sentToJuniorAt: new Date().toISOString()
+      });
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleLogout = () => {
@@ -119,7 +140,7 @@ export default function AdminDashboard() {
   if (loading) return <div className="h-screen flex items-center justify-center bg-background text-primary font-bold">Initializing Portal...</div>;
 
   return (
-    <div className="min-h-screen bg-muted/20">
+    <div className="min-h-screen bg-muted/20 pb-20">
       <header className="bg-white border-b px-4 md:px-8 py-4 flex justify-between items-center shadow-sm sticky top-0 z-50">
         <div className="flex items-center gap-8">
           <div className="flex items-center gap-3">
@@ -151,8 +172,8 @@ export default function AdminDashboard() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
             { label: 'Patient Directory', val: patientStats.total, icon: Users, color: 'bg-indigo-50 text-indigo-600', border: 'border-indigo-100' },
-            { label: 'Enrolled Today', val: patientStats.enrolled, icon: ClipboardList, color: 'bg-amber-50 text-orange-600', border: 'border-amber-100' },
-            { label: 'Waiting Room', val: patientStats.waiting, icon: Timer, color: 'bg-emerald-50 text-emerald-600', border: 'border-emerald-100' },
+            { label: 'At Reception', val: patientStats.admitted, icon: ClipboardList, color: 'bg-amber-50 text-orange-600', border: 'border-amber-100' },
+            { label: 'In Waiting Room', val: patientStats.waiting, icon: Timer, color: 'bg-emerald-50 text-emerald-600', border: 'border-emerald-100' },
             { label: 'Billing Desk', val: patientStats.billing, icon: CreditCard, color: 'bg-rose-50 text-rose-600', border: 'border-rose-100' },
           ].map((stat, i) => (
             <Card key={i} className={cn("border bg-white rounded-3xl shadow-sm transition-all hover:shadow-md", stat.border)}>
@@ -185,9 +206,9 @@ export default function AdminDashboard() {
                 <div className="flex justify-between items-center">
                   <CardTitle className="text-sm flex items-center gap-2 font-bold text-primary uppercase tracking-widest">
                     <Clock className="h-4 w-4 text-accent" />
-                    Bookings: {selectedDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                    Daily List: {selectedDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                   </CardTitle>
-                  <Badge variant="outline" className="text-[10px] bg-white">{activeDayAppointments.length} Bookings</Badge>
+                  <Badge variant="outline" className="text-[10px] bg-white">{activeDayAppointments.length} Entries</Badge>
                 </div>
               </CardHeader>
               <CardContent className="p-0 max-h-[400px] overflow-y-auto">
@@ -213,7 +234,7 @@ export default function AdminDashboard() {
                 ) : (
                   <div className="p-16 text-center text-xs text-foreground/30 italic">
                     <CalendarIcon className="h-8 w-8 mx-auto mb-2 opacity-20" />
-                    No bookings for this date.
+                    No entries for this date.
                   </div>
                 )}
               </CardContent>
@@ -221,63 +242,79 @@ export default function AdminDashboard() {
           </div>
 
           <div className="lg:col-span-8 space-y-8">
-            <Card className="border-none shadow-2xl rounded-[2rem] bg-white overflow-hidden min-h-[600px]">
+            {/* Clinic Intake Section */}
+            <Card className="border-none shadow-2xl rounded-[2rem] bg-white overflow-hidden min-h-[400px]">
               <CardHeader className="bg-slate-900 text-white p-8">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                   <div className="space-y-1">
                     <CardTitle className="text-3xl font-headline flex items-center gap-3 tracking-tight">
-                      <LayoutDashboard className="h-8 w-8 text-primary" /> Online Bookings
+                      <LayoutDashboard className="h-8 w-8 text-primary" /> Clinic Intake Queue
                     </CardTitle>
-                    <CardDescription className="text-white/50 font-medium">Verify online requests and enroll into clinic queue</CardDescription>
+                    <CardDescription className="text-white/50 font-medium">Patients checked-in and ready for assessment assignment</CardDescription>
                   </div>
-                  <div className="flex gap-2">
-                    <Button asChild variant="secondary" className="bg-white/5 hover:bg-white/10 border-white/10 text-white rounded-xl">
-                      <Link href="/admin/patients">Patient Directory</Link>
-                    </Button>
-                  </div>
+                  <Badge className="bg-primary/20 text-primary border-primary/20 px-4 py-1 font-bold">{admittedPatients.length} Waiting at Desk</Badge>
                 </div>
               </CardHeader>
               <CardContent className="p-0">
                 <div className="divide-y divide-slate-50">
-                  {appointments.filter(a => a.status === 'pending').map((apt) => (
-                    <div key={apt.id} className="p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-8 hover:bg-muted/10 transition-all group">
+                  {admittedPatients.map((p) => (
+                    <div key={p.id} className="p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-8 hover:bg-muted/10 transition-all group">
                       <div className="flex items-start gap-5">
-                        <div className="w-12 h-12 rounded-2xl bg-amber-100 flex items-center justify-center shrink-0 shadow-sm text-orange-600">
+                        <div className="w-12 h-12 rounded-2xl bg-indigo-100 flex items-center justify-center shrink-0 shadow-sm text-indigo-600">
                           <UserRound className="h-6 w-6" />
                         </div>
                         <div className="space-y-1">
                           <div className="flex items-center gap-3">
-                            <p className="text-xl font-bold text-slate-900 tracking-tight">{apt.name}</p>
-                            <Badge variant="outline" className="text-[10px] uppercase font-bold tracking-widest px-2 border-amber-200 text-orange-600 bg-amber-50">Online Booking</Badge>
+                            <p className="text-xl font-bold text-slate-900 tracking-tight">{p.name}</p>
+                            <Badge variant="outline" className="text-[10px] uppercase font-bold tracking-widest px-2 border-indigo-200 text-indigo-600 bg-indigo-50">{p.type}</Badge>
                           </div>
-                          <p className="text-sm text-foreground/60 font-medium">{apt.phone} <span className="mx-2 text-muted-foreground/30">•</span> {apt.service}</p>
-                          <div className="flex items-center gap-4 pt-1">
-                            <p className="text-[10px] font-bold text-foreground/30 uppercase flex items-center gap-1">
-                              <Clock className="h-3 w-3" /> Received: {apt.createdAt?.seconds ? new Date(apt.createdAt.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Just now'}
-                            </p>
-                          </div>
+                          <p className="text-sm text-foreground/60 font-medium">{p.phone} <span className="mx-2 text-muted-foreground/30">•</span> {p.regNo}</p>
                         </div>
                       </div>
 
-                      <div className="flex flex-wrap gap-2 w-full md:w-auto">
-                        <Button asChild className="bg-primary hover:bg-primary/90 text-white rounded-xl grow md:grow-0 font-bold shadow-lg shadow-primary/20">
-                          <Link href={`/admin/patients/new?name=${encodeURIComponent(apt.name)}&phone=${apt.phone}&email=${apt.email}`}>
-                            <UserPlus className="mr-2 h-4 w-4" /> Enroll Patient
-                          </Link>
-                        </Button>
-                        <Button variant="ghost" size="icon" onClick={() => updateDoc(doc(db, 'appointments', apt.id), { status: 'cancelled' })} className="rounded-xl text-slate-300 hover:text-rose-600 hover:bg-rose-50 transition-all">
-                          <XCircle className="h-4 w-4" />
-                        </Button>
-                      </div>
+                      <Button 
+                        onClick={() => handleSendToJunior(p.id)}
+                        className="bg-primary hover:bg-primary/90 text-white rounded-xl grow md:grow-0 font-bold shadow-lg shadow-primary/20"
+                      >
+                        Send for Assessment <ArrowRight className="ml-2 h-4 w-4" />
+                      </Button>
                     </div>
                   ))}
-                  {appointments.filter(a => a.status === 'pending').length === 0 && (
+                  {admittedPatients.length === 0 && (
                     <div className="flex flex-col items-center justify-center py-32 text-center space-y-4">
                       <div className="w-20 h-20 rounded-full bg-slate-50 flex items-center justify-center border border-dashed">
                         <UserPlus className="h-10 w-10 text-slate-200" />
                       </div>
-                      <p className="text-slate-400 font-medium italic">No new online requests.</p>
+                      <p className="text-slate-400 font-medium italic">Intake queue is clear. No patients at desk.</p>
                     </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Online Bookings Section */}
+            <Card className="border-none shadow-sm rounded-[2rem] bg-white overflow-hidden">
+              <CardHeader className="p-8 border-b">
+                <CardTitle className="text-xl font-headline flex items-center gap-3 text-primary">
+                  <Clock className="h-6 w-6" /> Online Booking Requests
+                </CardTitle>
+                <CardDescription>Requests from website contact form</CardDescription>
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="divide-y divide-slate-50">
+                  {appointments.filter(a => a.status === 'pending').map((apt) => (
+                    <div key={apt.id} className="p-6 flex justify-between items-center hover:bg-muted/5 transition-colors">
+                      <div className="space-y-1">
+                        <p className="font-bold text-slate-900">{apt.name}</p>
+                        <p className="text-xs text-foreground/50">{apt.phone} • {apt.service}</p>
+                      </div>
+                      <Button asChild variant="outline" size="sm" className="rounded-xl border-primary/10 text-primary">
+                        <Link href={`/admin/patients/new?name=${encodeURIComponent(apt.name)}&phone=${apt.phone}&email=${apt.email}`}>Admit Patient</Link>
+                      </Button>
+                    </div>
+                  ))}
+                  {appointments.filter(a => a.status === 'pending').length === 0 && (
+                    <div className="p-12 text-center text-xs text-foreground/30 italic">No new online requests.</div>
                   )}
                 </div>
               </CardContent>
