@@ -14,7 +14,7 @@ import {
   doc, 
   updateDoc,
   where,
-  Timestamp 
+  onSnapshot
 } from 'firebase/firestore';
 import { firebaseConfig } from '@/firebase/config';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -28,16 +28,13 @@ import {
   LogOut,
   Stethoscope,
   Clock,
-  ArrowRight,
   UserPlus,
-  CheckCircle2,
   XCircle,
   CreditCard,
   UserRound,
   LayoutDashboard,
-  Search,
-  ChevronRight,
-  ClipboardList
+  ClipboardList,
+  Timer
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -51,36 +48,53 @@ export default function AdminDashboard() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [appointments, setAppointments] = useState<any[]>([]);
+  const [patientStats, setPatientStats] = useState({
+    total: 0,
+    enrolled: 0,
+    waiting: 0,
+    billing: 0
+  });
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [patientCount, setPatientCount] = useState(0);
   const router = useRouter();
 
   const logoUrl = "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Logos%2FDhanwanthiri%20Logo.webp?alt=media&token=31a8ab0e-c431-4ea5-a513-324d630ebce4";
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (user) => {
+    const unsubAuth = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user);
-        fetchData();
+        startRealtimeListeners();
       } else {
         router.push('/admin/login');
       }
       setLoading(false);
     });
-    return () => unsub();
+    return () => unsubAuth();
   }, [router]);
 
-  const fetchData = async () => {
-    try {
-      const qApt = query(collection(db, 'appointments'), orderBy('createdAt', 'desc'));
-      const snapApt = await getDocs(qApt);
-      setAppointments(snapApt.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+  const startRealtimeListeners = () => {
+    // Listen for appointments
+    const qApt = query(collection(db, 'appointments'), orderBy('createdAt', 'desc'));
+    const unsubApt = onSnapshot(qApt, (snap) => {
+      setAppointments(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    });
 
-      const snapPatients = await getDocs(collection(db, 'patients'));
-      setPatientCount(snapPatients.size);
-    } catch (error) {
-      console.error("Error fetching dashboard data:", error);
-    }
+    // Listen for patient stats
+    const qPatients = collection(db, 'patients');
+    const unsubPatients = onSnapshot(qPatients, (snap) => {
+      const docs = snap.docs.map(d => d.data());
+      setPatientStats({
+        total: snap.size,
+        enrolled: docs.filter(d => d.status === 'enrolled').length,
+        waiting: docs.filter(d => d.status === 'waiting').length,
+        billing: docs.filter(d => d.status === 'billing').length,
+      });
+    });
+
+    return () => {
+      unsubApt();
+      unsubPatients();
+    };
   };
 
   const handleLogout = () => {
@@ -113,9 +127,9 @@ export default function AdminDashboard() {
               <Image src={logoUrl} alt="Logo" fill className="object-contain" />
             </Link>
             <div className="h-6 w-px bg-muted hidden md:block" />
-            <span className="text-sm font-bold text-primary tracking-tight hidden md:block">Clinical Dashboard</span>
+            <span className="text-sm font-bold text-primary tracking-tight hidden md:block">Reception Desk</span>
           </div>
-          <nav className="hidden md:flex gap-1 bg-muted/50 p-1 rounded-xl border">
+          <nav className="hidden lg:flex gap-1 bg-muted/50 p-1 rounded-xl border">
             <Link href="/admin/dashboard" className="px-4 py-2 text-sm font-bold bg-white text-primary rounded-lg shadow-sm">Reception</Link>
             <Link href="/admin/junior-doctor" className="px-4 py-2 text-sm font-bold text-foreground/60 hover:text-primary transition-colors">Junior Doctor</Link>
             <Link href="/admin/doctor" className="px-4 py-2 text-sm font-bold text-foreground/60 hover:text-primary transition-colors">Senior Doctor</Link>
@@ -136,10 +150,10 @@ export default function AdminDashboard() {
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
-            { label: 'Patient Directory', val: patientCount, icon: Users, color: 'bg-indigo-50 text-indigo-600', border: 'border-indigo-100' },
-            { label: 'Assessing Now', val: appointments.filter(a => a.status === 'enrolled').length, icon: ClipboardList, color: 'bg-amber-50 text-orange-600', border: 'border-amber-100' },
-            { label: 'Senior Review', val: appointments.filter(a => a.status === 'waiting').length, icon: Stethoscope, color: 'bg-emerald-50 text-emerald-600', border: 'border-emerald-100' },
-            { label: 'Billing Desk', val: appointments.filter(a => a.status === 'billing').length, icon: CreditCard, color: 'bg-rose-50 text-rose-600', border: 'border-rose-100' },
+            { label: 'Patient Directory', val: patientStats.total, icon: Users, color: 'bg-indigo-50 text-indigo-600', border: 'border-indigo-100' },
+            { label: 'Enrolled Today', val: patientStats.enrolled, icon: ClipboardList, color: 'bg-amber-50 text-orange-600', border: 'border-amber-100' },
+            { label: 'Waiting Room', val: patientStats.waiting, icon: Timer, color: 'bg-emerald-50 text-emerald-600', border: 'border-emerald-100' },
+            { label: 'Billing Desk', val: patientStats.billing, icon: CreditCard, color: 'bg-rose-50 text-rose-600', border: 'border-rose-100' },
           ].map((stat, i) => (
             <Card key={i} className={cn("border bg-white rounded-3xl shadow-sm transition-all hover:shadow-md", stat.border)}>
               <CardContent className="p-6 flex items-center gap-5">
@@ -156,7 +170,6 @@ export default function AdminDashboard() {
         </div>
 
         <div className="grid lg:grid-cols-12 gap-8">
-          {/* Scheduler Sidebar */}
           <div className="lg:col-span-4 space-y-8">
             <DeliveryScheduler 
               initialDate={selectedDate}
@@ -172,7 +185,7 @@ export default function AdminDashboard() {
                 <div className="flex justify-between items-center">
                   <CardTitle className="text-sm flex items-center gap-2 font-bold text-primary uppercase tracking-widest">
                     <Clock className="h-4 w-4 text-accent" />
-                    Activity: {selectedDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                    Bookings: {selectedDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                   </CardTitle>
                   <Badge variant="outline" className="text-[10px] bg-white">{activeDayAppointments.length} Bookings</Badge>
                 </div>
@@ -200,27 +213,26 @@ export default function AdminDashboard() {
                 ) : (
                   <div className="p-16 text-center text-xs text-foreground/30 italic">
                     <CalendarIcon className="h-8 w-8 mx-auto mb-2 opacity-20" />
-                    No clinical activity for this day.
+                    No bookings for this date.
                   </div>
                 )}
               </CardContent>
             </Card>
           </div>
 
-          {/* Workflow Registry Hub */}
           <div className="lg:col-span-8 space-y-8">
             <Card className="border-none shadow-2xl rounded-[2rem] bg-white overflow-hidden min-h-[600px]">
               <CardHeader className="bg-slate-900 text-white p-8">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                   <div className="space-y-1">
                     <CardTitle className="text-3xl font-headline flex items-center gap-3 tracking-tight">
-                      <LayoutDashboard className="h-8 w-8 text-primary" /> Active Reception Queue
+                      <LayoutDashboard className="h-8 w-8 text-primary" /> Online Bookings
                     </CardTitle>
-                    <CardDescription className="text-white/50 font-medium">Manage initial enrollment and patient check-in</CardDescription>
+                    <CardDescription className="text-white/50 font-medium">Verify online requests and enroll into clinic queue</CardDescription>
                   </div>
                   <div className="flex gap-2">
                     <Button asChild variant="secondary" className="bg-white/5 hover:bg-white/10 border-white/10 text-white rounded-xl">
-                      <Link href="/admin/patients">Search Registry</Link>
+                      <Link href="/admin/patients">Patient Directory</Link>
                     </Button>
                   </div>
                 </div>
@@ -249,7 +261,7 @@ export default function AdminDashboard() {
 
                       <div className="flex flex-wrap gap-2 w-full md:w-auto">
                         <Button asChild className="bg-primary hover:bg-primary/90 text-white rounded-xl grow md:grow-0 font-bold shadow-lg shadow-primary/20">
-                          <Link href={`/admin/patients/new?name=${encodeURIComponent(apt.name)}&phone=${apt.phone}`}>
+                          <Link href={`/admin/patients/new?name=${encodeURIComponent(apt.name)}&phone=${apt.phone}&email=${apt.email}`}>
                             <UserPlus className="mr-2 h-4 w-4" /> Enroll Patient
                           </Link>
                         </Button>
@@ -264,7 +276,7 @@ export default function AdminDashboard() {
                       <div className="w-20 h-20 rounded-full bg-slate-50 flex items-center justify-center border border-dashed">
                         <UserPlus className="h-10 w-10 text-slate-200" />
                       </div>
-                      <p className="text-slate-400 font-medium italic">No new online enrollment requests.</p>
+                      <p className="text-slate-400 font-medium italic">No new online requests.</p>
                     </div>
                   )}
                 </div>

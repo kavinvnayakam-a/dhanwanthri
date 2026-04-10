@@ -14,13 +14,14 @@ import {
   doc, 
   updateDoc,
   where,
-  addDoc
+  onSnapshot
 } from 'firebase/firestore';
 import { firebaseConfig } from '@/firebase/config';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
 import { 
   Stethoscope, 
   Clock, 
@@ -29,11 +30,11 @@ import {
   ClipboardCheck,
   Activity,
   History,
-  User,
   HeartPulse,
   LogOut,
   FileSearch,
-  Zap
+  Zap,
+  UserRound
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -56,36 +57,37 @@ export default function SeniorDoctorDashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (user) => {
+    const unsubAuth = onAuthStateChanged(auth, (user) => {
       if (user) {
-        fetchQueue();
+        startQueueListener();
       } else {
         router.push('/admin/login');
       }
       setLoading(false);
     });
-    return () => unsub();
+    return () => unsubAuth();
   }, [router]);
 
-  const fetchQueue = async () => {
-    // Only see patients who have been assessed by junior doctors
+  const startQueueListener = () => {
+    // Only see patients who have been "Sent" by the junior doctor (status: review)
     const q = query(
       collection(db, 'patients'), 
-      where('status', '==', 'waiting'),
-      orderBy('lastVisit', 'asc')
+      where('status', '==', 'review'),
+      orderBy('sentToSeniorAt', 'asc')
     );
-    const snap = await getDocs(q);
-    const docs = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    setQueue(docs);
+    
+    return onSnapshot(q, (snap) => {
+      setQueue(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    });
   };
 
   const loadPatientAssessment = async (p: any) => {
     setCurrentPatient(p);
     try {
+      // Find the most recent assessment
       const q = query(
         collection(db, 'patients', p.id, 'assessments'),
-        orderBy('date', 'desc'),
-        where('status', '==', 'waiting')
+        orderBy('date', 'desc')
       );
       const snap = await getDocs(q);
       if (!snap.empty) {
@@ -114,7 +116,6 @@ export default function SeniorDoctorDashboard() {
       setCurrentPatient(null);
       setAssessment(null);
       setConsultationData({ prescription: '', workoutPlan: '', nextVisitDate: '', seniorNotes: '', suggestedServices: '' });
-      fetchQueue();
     } catch (err) {
       console.error(err);
     }
@@ -131,7 +132,7 @@ export default function SeniorDoctorDashboard() {
           </div>
           <div>
             <h1 className="text-xl font-headline font-bold text-primary">Senior Physician Dashboard</h1>
-            <p className="text-[10px] font-bold text-foreground/40 uppercase tracking-widest">Review & Final Consultation</p>
+            <p className="text-[10px] font-bold text-foreground/40 uppercase tracking-widest">Clinical Review & Consultation</p>
           </div>
         </div>
         <div className="flex gap-4">
@@ -146,10 +147,13 @@ export default function SeniorDoctorDashboard() {
         <div className="lg:col-span-4 space-y-6">
           <Card className="border-none shadow-sm rounded-3xl bg-white overflow-hidden">
             <CardHeader className="bg-slate-900 text-white p-6">
-              <CardTitle className="text-lg flex items-center gap-2 font-headline">
-                <Clock className="h-5 w-5 text-accent" /> Review Registry
-              </CardTitle>
-              <CardDescription className="text-white/60">Assessed Out-patients pending review</CardDescription>
+              <div className="flex justify-between items-center">
+                <CardTitle className="text-lg flex items-center gap-2 font-headline">
+                  <UserRound className="h-5 w-5 text-accent" /> Ready for Review
+                </CardTitle>
+                <Badge className="bg-primary text-white border-none">{queue.length} Ready</Badge>
+              </div>
+              <CardDescription className="text-white/60">Patients cleared by Junior Doctor waiting for consultation</CardDescription>
             </CardHeader>
             <CardContent className="p-0">
               <div className="divide-y divide-slate-50">
@@ -167,14 +171,14 @@ export default function SeniorDoctorDashboard() {
                         variant="ghost"
                         className="rounded-xl text-accent opacity-0 group-hover:opacity-100 transition-opacity"
                       >
-                        Review <ChevronRight className="ml-1 h-3 w-3" />
+                        Start <ChevronRight className="ml-1 h-3 w-3" />
                       </Button>
                     </div>
                   </div>
                 ))}
                 {queue.length === 0 && (
                   <div className="p-16 text-center text-foreground/30 italic text-sm">
-                    No patients waiting for review.
+                    No patients currently waiting for review.
                   </div>
                 )}
               </div>
@@ -189,7 +193,7 @@ export default function SeniorDoctorDashboard() {
               <CardHeader className="bg-primary text-white p-10">
                 <div className="flex justify-between items-start">
                   <div className="space-y-3">
-                    <Badge className="bg-white text-primary px-4 py-1 font-bold">In-Review</Badge>
+                    <Badge className="bg-white text-primary px-4 py-1 font-bold">Consultation Active</Badge>
                     <CardTitle className="text-4xl font-headline tracking-tight">{currentPatient.name}</CardTitle>
                     <div className="flex gap-4 text-xs font-bold uppercase tracking-widest opacity-70">
                       <span>ID: {currentPatient.regNo}</span>
@@ -210,7 +214,7 @@ export default function SeniorDoctorDashboard() {
                     <div className="grid md:grid-cols-2 gap-8">
                       <div>
                         <p className="text-[10px] font-bold text-foreground/40 uppercase mb-1">Provisional Diagnosis</p>
-                        <p className="text-lg font-bold text-slate-900 leading-tight">{assessment.assessment.diagnosis || 'N/A'}</p>
+                        <p className="text-lg font-bold text-slate-900 leading-tight">{assessment.assessment?.diagnosis || 'N/A'}</p>
                       </div>
                       <div>
                         <p className="text-[10px] font-bold text-foreground/40 uppercase mb-1">Chief Complaints</p>
@@ -231,7 +235,7 @@ export default function SeniorDoctorDashboard() {
                       <Zap className="h-4 w-4 text-accent" /> Final Prescription
                     </div>
                     <Textarea 
-                      placeholder="Final medicines and dosages..." 
+                      placeholder="Medicines and dosages..." 
                       className="min-h-[180px] rounded-3xl border-primary/10 bg-white p-6 shadow-inner"
                       value={consultationData.prescription}
                       onChange={(e) => setConsultationData({...consultationData, prescription: e.target.value})}
@@ -239,13 +243,13 @@ export default function SeniorDoctorDashboard() {
                   </div>
                   <div className="space-y-4">
                     <div className="flex items-center gap-2 text-slate-900 font-bold uppercase text-[10px] tracking-widest">
-                      <Activity className="h-4 w-4 text-accent" /> Suggested Clinical Services
+                      <Activity className="h-4 w-4 text-accent" /> Final Recovery & Workout Plan
                     </div>
                     <Textarea 
-                      placeholder="Update or confirm services for billing..." 
+                      placeholder="Specify therapeutic exercises and home care..." 
                       className="min-h-[180px] rounded-3xl border-primary/10 bg-accent/5 p-6 shadow-inner font-bold"
-                      value={consultationData.suggestedServices}
-                      onChange={(e) => setConsultationData({...consultationData, suggestedServices: e.target.value})}
+                      value={consultationData.workoutPlan}
+                      onChange={(e) => setConsultationData({...consultationData, workoutPlan: e.target.value})}
                     />
                   </div>
                 </div>
@@ -253,7 +257,7 @@ export default function SeniorDoctorDashboard() {
                 <div className="grid md:grid-cols-2 gap-10 pt-6 border-t">
                   <div className="space-y-4">
                     <div className="flex items-center gap-2 text-slate-900 font-bold uppercase text-[10px] tracking-widest">
-                      <History className="h-4 w-4 text-accent" /> Follow-up Cycle
+                      <History className="h-4 w-4 text-accent" /> Follow-up Date
                     </div>
                     <Input 
                       type="date" 
@@ -264,13 +268,13 @@ export default function SeniorDoctorDashboard() {
                   </div>
                   <div className="space-y-4">
                     <div className="flex items-center gap-2 text-slate-900 font-bold uppercase text-[10px] tracking-widest">
-                      <Stethoscope className="h-4 w-4 text-accent" /> Clinical Observations
+                      <Activity className="h-4 w-4 text-accent" /> Suggested Billing Services
                     </div>
                     <Textarea 
-                      placeholder="Private notes for records..." 
+                      placeholder="Services for billing desk (e.g. 5 days Panchakarma)..." 
                       className="min-h-[100px] rounded-2xl border-primary/10 p-4"
-                      value={consultationData.seniorNotes}
-                      onChange={(e) => setConsultationData({...consultationData, seniorNotes: e.target.value})}
+                      value={consultationData.suggestedServices}
+                      onChange={(e) => setConsultationData({...consultationData, suggestedServices: e.target.value})}
                     />
                   </div>
                 </div>
@@ -279,7 +283,7 @@ export default function SeniorDoctorDashboard() {
                   onClick={closeConsultation}
                   className="w-full h-20 rounded-3xl bg-slate-900 text-xl font-bold hover:bg-slate-800 shadow-2xl transition-all active:scale-95"
                 >
-                  <CheckCircle2 className="mr-3 h-8 w-8 text-accent" /> Complete & Move to Billing
+                  <CheckCircle2 className="mr-3 h-8 w-8 text-accent" /> Complete Consultation & Send to Billing
                 </Button>
               </CardContent>
             </Card>
@@ -288,7 +292,7 @@ export default function SeniorDoctorDashboard() {
               <div className="w-24 h-24 rounded-full bg-muted flex items-center justify-center">
                 <FileSearch className="h-12 w-12 opacity-20" />
               </div>
-              <p className="text-xl font-headline font-medium italic">Select a patient profile to begin clinical review</p>
+              <p className="text-xl font-headline font-medium italic">Select a patient profile to begin consultation</p>
             </div>
           )}
         </div>
