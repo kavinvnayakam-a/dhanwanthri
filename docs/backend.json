@@ -1,3 +1,4 @@
+
 {
   "entities": {
     "Patient": {
@@ -17,7 +18,10 @@
         "createdAt": { "type": "string", "format": "date-time" },
         "lastVisit": { "type": "string", "format": "date" },
         "type": { "type": "string", "enum": ["In-patient", "Out-patient"] },
-        "status": { "type": "string", "enum": ["admitted", "registry", "waiting", "review", "billing", "completed"] }
+        "status": { "type": "string", "enum": ["admitted", "registry", "waiting", "review", "billing", "completed"] },
+        "treatmentAmount": { "type": "number" },
+        "paymentStatus": { "type": "string", "enum": ["unpaid", "paid"] },
+        "settledAt": { "type": "string", "format": "date-time" }
       },
       "required": ["name", "phone"]
     },
