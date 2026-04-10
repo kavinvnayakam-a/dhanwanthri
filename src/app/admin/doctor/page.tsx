@@ -20,37 +20,38 @@ import { firebaseConfig } from '@/firebase/config';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { 
   Stethoscope, 
   Clock, 
   CheckCircle2, 
-  ArrowRight,
-  ClipboardList,
+  ChevronRight,
+  ClipboardCheck,
   Activity,
   History,
   User,
   HeartPulse,
   LogOut,
-  ChevronRight
+  FileSearch,
+  Zap
 } from 'lucide-react';
 import Link from 'next/link';
-import { cn } from '@/lib/utils';
 
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-export default function DoctorDashboard() {
+export default function SeniorDoctorDashboard() {
   const [queue, setQueue] = useState<any[]>([]);
   const [currentPatient, setCurrentPatient] = useState<any>(null);
+  const [assessment, setAssessment] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [consultationData, setConsultationData] = useState({
     prescription: '',
     workoutPlan: '',
     nextVisitDate: '',
-    notes: ''
+    seniorNotes: '',
+    suggestedServices: ''
   });
   const router = useRouter();
 
@@ -67,25 +68,34 @@ export default function DoctorDashboard() {
   }, [router]);
 
   const fetchQueue = async () => {
+    // Only see patients who have been assessed by junior doctors
     const q = query(
-      collection(db, 'appointments'), 
-      where('status', 'in', ['waiting', 'consultation']),
-      orderBy('createdAt', 'asc')
+      collection(db, 'patients'), 
+      where('status', '==', 'waiting'),
+      orderBy('lastVisit', 'asc')
     );
     const snap = await getDocs(q);
     const docs = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     setQueue(docs);
-    
-    // Auto-set the patient who is already in consultation
-    const active = docs.find(a => a.status === 'consultation');
-    if (active) setCurrentPatient(active);
   };
 
-  const startConsultation = async (apt: any) => {
+  const loadPatientAssessment = async (p: any) => {
+    setCurrentPatient(p);
     try {
-      await updateDoc(doc(db, 'appointments', apt.id), { status: 'consultation' });
-      setCurrentPatient({ ...apt, status: 'consultation' });
-      setQueue(prev => prev.map(a => a.id === apt.id ? { ...a, status: 'consultation' } : a));
+      const q = query(
+        collection(db, 'patients', p.id, 'assessments'),
+        orderBy('date', 'desc'),
+        where('status', '==', 'waiting')
+      );
+      const snap = await getDocs(q);
+      if (!snap.empty) {
+        const data = snap.docs[0].data();
+        setAssessment(data);
+        setConsultationData({
+          ...consultationData,
+          suggestedServices: data.suggestedServices || ''
+        });
+      }
     } catch (err) {
       console.error(err);
     }
@@ -94,74 +104,77 @@ export default function DoctorDashboard() {
   const closeConsultation = async () => {
     if (!currentPatient) return;
     try {
-      await updateDoc(doc(db, 'appointments', currentPatient.id), { 
+      // Move to billing
+      await updateDoc(doc(db, 'patients', currentPatient.id), { 
         status: 'billing',
+        consultationComplete: true,
         ...consultationData 
       });
       
-      // Optionally create a health assessment record here if desired
-      
       setCurrentPatient(null);
-      setConsultationData({ prescription: '', workoutPlan: '', nextVisitDate: '', notes: '' });
+      setAssessment(null);
+      setConsultationData({ prescription: '', workoutPlan: '', nextVisitDate: '', seniorNotes: '', suggestedServices: '' });
       fetchQueue();
     } catch (err) {
       console.error(err);
     }
   };
 
-  if (loading) return <div className="h-screen flex items-center justify-center">Loading Clinical Workspace...</div>;
+  if (loading) return <div className="h-screen flex items-center justify-center font-bold text-primary">Senior Clinical Portal Initializing...</div>;
 
   return (
     <div className="min-h-screen bg-muted/30">
-      <header className="bg-white border-b px-8 py-4 flex justify-between items-center shadow-sm">
+      <header className="bg-white border-b px-8 py-4 flex justify-between items-center shadow-sm sticky top-0 z-50">
         <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white">
-            <Stethoscope className="h-6 w-6" />
+          <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center text-white">
+            <HeartPulse className="h-6 w-6 text-accent" />
           </div>
-          <h1 className="text-xl font-headline font-bold text-primary">Doctor's Consultation Portal</h1>
+          <div>
+            <h1 className="text-xl font-headline font-bold text-primary">Senior Physician Dashboard</h1>
+            <p className="text-[10px] font-bold text-foreground/40 uppercase tracking-widest">Review & Final Consultation</p>
+          </div>
         </div>
         <div className="flex gap-4">
-          <Button asChild variant="ghost" size="sm" className="text-foreground/60"><Link href="/admin/dashboard">Reception View</Link></Button>
+          <Button asChild variant="ghost" size="sm" className="text-foreground/60"><Link href="/admin/junior-doctor">Junior Portal</Link></Button>
           <Button variant="ghost" size="icon" onClick={() => auth.signOut()} className="text-destructive"><LogOut className="h-5 w-5" /></Button>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 py-8 grid lg:grid-cols-12 gap-8">
+      <main className="max-w-7xl mx-auto px-4 py-12 grid lg:grid-cols-12 gap-8">
         
-        {/* Patient Queue */}
+        {/* Patient Review Queue */}
         <div className="lg:col-span-4 space-y-6">
           <Card className="border-none shadow-sm rounded-3xl bg-white overflow-hidden">
             <CardHeader className="bg-slate-900 text-white p-6">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Clock className="h-5 w-5 text-accent" /> Waiting Room Queue
+              <CardTitle className="text-lg flex items-center gap-2 font-headline">
+                <Clock className="h-5 w-5 text-accent" /> Review Registry
               </CardTitle>
-              <CardDescription className="text-white/60">Patients ready for consultation</CardDescription>
+              <CardDescription className="text-white/60">Assessed Out-patients pending review</CardDescription>
             </CardHeader>
             <CardContent className="p-0">
-              <div className="divide-y">
-                {queue.filter(a => a.status === 'waiting').map((apt, idx) => (
-                  <div key={apt.id} className="p-6 hover:bg-muted/30 transition-colors group">
+              <div className="divide-y divide-slate-50">
+                {queue.map((p, idx) => (
+                  <div key={p.id} className="p-6 hover:bg-muted/30 transition-colors group cursor-pointer" onClick={() => loadPatientAssessment(p)}>
                     <div className="flex justify-between items-center">
                       <div className="space-y-1">
                         <p className="font-bold text-primary flex items-center gap-2">
-                          <span className="text-xs text-foreground/20">#{idx + 1}</span> {apt.name}
+                          <span className="text-xs text-foreground/20">#{idx + 1}</span> {p.name}
                         </p>
-                        <p className="text-xs font-medium text-foreground/40">{apt.service}</p>
+                        <p className="text-[10px] font-bold text-foreground/40 uppercase tracking-wider">{p.phone}</p>
                       </div>
                       <Button 
                         size="sm" 
-                        onClick={() => startConsultation(apt)}
-                        disabled={!!currentPatient}
-                        className="rounded-xl bg-accent text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                        variant="ghost"
+                        className="rounded-xl text-accent opacity-0 group-hover:opacity-100 transition-opacity"
                       >
-                        Call Patient <ChevronRight className="ml-1 h-3 w-3" />
+                        Review <ChevronRight className="ml-1 h-3 w-3" />
                       </Button>
                     </div>
                   </div>
                 ))}
-                {queue.filter(a => a.status === 'waiting').length === 0 && (
-                  <div className="p-12 text-center text-foreground/40 italic text-sm">
-                    Waiting room is empty.
+                {queue.length === 0 && (
+                  <div className="p-16 text-center text-foreground/30 italic text-sm">
+                    No patients waiting for review.
                   </div>
                 )}
               </div>
@@ -169,101 +182,113 @@ export default function DoctorDashboard() {
           </Card>
         </div>
 
-        {/* Active Consultation Workspace */}
+        {/* Clinical Review Workspace */}
         <div className="lg:col-span-8">
           {currentPatient ? (
-            <Card className="border-none shadow-2xl rounded-3xl bg-white overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <CardHeader className="bg-primary text-white p-8">
+            <Card className="border-none shadow-2xl rounded-[2.5rem] bg-white overflow-hidden animate-in fade-in zoom-in-95 duration-500">
+              <CardHeader className="bg-primary text-white p-10">
                 <div className="flex justify-between items-start">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center">
-                        <User className="h-6 w-6" />
-                      </div>
-                      <div>
-                        <Badge className="bg-white text-primary mb-1">Ongoing Consultation</Badge>
-                        <CardTitle className="text-2xl font-headline">{currentPatient.name}</CardTitle>
-                      </div>
+                  <div className="space-y-3">
+                    <Badge className="bg-white text-primary px-4 py-1 font-bold">In-Review</Badge>
+                    <CardTitle className="text-4xl font-headline tracking-tight">{currentPatient.name}</CardTitle>
+                    <div className="flex gap-4 text-xs font-bold uppercase tracking-widest opacity-70">
+                      <span>ID: {currentPatient.regNo}</span>
+                      <span>{currentPatient.phone}</span>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-xs font-bold uppercase opacity-60">Mobile</p>
-                    <p className="text-lg font-bold">{currentPatient.phone}</p>
-                  </div>
+                  <Button variant="ghost" onClick={() => setCurrentPatient(null)} className="text-white/60 hover:text-white hover:bg-white/10"><FileSearch className="h-6 w-6" /></Button>
                 </div>
               </CardHeader>
-              <CardContent className="p-8 space-y-8">
-                <div className="grid md:grid-cols-2 gap-8">
+              
+              <CardContent className="p-10 space-y-12">
+                {/* Junior Doctor's Assessment Summary */}
+                {assessment && (
+                  <div className="bg-muted/30 p-8 rounded-[2rem] border border-primary/5 space-y-6">
+                    <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest">
+                      <ClipboardCheck className="h-4 w-4" /> Junior Assessment Summary
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-8">
+                      <div>
+                        <p className="text-[10px] font-bold text-foreground/40 uppercase mb-1">Provisional Diagnosis</p>
+                        <p className="text-lg font-bold text-slate-900 leading-tight">{assessment.assessment.diagnosis || 'N/A'}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold text-foreground/40 uppercase mb-1">Chief Complaints</p>
+                        <p className="text-sm text-foreground/70">{assessment.chiefComplaints}</p>
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-bold text-foreground/40 uppercase mb-1">Junior suggested Services</p>
+                      <p className="text-sm text-accent font-bold italic">{assessment.suggestedServices || 'No services pre-suggested'}</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Senior Doctor Intervention */}
+                <div className="grid md:grid-cols-2 gap-10">
                   <div className="space-y-4">
-                    <div className="flex items-center gap-2 text-primary font-bold">
-                      <ClipboardList className="h-5 w-5" />
-                      <h3>Clinical Prescription</h3>
+                    <div className="flex items-center gap-2 text-slate-900 font-bold uppercase text-[10px] tracking-widest">
+                      <Zap className="h-4 w-4 text-accent" /> Final Prescription
                     </div>
                     <Textarea 
-                      placeholder="List medicines, dosages, and duration..." 
-                      className="min-h-[150px] rounded-2xl border-primary/10 bg-muted/30 p-4"
+                      placeholder="Final medicines and dosages..." 
+                      className="min-h-[180px] rounded-3xl border-primary/10 bg-white p-6 shadow-inner"
                       value={consultationData.prescription}
                       onChange={(e) => setConsultationData({...consultationData, prescription: e.target.value})}
                     />
                   </div>
                   <div className="space-y-4">
-                    <div className="flex items-center gap-2 text-primary font-bold">
-                      <Activity className="h-5 w-5" />
-                      <h3>Recovery & Workout Plan</h3>
+                    <div className="flex items-center gap-2 text-slate-900 font-bold uppercase text-[10px] tracking-widest">
+                      <Activity className="h-4 w-4 text-accent" /> Suggested Clinical Services
                     </div>
                     <Textarea 
-                      placeholder="Stretches, exercises, or activity restrictions..." 
-                      className="min-h-[150px] rounded-2xl border-primary/10 bg-muted/30 p-4"
-                      value={consultationData.workoutPlan}
-                      onChange={(e) => setConsultationData({...consultationData, workoutPlan: e.target.value})}
+                      placeholder="Update or confirm services for billing..." 
+                      className="min-h-[180px] rounded-3xl border-primary/10 bg-accent/5 p-6 shadow-inner font-bold"
+                      value={consultationData.suggestedServices}
+                      onChange={(e) => setConsultationData({...consultationData, suggestedServices: e.target.value})}
                     />
                   </div>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-8 pt-4 border-t">
+                <div className="grid md:grid-cols-2 gap-10 pt-6 border-t">
                   <div className="space-y-4">
-                    <div className="flex items-center gap-2 text-primary font-bold">
-                      <History className="h-5 w-5" />
-                      <h3>Follow-up Schedule</h3>
+                    <div className="flex items-center gap-2 text-slate-900 font-bold uppercase text-[10px] tracking-widest">
+                      <History className="h-4 w-4 text-accent" /> Follow-up Cycle
                     </div>
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-foreground/40 uppercase">Recommended Next Visit Date</label>
-                      <Input 
-                        type="date" 
-                        className="rounded-xl border-primary/10 h-12" 
-                        value={consultationData.nextVisitDate}
-                        onChange={(e) => setConsultationData({...consultationData, nextVisitDate: e.target.value})}
-                      />
-                    </div>
+                    <Input 
+                      type="date" 
+                      className="h-14 rounded-2xl border-primary/10 px-6 font-bold" 
+                      value={consultationData.nextVisitDate}
+                      onChange={(e) => setConsultationData({...consultationData, nextVisitDate: e.target.value})}
+                    />
                   </div>
                   <div className="space-y-4">
-                    <div className="flex items-center gap-2 text-primary font-bold">
-                      <HeartPulse className="h-5 w-5" />
-                      <h3>Final Consultation Notes</h3>
+                    <div className="flex items-center gap-2 text-slate-900 font-bold uppercase text-[10px] tracking-widest">
+                      <Stethoscope className="h-4 w-4 text-accent" /> Clinical Observations
                     </div>
                     <Textarea 
-                      placeholder="Doctor's internal observations..." 
-                      className="min-h-[100px] rounded-2xl border-primary/10"
-                      value={consultationData.notes}
-                      onChange={(e) => setConsultationData({...consultationData, notes: e.target.value})}
+                      placeholder="Private notes for records..." 
+                      className="min-h-[100px] rounded-2xl border-primary/10 p-4"
+                      value={consultationData.seniorNotes}
+                      onChange={(e) => setConsultationData({...consultationData, seniorNotes: e.target.value})}
                     />
                   </div>
                 </div>
 
-                <div className="pt-8">
-                  <Button 
-                    onClick={closeConsultation}
-                    className="w-full h-16 rounded-2xl bg-slate-900 text-lg font-bold hover:bg-slate-800 shadow-xl"
-                  >
-                    <CheckCircle2 className="mr-2 h-6 w-6 text-accent" /> Finalize & Send to Billing
-                  </Button>
-                </div>
+                <Button 
+                  onClick={closeConsultation}
+                  className="w-full h-20 rounded-3xl bg-slate-900 text-xl font-bold hover:bg-slate-800 shadow-2xl transition-all active:scale-95"
+                >
+                  <CheckCircle2 className="mr-3 h-8 w-8 text-accent" /> Complete & Move to Billing
+                </Button>
               </CardContent>
             </Card>
           ) : (
-            <div className="h-[600px] flex flex-col items-center justify-center bg-white rounded-3xl border-2 border-dashed gap-4 text-foreground/30">
-              <HeartPulse className="h-20 w-20" />
-              <p className="text-lg font-medium italic">Select a patient from the queue to start consultation</p>
+            <div className="h-[700px] flex flex-col items-center justify-center bg-white rounded-[3rem] border-2 border-dashed border-primary/10 gap-6 text-foreground/30 shadow-sm">
+              <div className="w-24 h-24 rounded-full bg-muted flex items-center justify-center">
+                <FileSearch className="h-12 w-12 opacity-20" />
+              </div>
+              <p className="text-xl font-headline font-medium italic">Select a patient profile to begin clinical review</p>
             </div>
           )}
         </div>
