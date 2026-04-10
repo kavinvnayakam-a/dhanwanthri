@@ -20,6 +20,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { DeliveryScheduler } from '@/components/ui/delivery-scheduler';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
 import { 
   Users, 
   Calendar as CalendarIcon, 
@@ -35,13 +36,23 @@ import {
   ClipboardList,
   Timer,
   ArrowRight,
-  ShieldCheck
+  ShieldCheck,
+  Search,
+  Loader2,
+  Phone
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 const auth = getAuth(app);
@@ -59,6 +70,13 @@ export default function AdminDashboard() {
     billing: 0
   });
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  
+  // Search State
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
   const router = useRouter();
 
   const logoUrl = "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Logos%2FDhanwanthiri%20Logo.webp?alt=media&token=31a8ab0e-c431-4ea5-a513-324d630ebce4";
@@ -161,6 +179,50 @@ export default function AdminDashboard() {
       });
   };
 
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+    
+    setIsSearching(true);
+    try {
+      const q = query(
+        collection(db, 'patients'), 
+        where('phone', '>=', searchQuery),
+        where('phone', '<=', searchQuery + '\uf8ff')
+      );
+      const snap = await getDocs(q);
+      setSearchResults(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const admitExistingPatient = async (patientId: string) => {
+    const docRef = doc(db, 'patients', patientId);
+    const data = {
+      status: 'admitted',
+      lastVisit: new Date().toISOString().split('T')[0]
+    };
+
+    updateDoc(docRef, data)
+      .then(() => {
+        setIsSearchOpen(false);
+        setSearchQuery('');
+        setSearchResults([]);
+      })
+      .catch(async (err) => {
+        if (err.code === 'permission-denied') {
+          errorEmitter.emit('permission-error', new FirestorePermissionError({
+            path: docRef.path,
+            operation: 'update',
+            requestResourceData: data
+          }));
+        }
+      });
+  };
+
   const handleLogout = () => {
     auth.signOut().then(() => router.push('/admin/login'));
   };
@@ -201,6 +263,71 @@ export default function AdminDashboard() {
           </nav>
         </div>
         <div className="flex items-center gap-3">
+          <Dialog open={isSearchOpen} onOpenChange={setIsSearchOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline" size="sm" className="rounded-xl border-primary/20 text-primary font-bold hidden sm:flex">
+                <Search className="mr-2 h-4 w-4" /> Search Directory
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[600px] rounded-[2rem] overflow-hidden p-0">
+              <DialogHeader className="p-8 bg-primary text-white">
+                <DialogTitle className="text-2xl font-headline flex items-center gap-3">
+                  <Users className="h-6 w-6" /> Patient Directory
+                </DialogTitle>
+                <CardDescription className="text-white/70">Find and admit existing patients by mobile number</CardDescription>
+              </DialogHeader>
+              <div className="p-8 space-y-6">
+                <form onSubmit={handleSearch} className="flex gap-3">
+                  <div className="relative flex-grow">
+                    <Search className="absolute left-4 top-3.5 h-5 w-5 text-primary/40" />
+                    <Input 
+                      placeholder="Enter mobile number..." 
+                      className="pl-12 h-12 rounded-2xl border-primary/10"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                  </div>
+                  <Button type="submit" className="bg-primary rounded-2xl h-12 px-8 font-bold" disabled={isSearching}>
+                    {isSearching ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Search'}
+                  </Button>
+                </form>
+
+                <div className="max-h-[350px] overflow-y-auto space-y-3 pr-2">
+                  {searchResults.map((p) => (
+                    <div key={p.id} className="p-5 border rounded-2xl flex justify-between items-center hover:bg-muted/30 transition-colors group">
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                          <UserPlus className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <p className="font-bold text-slate-900">{p.name}</p>
+                          <p className="text-xs text-foreground/40">{p.phone} • {p.regNo}</p>
+                        </div>
+                      </div>
+                      <Button 
+                        size="sm" 
+                        className="rounded-xl bg-accent text-white font-bold"
+                        onClick={() => admitExistingPatient(p.id)}
+                        disabled={p.status === 'admitted' || p.status === 'registry' || p.status === 'waiting' || p.status === 'review'}
+                      >
+                        {['admitted', 'registry', 'waiting', 'review'].includes(p.status) ? 'In Clinic' : 'Admit Now'}
+                      </Button>
+                    </div>
+                  ))}
+                  {searchResults.length === 0 && searchQuery && !isSearching && (
+                    <div className="py-12 text-center text-foreground/30 italic">No patients found with this number.</div>
+                  )}
+                  {!searchQuery && (
+                    <div className="py-12 text-center text-foreground/20 flex flex-col items-center gap-3">
+                      <Phone className="h-8 w-8 opacity-20" />
+                      <p className="text-sm">Search by mobile to pull records.</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+
           <Button asChild size="sm" className="bg-primary rounded-xl hidden sm:flex font-bold">
             <Link href="/admin/patients/new"><PlusCircle className="mr-2 h-4 w-4" /> New Enrollment</Link>
           </Button>
@@ -295,7 +422,16 @@ export default function AdminDashboard() {
                     </CardTitle>
                     <CardDescription className="text-white/50 font-medium">Patients checked-in and ready for assessment assignment</CardDescription>
                   </div>
-                  <Badge className="bg-primary/20 text-primary border-primary/20 px-4 py-1 font-bold">{admittedPatients.length} Waiting at Desk</Badge>
+                  <div className="flex gap-2">
+                    <Dialog open={isSearchOpen} onOpenChange={setIsSearchOpen}>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" size="sm" className="bg-white/10 border-white/20 text-white hover:bg-white/20 font-bold sm:hidden">
+                          <Search className="h-4 w-4" />
+                        </Button>
+                      </DialogTrigger>
+                    </Dialog>
+                    <Badge className="bg-primary/20 text-primary border-primary/20 px-4 py-1 font-bold">{admittedPatients.length} Waiting at Desk</Badge>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="p-0">
@@ -328,7 +464,10 @@ export default function AdminDashboard() {
                       <div className="w-20 h-20 rounded-full bg-slate-50 flex items-center justify-center border border-dashed">
                         <UserPlus className="h-10 w-10 text-slate-200" />
                       </div>
-                      <p className="text-slate-400 font-medium italic">Intake queue is clear. No patients at desk.</p>
+                      <div className="space-y-2">
+                        <p className="text-slate-400 font-medium italic">Intake queue is clear.</p>
+                        <p className="text-xs text-foreground/30">Use the search to admit an existing patient.</p>
+                      </div>
                     </div>
                   )}
                 </div>
