@@ -1,7 +1,6 @@
-
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { initializeApp, getApps } from 'firebase/app';
@@ -41,6 +40,8 @@ import {
 import Link from 'next/link';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError } from '@/firebase/errors';
 
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 const auth = getAuth(app);
@@ -62,60 +63,102 @@ export default function AdminDashboard() {
 
   const logoUrl = "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Logos%2FDhanwanthiri%20Logo.webp?alt=media&token=31a8ab0e-c431-4ea5-a513-324d630ebce4";
 
+  const startRealtimeListeners = useCallback(() => {
+    const unsubs: (() => void)[] = [];
+
+    // Listen for appointments
+    const qApt = query(collection(db, 'appointments'), orderBy('createdAt', 'desc'));
+    const unsubApt = onSnapshot(qApt, 
+      (snap) => setAppointments(snap.docs.map(doc => ({ id: doc.id, ...doc.data() }))),
+      async (err) => {
+        if (err.code === 'permission-denied') {
+          errorEmitter.emit('permission-error', new FirestorePermissionError({
+            path: 'appointments',
+            operation: 'list'
+          }));
+        }
+      }
+    );
+    unsubs.push(unsubApt);
+
+    // Listen for admitted patients
+    const qAdmitted = query(collection(db, 'patients'), where('status', '==', 'admitted'), orderBy('lastVisit', 'asc'));
+    const unsubAdmitted = onSnapshot(qAdmitted, 
+      (snap) => setAdmittedPatients(snap.docs.map(doc => ({ id: doc.id, ...doc.data() }))),
+      async (err) => {
+        if (err.code === 'permission-denied') {
+          errorEmitter.emit('permission-error', new FirestorePermissionError({
+            path: 'patients (admitted)',
+            operation: 'list'
+          }));
+        }
+      }
+    );
+    unsubs.push(unsubAdmitted);
+
+    // Listen for patient stats
+    const qPatients = collection(db, 'patients');
+    const unsubPatients = onSnapshot(qPatients, 
+      (snap) => {
+        const docs = snap.docs.map(d => d.data());
+        setPatientStats({
+          total: snap.size,
+          admitted: docs.filter(d => d.status === 'admitted').length,
+          waiting: docs.filter(d => d.status === 'waiting').length,
+          billing: docs.filter(d => d.status === 'billing').length,
+        });
+      },
+      async (err) => {
+        if (err.code === 'permission-denied') {
+          errorEmitter.emit('permission-error', new FirestorePermissionError({
+            path: 'patients (stats)',
+            operation: 'list'
+          }));
+        }
+      }
+    );
+    unsubs.push(unsubPatients);
+
+    return () => unsubs.forEach(unsub => unsub());
+  }, []);
+
   useEffect(() => {
+    let cleanupListeners: (() => void) | null = null;
+
     const unsubAuth = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user);
-        startRealtimeListeners();
+        cleanupListeners = startRealtimeListeners();
       } else {
+        if (cleanupListeners) cleanupListeners();
         router.push('/admin/login');
       }
       setLoading(false);
     });
-    return () => unsubAuth();
-  }, [router]);
-
-  const startRealtimeListeners = () => {
-    // Listen for appointments
-    const qApt = query(collection(db, 'appointments'), orderBy('createdAt', 'desc'));
-    const unsubApt = onSnapshot(qApt, (snap) => {
-      setAppointments(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-    });
-
-    // Listen for admitted patients (awaiting push to Junior Dr)
-    const qAdmitted = query(collection(db, 'patients'), where('status', '==', 'admitted'), orderBy('lastVisit', 'asc'));
-    const unsubAdmitted = onSnapshot(qAdmitted, (snap) => {
-      setAdmittedPatients(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-    });
-
-    // Listen for patient stats
-    const qPatients = collection(db, 'patients');
-    const unsubPatients = onSnapshot(qPatients, (snap) => {
-      const docs = snap.docs.map(d => d.data());
-      setPatientStats({
-        total: snap.size,
-        admitted: docs.filter(d => d.status === 'admitted').length,
-        waiting: docs.filter(d => d.status === 'waiting').length,
-        billing: docs.filter(d => d.status === 'billing').length,
-      });
-    });
 
     return () => {
-      unsubApt();
-      unsubAdmitted();
-      unsubPatients();
+      unsubAuth();
+      if (cleanupListeners) cleanupListeners();
     };
-  };
+  }, [router, startRealtimeListeners]);
 
   const handleSendToJunior = async (patientId: string) => {
-    try {
-      await updateDoc(doc(db, 'patients', patientId), {
-        status: 'registry',
-        sentToJuniorAt: new Date().toISOString()
+    const docRef = doc(db, 'patients', patientId);
+    const data = {
+      status: 'registry',
+      sentToJuniorAt: new Date().toISOString()
+    };
+
+    updateDoc(docRef, data)
+      .catch(async (err) => {
+        if (err.code === 'permission-denied') {
+          errorEmitter.emit('permission-error', new FirestorePermissionError({
+            path: docRef.path,
+            operation: 'update',
+            requestResourceData: data
+          }));
+        }
       });
-    } catch (err) {
-      console.error(err);
-    }
   };
 
   const handleLogout = () => {

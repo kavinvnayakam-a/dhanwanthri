@@ -3,6 +3,7 @@ import './globals.css';
 import {Navigation} from '@/components/Navigation';
 import {Footer} from '@/components/Footer';
 import {LanguageProvider} from '@/context/LanguageContext';
+import {FirebaseErrorListener} from '@/components/FirebaseErrorListener';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.dhanwanthrimaruthuvam.com'),
@@ -90,6 +91,7 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased flex flex-col min-h-screen">
         <LanguageProvider>
+          <FirebaseErrorListener />
           <Navigation />
           <main className="flex-grow">{children}</main>
           <Footer />

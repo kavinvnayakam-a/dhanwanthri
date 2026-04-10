@@ -1,7 +1,6 @@
-
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { initializeApp, getApps } from 'firebase/app';
@@ -37,6 +36,8 @@ import {
   UserRound
 } from 'lucide-react';
 import Link from 'next/link';
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError } from '@/firebase/errors';
 
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 const auth = getAuth(app);
@@ -56,19 +57,7 @@ export default function SeniorDoctorDashboard() {
   });
   const router = useRouter();
 
-  useEffect(() => {
-    const unsubAuth = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        startQueueListener();
-      } else {
-        router.push('/admin/login');
-      }
-      setLoading(false);
-    });
-    return () => unsubAuth();
-  }, [router]);
-
-  const startQueueListener = () => {
+  const startQueueListener = useCallback(() => {
     // Only see patients who have been "Sent" by the junior doctor (status: review)
     const q = query(
       collection(db, 'patients'), 
@@ -76,10 +65,37 @@ export default function SeniorDoctorDashboard() {
       orderBy('sentToSeniorAt', 'asc')
     );
     
-    return onSnapshot(q, (snap) => {
-      setQueue(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    return onSnapshot(q, 
+      (snap) => setQueue(snap.docs.map(doc => ({ id: doc.id, ...doc.data() }))),
+      async (err) => {
+        if (err.code === 'permission-denied') {
+          errorEmitter.emit('permission-error', new FirestorePermissionError({
+            path: 'patients (senior review queue)',
+            operation: 'list'
+          }));
+        }
+      }
+    );
+  }, []);
+
+  useEffect(() => {
+    let cleanup: (() => void) | null = null;
+
+    const unsubAuth = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        cleanup = startQueueListener();
+      } else {
+        if (cleanup) cleanup();
+        router.push('/admin/login');
+      }
+      setLoading(false);
     });
-  };
+
+    return () => {
+      unsubAuth();
+      if (cleanup) cleanup();
+    };
+  }, [router, startQueueListener]);
 
   const loadPatientAssessment = async (p: any) => {
     setCurrentPatient(p);
@@ -89,7 +105,16 @@ export default function SeniorDoctorDashboard() {
         collection(db, 'patients', p.id, 'assessments'),
         orderBy('date', 'desc')
       );
-      const snap = await getDocs(q);
+      const snap = await getDocs(q).catch(async (err) => {
+        if (err.code === 'permission-denied') {
+          errorEmitter.emit('permission-error', new FirestorePermissionError({
+            path: `patients/${p.id}/assessments`,
+            operation: 'list'
+          }));
+        }
+        throw err;
+      });
+
       if (!snap.empty) {
         const data = snap.docs[0].data();
         setAssessment(data);
@@ -105,20 +130,28 @@ export default function SeniorDoctorDashboard() {
 
   const closeConsultation = async () => {
     if (!currentPatient) return;
-    try {
-      // Move to billing
-      await updateDoc(doc(db, 'patients', currentPatient.id), { 
-        status: 'billing',
-        consultationComplete: true,
-        ...consultationData 
+    const docRef = doc(db, 'patients', currentPatient.id);
+    const data = { 
+      status: 'billing',
+      consultationComplete: true,
+      ...consultationData 
+    };
+
+    updateDoc(docRef, data)
+      .then(() => {
+        setCurrentPatient(null);
+        setAssessment(null);
+        setConsultationData({ prescription: '', workoutPlan: '', nextVisitDate: '', seniorNotes: '', suggestedServices: '' });
+      })
+      .catch(async (err) => {
+        if (err.code === 'permission-denied') {
+          errorEmitter.emit('permission-error', new FirestorePermissionError({
+            path: docRef.path,
+            operation: 'update',
+            requestResourceData: data
+          }));
+        }
       });
-      
-      setCurrentPatient(null);
-      setAssessment(null);
-      setConsultationData({ prescription: '', workoutPlan: '', nextVisitDate: '', seniorNotes: '', suggestedServices: '' });
-    } catch (err) {
-      console.error(err);
-    }
   };
 
   if (loading) return <div className="h-screen flex items-center justify-center font-bold text-primary">Senior Clinical Portal Initializing...</div>;
@@ -137,7 +170,7 @@ export default function SeniorDoctorDashboard() {
         </div>
         <div className="flex gap-4">
           <Button asChild variant="ghost" size="sm" className="text-foreground/60"><Link href="/admin/junior-doctor">Junior Portal</Link></Button>
-          <Button variant="ghost" size="icon" onClick={() => auth.signOut()} className="text-destructive"><LogOut className="h-5 w-5" /></Button>
+          <Button variant="ghost" size="icon" onClick={() => auth.signOut()} className="text-destructive rounded-xl hover:bg-destructive/10"><LogOut className="h-5 w-5" /></Button>
         </div>
       </header>
 

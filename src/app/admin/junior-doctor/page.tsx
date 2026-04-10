@@ -1,8 +1,9 @@
-
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { initializeApp, getApps } from 'firebase/app';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { 
   getFirestore, 
   collection, 
@@ -27,29 +28,44 @@ import {
   Timer, 
   CheckCircle2, 
   Users,
-  LayoutDashboard
+  LayoutDashboard,
+  LogOut
 } from 'lucide-react';
 import Link from 'next/link';
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError } from '@/firebase/errors';
 
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+const auth = getAuth(app);
 const db = getFirestore(app);
 
 export default function JuniorDoctorDashboard() {
   const [registryQueue, setRegistryQueue] = useState<any[]>([]);
   const [waitingRoom, setWaitingRoom] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
-  useEffect(() => {
+  const startQueueListeners = useCallback(() => {
+    const unsubs: (() => void)[] = [];
+
     // Registry Queue: Sent by Receptionist for Assessment
-    // Sorted ASCENDING (Oldest first) as requested
     const unsubRegistry = onSnapshot(
       query(
         collection(db, 'patients'), 
         where('status', '==', 'registry'), 
         orderBy('sentToJuniorAt', 'asc')
       ),
-      (snap) => setRegistryQueue(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })))
+      (snap) => setRegistryQueue(snap.docs.map(doc => ({ id: doc.id, ...doc.data() }))),
+      async (err) => {
+        if (err.code === 'permission-denied') {
+          errorEmitter.emit('permission-error', new FirestorePermissionError({
+            path: 'patients (registry queue)',
+            operation: 'list'
+          }));
+        }
+      }
     );
+    unsubs.push(unsubRegistry);
 
     // Clinical Waiting Room: Assessment Done, waiting for Senior Dr
     const unsubWaiting = onSnapshot(
@@ -58,25 +74,57 @@ export default function JuniorDoctorDashboard() {
         where('status', '==', 'waiting'), 
         orderBy('lastVisit', 'asc')
       ),
-      (snap) => setWaitingRoom(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })))
+      (snap) => setWaitingRoom(snap.docs.map(doc => ({ id: doc.id, ...doc.data() }))),
+      async (err) => {
+        if (err.code === 'permission-denied') {
+          errorEmitter.emit('permission-error', new FirestorePermissionError({
+            path: 'patients (waiting room)',
+            operation: 'list'
+          }));
+        }
+      }
     );
+    unsubs.push(unsubWaiting);
 
-    setLoading(false);
-    return () => {
-      unsubRegistry();
-      unsubWaiting();
-    };
+    return () => unsubs.forEach(unsub => unsub());
   }, []);
 
+  useEffect(() => {
+    let cleanupListeners: (() => void) | null = null;
+
+    const unsubAuth = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        cleanupListeners = startQueueListeners();
+      } else {
+        if (cleanupListeners) cleanupListeners();
+        router.push('/admin/login');
+      }
+      setLoading(false);
+    });
+
+    return () => {
+      unsubAuth();
+      if (cleanupListeners) cleanupListeners();
+    };
+  }, [router, startQueueListeners]);
+
   const sendToSenior = async (patientId: string) => {
-    try {
-      await updateDoc(doc(db, 'patients', patientId), { 
-        status: 'review',
-        sentToSeniorAt: new Date().toISOString()
+    const docRef = doc(db, 'patients', patientId);
+    const data = { 
+      status: 'review',
+      sentToSeniorAt: new Date().toISOString()
+    };
+
+    updateDoc(docRef, data)
+      .catch(async (err) => {
+        if (err.code === 'permission-denied') {
+          errorEmitter.emit('permission-error', new FirestorePermissionError({
+            path: docRef.path,
+            operation: 'update',
+            requestResourceData: data
+          }));
+        }
       });
-    } catch (err) {
-      console.error("Error sending to senior doctor:", err);
-    }
   };
 
   return (
@@ -92,7 +140,12 @@ export default function JuniorDoctorDashboard() {
               <p className="text-xs font-bold text-foreground/40 uppercase tracking-widest">Junior Physician Workspace</p>
             </div>
           </div>
-          <Button variant="ghost" asChild className="rounded-xl"><Link href="/admin/dashboard">Reception View</Link></Button>
+          <div className="flex gap-3">
+            <Button variant="ghost" asChild className="rounded-xl"><Link href="/admin/dashboard">Reception View</Link></Button>
+            <Button variant="ghost" size="icon" onClick={() => auth.signOut()} className="text-destructive rounded-xl hover:bg-destructive/10">
+              <LogOut className="h-5 w-5" />
+            </Button>
+          </div>
         </div>
       </header>
 
