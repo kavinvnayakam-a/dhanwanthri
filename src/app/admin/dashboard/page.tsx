@@ -2,20 +2,18 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { initializeApp, getApps } from 'firebase/app';
+import { onAuthStateChanged } from 'firebase/auth';
 import { 
   collection, 
   query, 
   orderBy, 
   getDocs, 
-  getFirestore, 
   doc, 
   updateDoc,
   where,
   onSnapshot
 } from 'firebase/firestore';
-import { firebaseConfig } from '@/firebase/config';
+import { auth, db } from '@/firebase/config';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { DeliveryScheduler } from '@/components/ui/delivery-scheduler';
@@ -26,10 +24,8 @@ import {
   Calendar as CalendarIcon, 
   PlusCircle, 
   LogOut,
-  Stethoscope,
   Clock,
   UserPlus,
-  XCircle,
   CreditCard,
   UserRound,
   LayoutDashboard,
@@ -54,10 +50,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-const auth = getAuth(app);
-const db = getFirestore(app);
-
 export default function AdminDashboard() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -71,7 +63,6 @@ export default function AdminDashboard() {
   });
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   
-  // Search State
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -82,9 +73,9 @@ export default function AdminDashboard() {
   const logoUrl = "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Logos%2FDhanwanthiri%20Logo.webp?alt=media&token=31a8ab0e-c431-4ea5-a513-324d630ebce4";
 
   const startRealtimeListeners = useCallback(() => {
+    if (!db) return () => {};
     const unsubs: (() => void)[] = [];
 
-    // Listen for appointments
     const qApt = query(collection(db, 'appointments'), orderBy('createdAt', 'desc'));
     const unsubApt = onSnapshot(qApt, 
       (snap) => setAppointments(snap.docs.map(doc => ({ id: doc.id, ...doc.data() }))),
@@ -99,7 +90,6 @@ export default function AdminDashboard() {
     );
     unsubs.push(unsubApt);
 
-    // Listen for admitted patients
     const qAdmitted = query(collection(db, 'patients'), where('status', '==', 'admitted'), orderBy('lastVisit', 'asc'));
     const unsubAdmitted = onSnapshot(qAdmitted, 
       (snap) => setAdmittedPatients(snap.docs.map(doc => ({ id: doc.id, ...doc.data() }))),
@@ -114,7 +104,6 @@ export default function AdminDashboard() {
     );
     unsubs.push(unsubAdmitted);
 
-    // Listen for patient stats
     const qPatients = collection(db, 'patients');
     const unsubPatients = onSnapshot(qPatients, 
       (snap) => {
@@ -141,6 +130,11 @@ export default function AdminDashboard() {
   }, []);
 
   useEffect(() => {
+    if (!auth) {
+      setLoading(false);
+      return;
+    }
+
     let cleanupListeners: (() => void) | null = null;
 
     const unsubAuth = onAuthStateChanged(auth, (user) => {
@@ -161,6 +155,7 @@ export default function AdminDashboard() {
   }, [router, startRealtimeListeners]);
 
   const handleSendToJunior = async (patientId: string) => {
+    if (!db) return;
     const docRef = doc(db, 'patients', patientId);
     const data = {
       status: 'registry',
@@ -181,7 +176,7 @@ export default function AdminDashboard() {
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!searchQuery.trim()) return;
+    if (!searchQuery.trim() || !db) return;
     
     setIsSearching(true);
     try {
@@ -200,6 +195,7 @@ export default function AdminDashboard() {
   };
 
   const admitExistingPatient = async (patientId: string) => {
+    if (!db) return;
     const docRef = doc(db, 'patients', patientId);
     const data = {
       status: 'admitted',
@@ -224,7 +220,7 @@ export default function AdminDashboard() {
   };
 
   const handleLogout = () => {
-    auth.signOut().then(() => router.push('/admin/login'));
+    if (auth) auth.signOut().then(() => router.push('/admin/login'));
   };
 
   const getAppointmentsForDate = (date: Date) => {
@@ -308,7 +304,7 @@ export default function AdminDashboard() {
                         size="sm" 
                         className="rounded-xl bg-accent text-white font-bold"
                         onClick={() => admitExistingPatient(p.id)}
-                        disabled={p.status === 'admitted' || p.status === 'registry' || p.status === 'waiting' || p.status === 'review'}
+                        disabled={['admitted', 'registry', 'waiting', 'review'].includes(p.status)}
                       >
                         {['admitted', 'registry', 'waiting', 'review'].includes(p.status) ? 'In Clinic' : 'Admit Now'}
                       </Button>
@@ -338,7 +334,6 @@ export default function AdminDashboard() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-8 space-y-8">
-        {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
             { label: 'Patient Directory', val: patientStats.total, icon: Users, color: 'bg-indigo-50 text-indigo-600', border: 'border-indigo-100' },
@@ -412,7 +407,6 @@ export default function AdminDashboard() {
           </div>
 
           <div className="lg:col-span-8 space-y-8">
-            {/* Clinic Intake Section */}
             <Card className="border-none shadow-2xl rounded-[2rem] bg-white overflow-hidden min-h-[400px]">
               <CardHeader className="bg-primary text-primary-foreground p-8">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
@@ -474,7 +468,6 @@ export default function AdminDashboard() {
               </CardContent>
             </Card>
 
-            {/* Online Bookings Section */}
             <Card className="border-none shadow-sm rounded-[2rem] bg-white overflow-hidden">
               <CardHeader className="p-8 border-b">
                 <CardTitle className="text-xl font-headline flex items-center gap-3 text-primary">

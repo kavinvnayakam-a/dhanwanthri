@@ -1,18 +1,23 @@
-
 "use client";
 
 import { useEffect, useState } from 'react';
-import { initializeApp, getApps } from 'firebase/app';
-import { getFirestore, collection, query, getDocs, where, doc, updateDoc, orderBy } from 'firebase/firestore';
-import { firebaseConfig } from '@/firebase/config';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { 
+  collection, 
+  query, 
+  getDocs, 
+  where, 
+  doc, 
+  updateDoc, 
+  orderBy 
+} from 'firebase/firestore';
+import { auth, db } from '@/firebase/config';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { 
   CreditCard, 
-  Receipt, 
   User, 
   CheckCircle2, 
   Clock, 
@@ -24,9 +29,6 @@ import {
   Filter
 } from 'lucide-react';
 import Link from 'next/link';
-
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-const db = getFirestore(app);
 
 export default function BillingDashboard() {
   const [pendingQueue, setPendingQueue] = useState<any[]>([]);
@@ -40,9 +42,9 @@ export default function BillingDashboard() {
   }, []);
 
   const fetchBillingData = async () => {
+    if (!db) return;
     setLoading(true);
     try {
-      // Fetch Unpaid
       const qUnpaid = query(
         collection(db, 'patients'), 
         where('status', '==', 'billing'),
@@ -52,7 +54,6 @@ export default function BillingDashboard() {
       const snapUnpaid = await getDocs(qUnpaid);
       setPendingQueue(snapUnpaid.docs.map(doc => ({ id: doc.id, ...doc.data() })));
 
-      // Fetch Paid (Recent)
       const qPaid = query(
         collection(db, 'patients'), 
         where('paymentStatus', '==', 'paid'),
@@ -69,6 +70,7 @@ export default function BillingDashboard() {
   };
 
   const markPaid = async (pId: string) => {
+    if (!db) return;
     try {
       const pRef = doc(db, 'patients', pId);
       const updateData = { 
@@ -78,7 +80,6 @@ export default function BillingDashboard() {
       };
       await updateDoc(pRef, updateData);
       
-      // Update local state
       const patient = pendingQueue.find(p => p.id === pId);
       setPendingQueue(prev => prev.filter(p => p.id !== pId));
       if (patient) {

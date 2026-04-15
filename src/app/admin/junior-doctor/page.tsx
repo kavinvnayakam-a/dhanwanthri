@@ -2,42 +2,31 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { initializeApp, getApps } from 'firebase/app';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
 import { 
-  getFirestore, 
   collection, 
   query, 
-  getDocs, 
   where, 
   orderBy, 
   updateDoc, 
   doc, 
   onSnapshot 
 } from 'firebase/firestore';
-import { firebaseConfig } from '@/firebase/config';
+import { auth, db } from '@/firebase/config';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
   Stethoscope, 
   ClipboardList, 
-  User, 
   ArrowRight, 
-  Clock, 
   Timer, 
-  CheckCircle2, 
   Users,
-  LayoutDashboard,
   LogOut
 } from 'lucide-react';
 import Link from 'next/link';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
-
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-const auth = getAuth(app);
-const db = getFirestore(app);
 
 export default function JuniorDoctorDashboard() {
   const [registryQueue, setRegistryQueue] = useState<any[]>([]);
@@ -46,9 +35,9 @@ export default function JuniorDoctorDashboard() {
   const router = useRouter();
 
   const startQueueListeners = useCallback(() => {
+    if (!db) return () => {};
     const unsubs: (() => void)[] = [];
 
-    // Registry Queue: Sent by Receptionist for Assessment
     const unsubRegistry = onSnapshot(
       query(
         collection(db, 'patients'), 
@@ -67,7 +56,6 @@ export default function JuniorDoctorDashboard() {
     );
     unsubs.push(unsubRegistry);
 
-    // Clinical Waiting Room: Assessment Done, waiting for Senior Dr
     const unsubWaiting = onSnapshot(
       query(
         collection(db, 'patients'), 
@@ -90,6 +78,11 @@ export default function JuniorDoctorDashboard() {
   }, []);
 
   useEffect(() => {
+    if (!auth) {
+      setLoading(false);
+      return;
+    }
+
     let cleanupListeners: (() => void) | null = null;
 
     const unsubAuth = onAuthStateChanged(auth, (user) => {
@@ -109,6 +102,7 @@ export default function JuniorDoctorDashboard() {
   }, [router, startQueueListeners]);
 
   const sendToSenior = async (patientId: string) => {
+    if (!db) return;
     const docRef = doc(db, 'patients', patientId);
     const data = { 
       status: 'review',
@@ -142,7 +136,7 @@ export default function JuniorDoctorDashboard() {
           </div>
           <div className="flex gap-3">
             <Button variant="ghost" asChild className="rounded-xl"><Link href="/admin/dashboard">Reception View</Link></Button>
-            <Button variant="ghost" size="icon" onClick={() => auth.signOut()} className="text-destructive rounded-xl hover:bg-destructive/10">
+            <Button variant="ghost" size="icon" onClick={() => auth?.signOut()} className="text-destructive rounded-xl hover:bg-destructive/10">
               <LogOut className="h-5 w-5" />
             </Button>
           </div>
@@ -150,8 +144,6 @@ export default function JuniorDoctorDashboard() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-12 grid lg:grid-cols-2 gap-8">
-        
-        {/* Registry Queue: Assigned for Assessment */}
         <div className="space-y-6">
           <Card className="border-none shadow-xl rounded-[2.5rem] bg-white overflow-hidden">
             <CardHeader className="bg-slate-900 text-white p-8">
@@ -195,7 +187,6 @@ export default function JuniorDoctorDashboard() {
           </Card>
         </div>
 
-        {/* Waiting Room: Assessed & Ready to Send */}
         <div className="space-y-6">
           <Card className="border-none shadow-xl rounded-[2.5rem] bg-white overflow-hidden border-2 border-accent/10">
             <CardHeader className="bg-accent text-white p-8">
@@ -242,7 +233,6 @@ export default function JuniorDoctorDashboard() {
             </CardContent>
           </Card>
         </div>
-
       </main>
     </div>
   );

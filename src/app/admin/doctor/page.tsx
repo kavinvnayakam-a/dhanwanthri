@@ -1,23 +1,20 @@
-
 "use client";
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { initializeApp, getApps } from 'firebase/app';
+import { onAuthStateChanged } from 'firebase/auth';
 import { 
   collection, 
   query, 
   orderBy, 
   getDocs, 
-  getFirestore, 
   doc, 
   updateDoc,
   where,
   onSnapshot,
   limit
 } from 'firebase/firestore';
-import { firebaseConfig } from '@/firebase/config';
+import { auth, db } from '@/firebase/config';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -44,10 +41,6 @@ import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 import { cn } from '@/lib/utils';
 
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-const auth = getAuth(app);
-const db = getFirestore(app);
-
 export default function SeniorDoctorDashboard() {
   const [queue, setQueue] = useState<any[]>([]);
   const [attendedHistory, setAttendedHistory] = useState<any[]>([]);
@@ -69,9 +62,9 @@ export default function SeniorDoctorDashboard() {
   const router = useRouter();
 
   const startListeners = useCallback(() => {
+    if (!db) return () => {};
     const unsubs: (() => void)[] = [];
 
-    // Listen for waiting queue (Patients sent by junior doctor)
     const qQueue = query(
       collection(db, 'patients'), 
       where('status', '==', 'review'),
@@ -88,7 +81,6 @@ export default function SeniorDoctorDashboard() {
     });
     unsubs.push(unsubQueue);
 
-    // Listen for attended history (Recent completions)
     const qHistory = query(
       collection(db, 'patients'),
       where('status', 'in', ['billing', 'completed']),
@@ -98,7 +90,6 @@ export default function SeniorDoctorDashboard() {
     const unsubHistory = onSnapshot(qHistory, (snap) => {
       const docs = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setAttendedHistory(docs);
-      // For a real production app, we'd filter by today's date properly in Firestore
       setStats(prev => ({ ...prev, attendedToday: snap.size }));
     }, async (err) => {
       if (err.code === 'permission-denied') {
@@ -111,6 +102,11 @@ export default function SeniorDoctorDashboard() {
   }, []);
 
   useEffect(() => {
+    if (!auth) {
+      setLoading(false);
+      return;
+    }
+
     let cleanup: (() => void) | null = null;
     const unsubAuth = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -128,6 +124,7 @@ export default function SeniorDoctorDashboard() {
   }, [router, startListeners]);
 
   const loadPatientAssessment = async (p: any) => {
+    if (!db) return;
     setCurrentPatient(p);
     try {
       const q = query(
@@ -150,7 +147,7 @@ export default function SeniorDoctorDashboard() {
   };
 
   const closeConsultation = async () => {
-    if (!currentPatient) return;
+    if (!currentPatient || !db) return;
     const docRef = doc(db, 'patients', currentPatient.id);
     const data = { 
       status: 'billing',
@@ -204,14 +201,13 @@ export default function SeniorDoctorDashboard() {
             <ShieldCheck className="h-4 w-4 text-primary" />
             <span className="text-xs font-bold text-primary">Active Practitioner Session</span>
           </div>
-          <Button variant="ghost" size="icon" onClick={() => auth.signOut()} className="text-destructive rounded-xl hover:bg-destructive/10">
+          <Button variant="ghost" size="icon" onClick={() => auth?.signOut()} className="text-destructive rounded-xl hover:bg-destructive/10">
             <LogOut className="h-5 w-5" />
           </Button>
         </div>
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-8 space-y-8">
-        {/* Analytics Top Bar */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card className="border-none shadow-sm rounded-3xl bg-white p-6 flex items-center gap-5">
             <div className="w-14 h-14 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600">
@@ -243,7 +239,6 @@ export default function SeniorDoctorDashboard() {
         </div>
 
         <div className="grid lg:grid-cols-12 gap-8">
-          {/* Queues Sidebar */}
           <div className="lg:col-span-4 space-y-8">
             <Card className="border-none shadow-sm rounded-[2rem] bg-white overflow-hidden">
               <CardHeader className="bg-slate-900 text-white p-6">
@@ -303,7 +298,6 @@ export default function SeniorDoctorDashboard() {
             </Card>
           </div>
 
-          {/* Clinical Workspace */}
           <div className="lg:col-span-8">
             {currentPatient ? (
               <Card className="border-none shadow-2xl rounded-[2.5rem] bg-white overflow-hidden">
@@ -324,7 +318,6 @@ export default function SeniorDoctorDashboard() {
                 </CardHeader>
                 
                 <CardContent className="p-10 space-y-12">
-                  {/* Junior Doctor Intake Data */}
                   {assessment && (
                     <div className="bg-muted/30 p-8 rounded-[2rem] border border-primary/5 space-y-6">
                       <div className="flex items-center gap-2 text-primary font-bold text-[10px] uppercase tracking-widest">

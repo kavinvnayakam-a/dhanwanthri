@@ -1,10 +1,7 @@
-
 "use client";
 
 import { useEffect, useState } from 'react';
-import { initializeApp, getApps } from 'firebase/app';
 import { 
-  getFirestore, 
   collection, 
   query, 
   orderBy, 
@@ -13,7 +10,7 @@ import {
   doc, 
   deleteDoc 
 } from 'firebase/firestore';
-import { firebaseConfig } from '@/firebase/config';
+import { auth, db } from '@/firebase/config';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -30,8 +27,7 @@ import {
   Mail,
   MessageSquare,
   Edit3,
-  Save,
-  X
+  Save
 } from 'lucide-react';
 import Link from 'next/link';
 import {
@@ -43,9 +39,6 @@ import {
   DialogFooter
 } from "@/components/ui/dialog";
 
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-const db = getFirestore(app);
-
 export default function AppointmentsManagementPage() {
   const [appointments, setAppointments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -56,6 +49,7 @@ export default function AppointmentsManagementPage() {
   }, []);
 
   const fetchAppointments = async () => {
+    if (!db) return;
     setLoading(true);
     try {
       const q = query(collection(db, 'appointments'), orderBy('createdAt', 'desc'));
@@ -69,6 +63,7 @@ export default function AppointmentsManagementPage() {
   };
 
   const updateStatus = async (id: string, newStatus: string) => {
+    if (!db) return;
     try {
       await updateDoc(doc(db, 'appointments', id), { status: newStatus });
       setAppointments(prev => prev.map(a => a.id === id ? { ...a, status: newStatus } : a));
@@ -78,7 +73,7 @@ export default function AppointmentsManagementPage() {
   };
 
   const deleteAppointment = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this record?')) return;
+    if (!db || !confirm('Are you sure you want to delete this record?')) return;
     try {
       await deleteDoc(doc(db, 'appointments', id));
       setAppointments(prev => prev.filter(a => a.id !== id));
@@ -88,7 +83,7 @@ export default function AppointmentsManagementPage() {
   };
 
   const handleEditSave = async () => {
-    if (!editingApt) return;
+    if (!editingApt || !db) return;
     try {
       const { id, ...data } = editingApt;
       await updateDoc(doc(db, 'appointments', id), data);
