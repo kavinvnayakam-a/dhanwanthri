@@ -1,11 +1,9 @@
-
 "use client";
 
 import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { initializeApp, getApps } from 'firebase/app';
-import { getFirestore, collection, addDoc, doc, updateDoc } from 'firebase/firestore';
-import { firebaseConfig } from '@/firebase/config';
+import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
+import { db } from '@/firebase/config';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -14,19 +12,14 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { 
   FileText, 
   ArrowLeft, 
-  Save, 
   Activity, 
-  Stethoscope, 
-  Waves,
   Brain,
   History,
   Heart,
-  UserPlus
+  UserPlus,
+  Waves
 } from 'lucide-react';
 import Link from 'next/link';
-
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-const db = getFirestore(app);
 
 export default function NewAssessmentPage() {
   const { id } = useParams();
@@ -99,8 +92,8 @@ export default function NewAssessmentPage() {
       kosha: 'Annamaya'
     },
     suggestedServices: '',
-    doctorChief: 'Junior Doctor Name', // Prefilled for junior doctor role
-    status: 'waiting' // Moved to waiting room for senior review
+    doctorChief: 'Junior Doctor Name',
+    status: 'waiting'
   });
 
   const handleCheckbox = (section: string, value: string) => {
@@ -123,13 +116,14 @@ export default function NewAssessmentPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!db) return;
     setLoading(true);
     try {
       await addDoc(collection(db, 'patients', id as string, 'assessments'), formData);
       await updateDoc(doc(db, 'patients', id as string), {
         lastVisit: formData.date,
         type: formData.visitType,
-        status: 'waiting' // Official waiting status for senior doctor
+        status: 'waiting'
       });
       router.push(`/admin/junior-doctor`);
     } catch (error) {

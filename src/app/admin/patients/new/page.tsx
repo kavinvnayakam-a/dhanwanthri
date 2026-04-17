@@ -1,20 +1,15 @@
-
 "use client";
 
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { initializeApp, getApps } from 'firebase/app';
-import { getFirestore, collection, addDoc, serverTimestamp, query, where, getDocs } from 'firebase/firestore';
-import { firebaseConfig } from '@/firebase/config';
+import { collection, addDoc, serverTimestamp, query, where, getDocs } from 'firebase/firestore';
+import { db } from '@/firebase/config';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { UserPlus, ArrowLeft, Loader2, Search, Users, AlertCircle } from 'lucide-react';
+import { UserPlus, ArrowLeft, Loader2, Users } from 'lucide-react';
 import Link from 'next/link';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-const db = getFirestore(app);
 
 function RegistrationForm() {
   const router = useRouter();
@@ -34,7 +29,7 @@ function RegistrationForm() {
     address: '',
     branch: 'Ashok Nagar',
     regNo: `REG-${Date.now().toString().slice(-6)}`,
-    status: 'admitted' // Patient checked-in at desk, awaiting assignment to Junior Dr
+    status: 'admitted'
   });
 
   useEffect(() => {
@@ -55,7 +50,7 @@ function RegistrationForm() {
   }, [searchParams]);
 
   const checkPhoneExistence = async (phone: string) => {
-    if (phone.length < 10) return;
+    if (phone.length < 10 || !db) return;
     setCheckingPhone(true);
     try {
       const q = query(collection(db, 'patients'), where('phone', '==', phone));
@@ -70,15 +65,15 @@ function RegistrationForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!db) return;
     setLoading(true);
     
     try {
-      const docRef = await addDoc(collection(db, 'patients'), {
+      await addDoc(collection(db, 'patients'), {
         ...formData,
         createdAt: serverTimestamp(),
         lastVisit: new Date().toISOString().split('T')[0]
       });
-      // Redirect back to dashboard where they can "Send for Assessment"
       router.push(`/admin/dashboard`);
     } catch (error) {
       console.error(error);
@@ -102,7 +97,7 @@ function RegistrationForm() {
             <UserPlus className="h-6 w-6 text-accent shrink-0" />
             <div>
               <CardTitle className="text-xl md:text-2xl font-headline">Receptionist Enrollment</CardTitle>
-              <CardDescription className="text-primary-foreground/70 text-xs md:text-sm">New patient registration and intake</CardDescription>
+              <CardDescription className="text-primary-foreground/70 text-xs md:sm">New patient registration and intake</CardDescription>
             </div>
           </div>
         </CardHeader>

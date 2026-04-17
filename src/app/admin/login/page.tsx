@@ -1,19 +1,14 @@
-
 "use client";
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
-import { initializeApp, getApps } from 'firebase/app';
-import { firebaseConfig } from '@/firebase/config';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/firebase/config';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Lock, Mail, Loader2, AlertCircle, ShieldCheck } from 'lucide-react';
 import Image from 'next/image';
-
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-const auth = getAuth(app);
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('');
@@ -24,6 +19,11 @@ export default function AdminLoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!auth) {
+      setError('Firebase is not initialized. Check your configuration.');
+      return;
+    }
+    
     setLoading(true);
     setError('');
     

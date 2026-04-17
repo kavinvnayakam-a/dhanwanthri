@@ -1,11 +1,9 @@
-
 "use client";
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { initializeApp, getApps } from 'firebase/app';
-import { getFirestore, doc, getDoc, collection, query, orderBy, getDocs } from 'firebase/firestore';
-import { firebaseConfig } from '@/firebase/config';
+import { doc, getDoc, collection, query, orderBy, getDocs } from 'firebase/firestore';
+import { db } from '@/firebase/config';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -22,9 +20,6 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-const db = getFirestore(app);
-
 export default function PatientDetailPage() {
   const { id } = useParams();
   const router = useRouter();
@@ -34,6 +29,10 @@ export default function PatientDetailPage() {
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!db) {
+        setLoading(false);
+        return;
+      }
       const patientSnap = await getDoc(doc(db, 'patients', id as string));
       if (patientSnap.exists()) {
         setPatient(patientSnap.data());

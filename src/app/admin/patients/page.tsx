@@ -1,17 +1,13 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import { initializeApp, getApps } from 'firebase/app';
-import { getFirestore, collection, query, getDocs, where } from 'firebase/firestore';
-import { firebaseConfig } from '@/firebase/config';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState } from 'react';
+import { collection, query, getDocs, where } from 'firebase/firestore';
+import { db } from '@/firebase/config';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Search, PlusCircle, ArrowLeft, User, Phone } from 'lucide-react';
 import Link from 'next/link';
-
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-const db = getFirestore(app);
 
 export default function PatientRegistryPage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -20,7 +16,7 @@ export default function PatientRegistryPage() {
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!searchTerm) return;
+    if (!searchTerm || !db) return;
     setLoading(true);
     try {
       const q = query(

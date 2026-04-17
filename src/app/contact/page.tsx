@@ -1,10 +1,8 @@
-
 "use client";
 
 import { useState } from 'react';
-import { initializeApp, getApps } from 'firebase/app';
-import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { firebaseConfig } from '@/firebase/config';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '@/firebase/config';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -25,9 +23,6 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { useLanguage } from '@/context/LanguageContext';
 
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-const db = getFirestore(app);
-
 export default function ContactPage() {
   const { t } = useLanguage();
   const [loading, setLoading] = useState(false);
@@ -45,6 +40,7 @@ export default function ContactPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!db) return;
     setLoading(true);
     
     try {
@@ -110,7 +106,6 @@ export default function ContactPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-5 gap-16 items-start">
           
-          {/* Contact Information */}
           <div className="lg:col-span-2 space-y-12">
             <div className="space-y-4">
               <Badge className="bg-accent text-accent-foreground">{t.contact.badge}</Badge>
@@ -183,7 +178,6 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* Appointment Form */}
           <div className="lg:col-span-3">
             <Card className="border-none shadow-2xl rounded-3xl overflow-hidden bg-white">
               <CardHeader className="bg-primary p-8 text-primary-foreground">
