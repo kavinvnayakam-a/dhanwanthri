@@ -64,6 +64,7 @@ export default function Home() {
     "@id": "https://www.dhanwanthrimaruthuvam.com",
     "url": "https://www.dhanwanthrimaruthuvam.com",
     "telephone": "+918608174673",
+    "description": "Under the guidance of Doctor Dharmesh (Dr. Dharmesh Kubendiran), we provide specialized sports therapy and ayurvedic treatments in Chennai.",
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "No.2, 54th street lane, 11th avenue, Ashok Nagar",
@@ -93,7 +94,8 @@ export default function Home() {
     "medicalSpecialty": ["Ayurvedic", "Sports Medicine", "Physical Therapy"],
     "founder": {
       "@type": "Person",
-      "name": "Dr. Dharmesh Kubendiran"
+      "name": "Dr. Dharmesh Kubendiran",
+      "alternateName": "Doctor Dharmesh"
     }
   };
 
@@ -111,7 +113,7 @@ export default function Home() {
             <div className="hidden md:block absolute inset-0">
               <Image
                 src={heroImg.imageUrl}
-                alt={heroImg.description}
+                alt="Doctor Dharmesh clinic hero"
                 fill
                 className="object-cover opacity-100"
                 priority
@@ -123,7 +125,7 @@ export default function Home() {
             <div className="block md:hidden absolute inset-0">
               <Image
                 src={heroMobileImg.imageUrl}
-                alt={heroMobileImg.description}
+                alt="Dhanwanthri Maruthuvam sports therapy"
                 fill
                 className="object-cover opacity-100"
                 priority
@@ -192,7 +194,7 @@ export default function Home() {
           {interiorImg && (
             <Image
               src={interiorImg.imageUrl}
-              alt="Clinic Interior"
+              alt="Dhanwanthri Maruthuvam Interior"
               fill
               className="object-cover"
               data-ai-hint="clinic lobby"

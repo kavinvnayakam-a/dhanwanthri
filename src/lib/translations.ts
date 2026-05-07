@@ -1,4 +1,3 @@
-
 export type Language = 'en' | 'ta';
 
 export const translations = {
@@ -15,19 +14,19 @@ export const translations = {
       badge: "Chennai's Foremost Integrative Medical Center",
       title1: "Ancient Wisdom",
       title2: "Modern Recovery.",
-      subtitle: "Dhanwanthri Maruthuvam integrates traditional Ayurveda with Advanced Sports Therapy and Osteopathic Manipulation for holistic pain management.",
+      subtitle: "Dhanwanthri Maruthuvam integrates traditional Ayurveda with Advanced Sports Therapy and Osteopathic Manipulation for holistic pain management led by Doctor Dharmesh.",
       ctaBook: "WhatsApp Booking",
       ctaServices: "View Services"
     },
     home: {
-      overviewTitle: "Dhanwanthri Maruthuvam",
-      overviewDesc: "A premium Ayurvedic and Sports Therapy clinic located in Chennai, it's the first of its kind in Tamilnadu. We specialize in traditional Ayush medicine paired with advanced techniques like Dry Needling and Osteopathic Manipulation.",
+      overviewTitle: "Dhanwanthri Maruthuvam - Dr. Dharmesh",
+      overviewDesc: "A premium Ayurvedic and Sports Therapy clinic located in Chennai, it's the first of its kind in Tamilnadu. Under the guidance of Doctor Dharmesh, we specialize in traditional Ayush medicine paired with advanced techniques like Dry Needling and Osteopathic Manipulation.",
       hours: "Hours",
       hoursVal: "7 AM - 9 PM, Daily",
       capacity: "Capacity",
       capacityVal: "12 Specialized Therapy Rooms",
       servicesTitle: "Specialized Treatments",
-      servicesDesc: "Combining evidence-based sports science with holistic rejuvenation for lasting relief.",
+      servicesDesc: "Combining evidence-based sports science with holistic rejuvenation for lasting relief, supervised by Dharmesh sports therapist.",
       upgradeTitle: "Exciting Upgrades!",
       upgradeDesc: "We are expanding from a 5-room facility to 12 exclusive therapy rooms, featuring specialized spaces for Panchakarma, HBOT, and Hydrocolon therapy.",
       tourBtn: "Tour Facilities"
@@ -35,9 +34,9 @@ export const translations = {
     about: {
       badge: "Primary Physician",
       name: "Dr. Dharmesh Kubendiran",
-      title: "Leading Expert in Integrative Sports Medicine",
-      bio1: "Dr. Dharmesh Kubendiran is a visionary in the field of Ayush medicine, bridging the gap between ancient Ayurvedic healing and modern sports science. With a BAMS degree and a PhD in Sports Method and Training, he brings a unique scientific perspective to traditional therapies.",
-      bio2: "As a dedicated Sports Scientist and Biomechanist, Dr. Dharmesh focuses on analyzing gait patterns, muscle mechanics, and neurological communication to resolve chronic pain at its source.",
+      title: "Doctor Dharmesh - Leading Expert in Integrative Sports Medicine",
+      bio1: "Doctor Dharmesh (Dr. Dharmesh Kubendiran) is a visionary in the field of Ayush medicine, bridging the gap between ancient Ayurvedic healing and modern sports science. With a BAMS degree and a PhD in Sports Method and Training, Dharmesh doctor brings a unique scientific perspective to traditional therapies.",
+      bio2: "As a dedicated Dharmesh sports therapist and Biomechanist, Dr. Dharmesh focuses on analyzing gait patterns, muscle mechanics, and neurological communication to resolve chronic pain at its source.",
       philosophy: "Professional Philosophy",
       quote: "\"Our approach isn't just about suppressing symptoms; it's about optimizing the human machine. By integrating Kinesiology with Siddha and Ayurveda, we reset the body's natural healing systems and restore peak functional performance.\"",
       expertiseTitle: "Key Expertise:",
@@ -51,7 +50,7 @@ export const translations = {
     services: {
       badge: "Our Expertise",
       title: "Advanced Therapeutic Services",
-      desc: "Combining traditional Ayush medicine with modern sports science for precise, personalized care.",
+      desc: "Combining traditional Ayush medicine with modern sports science for precise, personalized care directed by Doctor Dharmesh.",
       kinesiology: {
         title: "Advanced Kinesiology",
         desc: "The scientific study of human body movement. It integrates human anatomy, physiology, and biomechanics to understand function and health.",
@@ -135,7 +134,7 @@ export const translations = {
     contact: {
       badge: "Reach Out",
       title: "Get in Touch",
-      desc: "Whether you have questions about specific treatments or wish to book a consultation, we are here to help.",
+      desc: "Whether you have questions about specific treatments or wish to book a consultation with Doctor Dharmesh, we are here to help.",
       loc: "Location",
       locVal: "No.2, 54th street lane, 11th avenue, Ashok Nagar, Chennai 600083",
       viewMap: "View on Map",
@@ -160,14 +159,14 @@ export const translations = {
       successTitle: "Inquiry Sent!",
       successDesc: "Thank you for reaching out. Our clinical coordinators will contact you within 24 hours.",
       successBtn: "Send another inquiry",
-      whatsappMsg: "Hi, I'd like to book an appointment with Dhanwanthri Maruthuvam."
+      whatsappMsg: "Hi, I'd like to book an appointment with Doctor Dharmesh at Dhanwanthri Maruthuvam."
     },
     footer: {
       ctaTitle: "Ready to start your recovery?",
-      ctaSub: "Expert consultation available 7 days a week.",
+      ctaSub: "Expert consultation with Doctor Dharmesh available 7 days a week.",
       ctaBook: "Book Appointment",
       ctaAI: "Ask Our AI",
-      mission: "Bridging the gap between ancient Ayurvedic wisdom and modern sports medicine. Our mission is to restore peak human performance through scientific movement analysis and holistic therapies.",
+      mission: "Bridging the gap between ancient Ayurvedic wisdom and modern sports medicine. Our mission is to restore peak human performance through scientific movement analysis and holistic therapies led by Dr. Dharmesh.",
       treatments: "Treatments",
       info: "Information",
       connect: "Connect",
@@ -187,13 +186,13 @@ export const translations = {
       badge: "சென்னையின் முதன்மை ஒருங்கிணைந்த மருத்துவ மையம்",
       title1: "பண்டைய ஞானம்",
       title2: "நவீன மீட்பு.",
-      subtitle: "தன்வந்திரி மருத்துவம் பாரம்பரிய ஆயுர்வேதத்தை மேம்பட்ட விளையாட்டு சிகிச்சை மற்றும் ஆஸ்டியோபதி கையாளுதலுடன் ஒருங்கிணைத்து முழுமையான வலி மேலாண்மையை வழங்குகிறது.",
+      subtitle: "டாக்டர் தர்மேஷ் தலைமையில் தன்வந்திரி மருத்துவம் பாரம்பரிய ஆயுர்வேதத்தை மேம்பட்ட விளையாட்டு சிகிச்சை மற்றும் ஆஸ்டியோபதி கையாளுதலுடன் ஒருங்கிணைத்து முழுமையான வலி மேலாண்மையை வழங்குகிறது.",
       ctaBook: "வாட்ஸ்அப் முன்பதிவு",
       ctaServices: "சேவைகளைப் பார்க்க"
     },
     home: {
-      overviewTitle: "தன்வந்திரி மருத்துவம்",
-      overviewDesc: "சென்னையில் அமைந்துள்ள ஒரு பிரீமியம் ஆயுர்வேத மற்றும் விளையாட்டு சிகிச்சை கிளினிக், இது தமிழ்நாட்டில் முதல் முறையாகும். டிரை நீட்லிங் மற்றும் ஆஸ்டியோபதி கையாளுதல் போன்ற மேம்பட்ட நுட்பங்களுடன் பாரம்பரிய ஆயுஷ் மருத்துவத்தில் நாங்கள் நிபுணத்துவம் பெற்றுள்ளோம்.",
+      overviewTitle: "தன்வந்திரி மருத்துவம் - டாக்டர் தர்மேஷ்",
+      overviewDesc: "சென்னையில் அமைந்துள்ள ஒரு பிரீமியம் ஆயுர்வேத மற்றும் விளையாட்டு சிகிச்சை கிளினிக், இது தமிழ்நாட்டில் முதல் முறையாகும். டாக்டர் தர்மேஷ் வழிகாட்டுதலின் கீழ், டிரை நீட்லிங் மற்றும் ஆஸ்டியோபதி கையாளுதல் போன்ற மேம்பட்ட நுட்பங்களுடன் பாரம்பரிய ஆயுஷ் மருத்துவத்தில் நாங்கள் நிபுணத்துவம் பெற்றுள்ளோம்.",
       hours: "நேரம்",
       hoursVal: "காலை 7 - இரவு 9, தினமும்",
       capacity: "வசதி",
@@ -207,9 +206,9 @@ export const translations = {
     about: {
       badge: "முதன்மை மருத்துவர்",
       name: "டாக்டர் தர்மேஷ் குபேந்திரன்",
-      title: "ஒருங்கிணைந்த விளையாட்டு மருத்துவத்தில் முன்னணி நிபுணர்",
-      bio1: "டாக்டர் தர்மேஷ் குபேந்திரன் ஆயுஷ் மருத்துவத் துறையில் ஒரு தொலைநோக்கு பார்வையாளர், பண்டைய ஆயுர்வேத குணப்படுத்துதலுக்கும் நவீன விளையாட்டு அறிவியலுக்கும் இடையிலான இடைவெளியைக் குறைக்கிறார். BAMS பட்டம் மற்றும் விளையாட்டு முறை மற்றும் பயிற்சியில் PhD பெற்றுள்ள அவர், பாரம்பரிய சிகிச்சைகளுக்கு ஒரு தனித்துவமான அறிவியல் கண்ணோட்டத்தைக் கொண்டுவருகிறார்.",
-      bio2: "ஒரு அர்ப்பணிப்புள்ள விளையாட்டு விஞ்ஞானி மற்றும் பயோமெக்கானிஸ்ட் ஆக, டாக்டர் தர்மேஷ் நாள்பட்ட வலியை அதன் மூலத்திலேயே தீர்க்க நடை முறைகள், தசை இயக்கவியல் மற்றும் நரம்பியல் தொடர்புகளை பகுப்பாய்வு செய்வதில் கவனம் செலுத்துகிறார்.",
+      title: "டாக்டர் தர்மேஷ் - ஒருங்கிணைந்த விளையாட்டு மருத்துவத்தில் முன்னணி நிபுணர்",
+      bio1: "டாக்டர் தர்மேஷ் குபேந்திரன் ஆயுஷ் மருத்துவத் துறையில் ஒரு தொலைநோக்கு பார்வையாளர், பண்டைய ஆயுர்வேத குணப்படுத்துதலுக்கும் நவீன விளையாட்டு அறிவியலுக்கும் இடையிலான இடைவெளியைக் குறைக்கிறார். BAMS பட்டம் மற்றும் விளையாட்டு முறை மற்றும் பயிற்சியில் PhD பெற்றுள்ள தர்மேஷ் டாக்டர், பாரம்பரிய சிகிச்சைகளுக்கு ஒரு தனித்துவமான அறிவியல் கண்ணோட்டத்தைக் கொண்டுவருகிறார்.",
+      bio2: "ஒரு அர்ப்பணிப்புள்ள தர்மேஷ் விளையாட்டு சிகிச்சையாளர் மற்றும் பயோமெக்கானிஸ்ட் ஆக, டாக்டர் தர்மேஷ் நாள்பட்ட வலியை அதன் மூலத்திலேயே தீர்க்க நடை முறைகள், தசை இயக்கவியல் மற்றும் நரம்பியல் தொடர்புகளை பகுப்பாய்வு செய்வதில் கவனம் செலுத்துகிறார்.",
       philosophy: "தொழில்முறை தத்துவம்",
       quote: "\"எங்கள் அணுகுமுறை அறிகுறிகளை அடக்குவது மட்டுமல்ல; இது மனித இயந்திரத்தை மேம்படுத்துவது பற்றியது. கினீசியாலஜியை சித்தா மற்றும் ஆயுர்வேதத்துடன் ஒருங்கிணைப்பதன் மூலம், உடலின் இயற்கையான குணப்படுத்தும் அமைப்புகளை மீட்டமைத்து, உச்ச செயல்பாட்டு செயல்திறனை மீட்டெடுக்கிறோம்.\"",
       expertiseTitle: "முக்கிய நிபுணத்துவம்:",
@@ -223,7 +222,7 @@ export const translations = {
     services: {
       badge: "எங்கள் நிபுணத்துவம்",
       title: "மேம்பட்ட சிகிச்சை சேவைகள்",
-      desc: "துல்லியமான, தனிப்பயனாக்கப்பட்ட கவனிப்புக்காக பாரம்பரிய ஆயுஷ் மருத்துவத்தை நவீன விளையாட்டு அறிவியலுடன் இணைத்தல்.",
+      desc: "துல்லியமான, தனிப்பயனாக்கப்பட்ட கவனிப்புக்காக டாக்டர் தர்மேஷ் வழிகாட்டுதலின் கீழ் பாரம்பரிய ஆயுஷ் மருத்துவத்தை நவீன விளையாட்டு அறிவியலுடன் இணைத்தல்.",
       kinesiology: {
         title: "மேம்பட்ட கினீசியாலஜி",
         desc: "மனித உடல் இயக்கத்தின் அறிவியல் ஆய்வு. இது செயல்பாட்டையும் ஆரோக்கியத்தையும் புரிந்துகொள்ள உடற்கூறியல் மற்றும் உடலியல் ஆகியவற்றை ஒருங்கிணைக்கிறது.",
@@ -307,7 +306,7 @@ export const translations = {
     contact: {
       badge: "தொடர்பு கொள்ள",
       title: "தொடர்பில் இருங்கள்",
-      desc: "குறிப்பிட்ட சிகிச்சைகள் பற்றிய கேள்விகள் இருந்தாலும் அல்லது ஆலோசனையைப் பதிவு செய்ய விரும்பினாலும், நாங்கள் உதவ இருக்கிறோம்.",
+      desc: "குறிப்பிட்ட சிகிச்சைகள் பற்றிய கேள்விகள் இருந்தாலும் அல்லது டாக்டர் தர்மேஷிடம் ஆலோசனையைப் பதிவு செய்ய விரும்பினாலும், நாங்கள் உதவ இருக்கிறோம்.",
       loc: "இடம்",
       locVal: "எண்.2, 54வது தெரு சந்து, 11வது அவென்யூ, அசோக் நகர், சென்னை 600083",
       viewMap: "வரைபடத்தில் பார்க்க",
@@ -332,14 +331,14 @@ export const translations = {
       successTitle: "விசாரணை அனுப்பப்பட்டது!",
       successDesc: "தொடர்பு கொண்டதற்கு நன்றி. எங்கள் மருத்துவ ஒருங்கிணைப்பாளர்கள் 24 மணி நேரத்திற்குள் உங்களைத் தொடர்புகொள்வார்கள்.",
       successBtn: "மற்றொரு விசாரணையை அனுப்பவும்",
-      whatsappMsg: "வணக்கம், நான் தன்வந்திரி மருத்துவத்தில் ஒரு அப்பாயிண்ட்மெண்ட் பதிவு செய்ய விரும்புகிறேன்."
+      whatsappMsg: "வணக்கம், தர்மேஷ் டாக்டரிடம் தன்வந்திரி மருத்துவத்தில் ஒரு அப்பாயிண்ட்மெண்ட் பதிவு செய்ய விரும்புகிறேன்."
     },
     footer: {
       ctaTitle: "உங்கள் மீட்சியைத் தொடங்கத் தயாரா?",
-      ctaSub: "வாரம் 7 நாட்களும் நிபுணத்துவ ஆலோசனை கிடைக்கும்.",
+      ctaSub: "டாக்டர் தர்மேஷ் ஆலோசனை வாரம் 7 நாட்களும் கிடைக்கும்.",
       ctaBook: "அப்பாயிண்ட்மெண்ட் பதிவு",
       ctaAI: "எங்கள் AI-யிடம் கேளுங்கள்",
-      mission: "பண்டைய ஆயுர்வேத ஞானத்திற்கும் நவீன விளையாட்டு மருத்துவத்திற்கும் இடையிலான இடைவெளியைக் குறைத்தல். அறிவியல் பூர்வமான இயக்க பகுப்பாய்வு மற்றும் முழுமையான சிகிச்சைகள் மூலம் மனித செயல்திறனை மீட்டெடுப்பதே எங்கள் நோக்கம்.",
+      mission: "பண்டைய ஆயுர்வேத ஞானத்திற்கும் நவீன விளையாட்டு மருத்துவத்திற்கும் இடையிலான இடைவெளியைக் டாக்டர் தர்மேஷ் தலைமையில் குறைத்தல். அறிவியல் பூர்வமான இயக்க பகுப்பாய்வு மற்றும் முழுமையான சிகிச்சைகள் மூலம் மனித செயல்திறனை மீட்டெடுப்பதே எங்கள் நோக்கம்.",
       treatments: "சிகிச்சைகள்",
       info: "தகவல்",
       connect: "தொடர்பு கொள்ள",

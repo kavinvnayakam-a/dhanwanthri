@@ -8,15 +8,18 @@ import {FirebaseErrorListener} from '@/components/FirebaseErrorListener';
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.dhanwanthrimaruthuvam.com'),
   title: {
-    default: 'Dhanwanthri Maruthuvam | Best Ayurvedic & Sports Therapy Clinic in Chennai',
+    default: 'Dhanwanthri Maruthuvam | Dr. Dharmesh - Best Ayurvedic & Sports Therapy Clinic in Chennai',
     template: '%s | Dhanwanthri Maruthuvam'
   },
-  description: 'Dhanwanthri Maruthuvam (Dhanwanthiri Hospital) is Chennai\'s premier clinic for Integrative Sports Medicine and Ayurveda. Led by Dr. Dharmesh Kubendiran (BAMS, PhD), specializing in Kinesiology, Dry Needling, and Osteopathic Manipulation for chronic pain and sports recovery.',
+  description: 'Dhanwanthri Maruthuvam is Chennai\'s premier clinic for Integrative Sports Medicine and Ayurveda. Led by Doctor Dharmesh (Dr. Dharmesh Kubendiran), a specialist sports therapist and biomechanist specializing in Kinesiology and Pain Management.',
   keywords: [
+    'Doctor Dharmesh',
+    'Dr. Dharmesh',
+    'Dharmesh doctor',
+    'Dharmesh sports therapist',
     'Dhanwanthiri Hospital',
     'Dhanwanthiri Maruthuvam',
     'Dhanwanthri Maruthuvam',
-    'Dr. Dharmesh',
     'Dr. Dharmesh Kubendiran',
     'Sports Therapy Chennai',
     'Ayurveda Chennai',
@@ -40,8 +43,8 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: 'Dhanwanthri Maruthuvam | Ancient Wisdom, Modern Recovery',
-    description: 'Specialized Ayurvedic and Sports Therapy clinic in Ashok Nagar, Chennai. Expert pain management and rehabilitation by Dr. Dharmesh Kubendiran.',
+    title: 'Dhanwanthri Maruthuvam | Ancient Wisdom, Modern Recovery with Dr. Dharmesh',
+    description: 'Specialized Ayurvedic and Sports Therapy clinic in Ashok Nagar, Chennai. Expert pain management and rehabilitation by Doctor Dharmesh.',
     url: 'https://www.dhanwanthrimaruthuvam.com',
     siteName: 'Dhanwanthri Maruthuvam',
     locale: 'en_IN',
@@ -51,14 +54,14 @@ export const metadata: Metadata = {
         url: 'https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Images%2FLanding%20page%20hero%20image.webp?alt=media&token=6b702b7d-29eb-4921-affc-6193ed9fcd49',
         width: 1200,
         height: 630,
-        alt: 'Dhanwanthri Maruthuvam Clinic'
+        alt: 'Dhanwanthri Maruthuvam Clinic - Dr. Dharmesh'
       }
     ]
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Dhanwanthri Maruthuvam | Sports Therapy & Ayurveda',
-    description: 'Holistic pain management and athletic recovery in Chennai.',
+    title: 'Dhanwanthri Maruthuvam | Dr. Dharmesh - Sports Therapy & Ayurveda',
+    description: 'Holistic pain management and athletic recovery in Chennai by Doctor Dharmesh.',
     images: ['https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Images%2FLanding%20page%20hero%20image.webp?alt=media&token=6b702b7d-29eb-4921-affc-6193ed9fcd49'],
   },
   icons: {

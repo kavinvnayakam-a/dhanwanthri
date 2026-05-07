@@ -1,4 +1,3 @@
-
 "use client";
 
 import Image from 'next/image';
@@ -21,10 +20,11 @@ export default function AboutPage() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Physician",
-    "name": "Dr. Dharmesh Kubendiran",
+    "name": "Doctor Dharmesh (Dr. Dharmesh Kubendiran)",
+    "alternateName": ["Dr. Dharmesh", "Dharmesh doctor", "Dharmesh sports therapist"],
     "image": profileImageUrl,
-    "medicalSpecialty": ["Ayurvedic", "Sports Medicine", "Kinesiology"],
-    "description": "Leading Expert in Integrative Sports Medicine with a PhD in Sports Method and Training. Specialist in Biomechanics and Chronic Pain Management.",
+    "medicalSpecialty": ["Ayurvedic", "Sports Medicine", "Kinesiology", "Sports Therapy"],
+    "description": "Doctor Dharmesh is a leading Expert in Integrative Sports Medicine with a PhD in Sports Method and Training. Specialist in Biomechanics and Chronic Pain Management.",
     "memberOf": {
       "@type": "MedicalClinic",
       "name": "Dhanwanthri Maruthuvam",
@@ -38,7 +38,7 @@ export default function AboutPage() {
       "addressCountry": "IN"
     },
     "telephone": "+918608174673",
-    "knowsAbout": ["Ayurveda", "Sports Kinesiology", "Dry Needling", "Osteopathic Manipulation"]
+    "knowsAbout": ["Ayurveda", "Sports Kinesiology", "Dry Needling", "Osteopathic Manipulation", "Sports Therapy"]
   };
 
   return (
@@ -64,7 +64,7 @@ export default function AboutPage() {
             <div className="relative aspect-[4/5] md:aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl mx-auto lg:mx-0 max-w-sm md:max-w-full">
               <Image
                 src={profileImageUrl}
-                alt={t.about.name}
+                alt="Doctor Dharmesh portrait"
                 fill
                 className="object-cover"
                 data-ai-hint="doctor portrait"
