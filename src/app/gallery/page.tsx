@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { PlayCircle, Maximize2, Camera, X } from 'lucide-react';
+import { PlayCircle, Maximize2, Camera } from 'lucide-react';
 import { PlaceHolderImages, type ImagePlaceholder } from '@/lib/placeholder-images';
 import { useLanguage } from '@/context/LanguageContext';
 import {
@@ -113,6 +113,11 @@ export default function GalleryPage() {
         {/* Full-Screen Image Viewer Dialog */}
         <Dialog open={!!selectedImg} onOpenChange={(open) => !open && setSelectedImg(null)}>
           <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 border-none bg-black/95 overflow-hidden flex flex-col items-center justify-center rounded-3xl">
+            <DialogHeader className="sr-only">
+              <DialogTitle>
+                {selectedImg ? (galleryItems.find(i => i.id === selectedImg.id)?.title || selectedImg.description) : 'Gallery Image'}
+              </DialogTitle>
+            </DialogHeader>
             {selectedImg && (
               <div className="relative w-full h-full flex flex-col">
                 <div className="relative flex-grow w-full h-[80vh]">
