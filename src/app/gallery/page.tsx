@@ -1,14 +1,22 @@
 "use client";
 
+import { useState } from 'react';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { PlayCircle, Maximize2, Camera } from 'lucide-react';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { PlayCircle, Maximize2, Camera, X } from 'lucide-react';
+import { PlaceHolderImages, type ImagePlaceholder } from '@/lib/placeholder-images';
 import { useLanguage } from '@/context/LanguageContext';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export default function GalleryPage() {
   const { t } = useLanguage();
+  const [selectedImg, setSelectedImg] = useState<ImagePlaceholder | null>(null);
 
   const galleryItems = [
     { id: 'gallery-1', title: t.gallery.item1, category: t.gallery.cat1 },
@@ -74,21 +82,25 @@ export default function GalleryPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {galleryItems.map((item) => {
               const img = PlaceHolderImages.find(i => i.id === item.id);
+              if (!img) return null;
+              
               return (
-                <div key={item.id} className="group relative aspect-[4/5] rounded-3xl overflow-hidden shadow-lg cursor-pointer bg-muted">
-                  {img && (
-                    <Image
-                      src={img.imageUrl}
-                      alt={item.title}
-                      fill
-                      className="object-cover group-hover:scale-110 transition-transform duration-700"
-                      data-ai-hint={img.imageHint}
-                    />
-                  )}
+                <div 
+                  key={item.id} 
+                  className="group relative aspect-[4/5] rounded-3xl overflow-hidden shadow-lg cursor-pointer bg-muted"
+                  onClick={() => setSelectedImg(img)}
+                >
+                  <Image
+                    src={img.imageUrl}
+                    alt={item.title}
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-700"
+                    data-ai-hint={img.imageHint}
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-8 flex flex-col justify-end">
                     <Badge className="bg-accent text-accent-foreground w-fit mb-2">{item.category}</Badge>
                     <h3 className="text-white text-xl font-bold font-headline">{item.title}</h3>
-                    <div className="mt-4 flex items-center gap-2 text-white/80 text-sm">
+                    <div className="mt-4 flex items-center gap-2 text-white/80 text-sm font-bold">
                       <Maximize2 className="h-4 w-4" /> {t.gallery.viewFull}
                     </div>
                   </div>
@@ -97,6 +109,36 @@ export default function GalleryPage() {
             })}
           </div>
         </section>
+
+        {/* Full-Screen Image Viewer Dialog */}
+        <Dialog open={!!selectedImg} onOpenChange={(open) => !open && setSelectedImg(null)}>
+          <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 border-none bg-black/95 overflow-hidden flex flex-col items-center justify-center rounded-3xl">
+            {selectedImg && (
+              <div className="relative w-full h-full flex flex-col">
+                <div className="relative flex-grow w-full h-[80vh]">
+                  <Image
+                    src={selectedImg.imageUrl}
+                    alt={selectedImg.description}
+                    fill
+                    className="object-contain p-4"
+                  />
+                </div>
+                <div className="bg-black/40 backdrop-blur-md w-full p-6 text-white border-t border-white/10">
+                  <div className="max-w-3xl mx-auto space-y-2">
+                    <Badge className="bg-accent text-white mb-2">
+                      {galleryItems.find(i => i.id === selectedImg.id)?.category || 'Gallery'}
+                    </Badge>
+                    <h2 className="text-2xl font-headline font-bold text-white tracking-tight">
+                      {galleryItems.find(i => i.id === selectedImg.id)?.title || selectedImg.description}
+                    </h2>
+                    <p className="text-white/60 text-sm">Dhanwanthri Maruthuvam — Clinical Facility Visualization</p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
+
       </div>
     </div>
   );
