@@ -20,69 +20,39 @@
     },
     {
       "id": "gallery-1",
-      "description": "Clinic Interior - Reception",
-      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Interior%20images%2FWhatsApp%20Image%202026-04-04%20at%2012.32.44%20(1).webp?alt=media&token=06e55e68-d4c0-4639-a5d0-3ad117062176",
-      "imageHint": "clinic interior"
+      "description": "Clinic Reception",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/interior%20image%20changed%20one%2FClinic%20Reception.webp?alt=media&token=03b7d076-114f-4cc0-ad32-3e971b7d0d68",
+      "imageHint": "clinic reception"
     },
     {
       "id": "gallery-2",
-      "description": "Clinic Interior - Traditional Therapy Setup",
-      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Interior%20images%2FWhatsApp%20Image%202026-04-04%20at%2012.32.44%20(2).webp?alt=media&token=8ed928d4-5617-41be-8f37-fa09a240d77e",
-      "imageHint": "clinic interior"
+      "description": "Traditional Therapy Room",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/interior%20image%20changed%20one%2FTraditional%20Therapy%20Room.webp?alt=media&token=1615cb49-0ac5-43a0-aa43-7d10f8b4ed74",
+      "imageHint": "therapy room"
     },
     {
       "id": "gallery-3",
-      "description": "Clinic Interior - Clinical Room",
-      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Interior%20images%2FWhatsApp%20Image%202026-04-04%20at%2012.32.44.webp?alt=media&token=d3c8322d-800b-4a06-8bac-a73e435394f3",
-      "imageHint": "clinic interior"
+      "description": "Clinical Procedure",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/interior%20image%20changed%20one%2FClinical%20Procedure.webp?alt=media&token=5a5130e1-fa90-4f0e-9e5f-a0fb03214627",
+      "imageHint": "clinical procedure"
     },
     {
       "id": "gallery-4",
-      "description": "Clinic Interior - Treatment Suite",
-      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Interior%20images%2FWhatsApp%20Image%202026-04-04%20at%2012.32.45%20(1).webp?alt=media&token=22266cae-1fec-4f9a-b45f-f4bf40beff96",
-      "imageHint": "clinic interior"
+      "description": "Modern clinic space-1",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/interior%20image%20changed%20one%2FModern%20clinic%20space-1.webp?alt=media&token=35a61861-5b04-4f96-bb1f-9c174f594a51",
+      "imageHint": "clinic space"
     },
     {
       "id": "gallery-5",
-      "description": "Clinic Interior - Specialized Room",
-      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Interior%20images%2FWhatsApp%20Image%202026-04-04%20at%2012.32.45%20(2).webp?alt=media&token=84a58eb2-a283-47cd-b624-2f5701f9f192",
-      "imageHint": "clinic interior"
+      "description": "Patient waiting area",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/interior%20image%20changed%20one%2FPatient%20waiting%20area.webp?alt=media&token=72687da0-e6f3-4533-91cc-0f8b0b0df0e6",
+      "imageHint": "waiting area"
     },
     {
       "id": "gallery-6",
-      "description": "Clinic Interior - Clinical Bed Setup",
-      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Interior%20images%2FWhatsApp%20Image%202026-04-04%20at%2012.32.46%20(1).webp?alt=media&token=9ed16edd-2921-4a63-9045-72b33d912a15",
-      "imageHint": "clinic interior"
-    },
-    {
-      "id": "gallery-7",
-      "description": "Clinic Interior - Facility Corridor",
-      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Interior%20images%2FWhatsApp%20Image%202026-04-04%20at%2012.32.46.webp?alt=media&token=e239a143-369e-4074-b1c7-e4a4859bcf6c",
-      "imageHint": "clinic interior"
-    },
-    {
-      "id": "gallery-8",
-      "description": "Clinic Interior - Patient Comfort Detail",
-      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Interior%20images%2FWhatsApp%20Image%202026-04-04%20at%2012.32.47%20(1).webp?alt=media&token=9d8358fe-c77e-4f4b-8e7d-df27d6632a08",
-      "imageHint": "clinic interior"
-    },
-    {
-      "id": "gallery-9",
-      "description": "Clinic Interior - Patient Suite",
-      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Interior%20images%2FWhatsApp%20Image%202026-04-04%20at%2012.32.47%20(2).webp?alt=media&token=c209346f-53fc-422c-b375-c48ae96bd271",
-      "imageHint": "clinic interior"
-    },
-    {
-      "id": "gallery-10",
-      "description": "Clinic Interior - Specialized Treatment Room",
-      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Interior%20images%2FWhatsApp%20Image%202026-04-04%20at%2012.32.47.webp?alt=media&token=0b2745ff-8679-4c70-b200-eef01bbcc600",
-      "imageHint": "clinic interior"
-    },
-    {
-      "id": "gallery-11",
-      "description": "Clinic Interior - Modern Clinical View",
-      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/Interior%20images%2FWhatsApp%20Image%202026-04-04%20at%2012.32.48.webp?alt=media&token=4a6bf438-ef49-4376-8411-8afe73ba050b",
-      "imageHint": "clinic interior"
+      "description": "Therapy Consultation",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/dhanwanthrimaruthuvam-83c7d.firebasestorage.app/o/interior%20image%20changed%20one%2FTherapy%20Consultation.webp?alt=media&token=2166cec5-2f5f-4a64-a690-eda08906f5f1",
+      "imageHint": "therapy consultation"
     }
   ]
 }

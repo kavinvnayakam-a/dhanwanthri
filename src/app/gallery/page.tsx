@@ -1,4 +1,3 @@
-
 "use client";
 
 import Image from 'next/image';
@@ -14,15 +13,10 @@ export default function GalleryPage() {
   const galleryItems = [
     { id: 'gallery-1', title: t.gallery.item1, category: t.gallery.cat1 },
     { id: 'gallery-2', title: t.gallery.item2, category: t.gallery.cat2 },
-    { id: 'gallery-3', title: t.gallery.item3, category: t.gallery.cat2 },
+    { id: 'gallery-3', title: t.gallery.item3, category: t.gallery.cat4 },
     { id: 'gallery-4', title: t.gallery.item4, category: t.gallery.cat4 },
-    { id: 'gallery-5', title: t.gallery.item5, category: t.gallery.cat2 },
-    { id: 'gallery-6', title: t.gallery.item6, category: t.gallery.cat1 },
-    { id: 'gallery-7', title: t.gallery.item7, category: t.gallery.cat1 },
-    { id: 'gallery-8', title: t.gallery.item8, category: t.gallery.cat2 },
-    { id: 'gallery-9', title: t.gallery.item9, category: t.gallery.cat1 },
-    { id: 'gallery-10', title: t.gallery.item10, category: t.gallery.cat4 },
-    { id: 'gallery-11', title: t.gallery.item11, category: t.gallery.cat1 },
+    { id: 'gallery-5', title: t.gallery.item5, category: t.gallery.cat1 },
+    { id: 'gallery-6', title: t.gallery.item6, category: t.gallery.cat3 },
   ];
 
   return (
@@ -48,6 +42,7 @@ export default function GalleryPage() {
                 alt="Sports Therapy Intro" 
                 fill 
                 className="object-cover opacity-60 group-hover:scale-105 transition-transform duration-500" 
+                priority
               />
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 text-white">
                 <PlayCircle className="h-20 w-20 text-accent drop-shadow-lg" />
@@ -80,7 +75,7 @@ export default function GalleryPage() {
             {galleryItems.map((item) => {
               const img = PlaceHolderImages.find(i => i.id === item.id);
               return (
-                <div key={item.id} className="group relative aspect-[4/5] rounded-3xl overflow-hidden shadow-lg cursor-pointer">
+                <div key={item.id} className="group relative aspect-[4/5] rounded-3xl overflow-hidden shadow-lg cursor-pointer bg-muted">
                   {img && (
                     <Image
                       src={img.imageUrl}
@@ -90,7 +85,7 @@ export default function GalleryPage() {
                       data-ai-hint={img.imageHint}
                     />
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-8 flex flex-col justify-end">
+                  <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-8 flex flex-col justify-end">
                     <Badge className="bg-accent text-accent-foreground w-fit mb-2">{item.category}</Badge>
                     <h3 className="text-white text-xl font-bold font-headline">{item.title}</h3>
                     <div className="mt-4 flex items-center gap-2 text-white/80 text-sm">
