@@ -16,6 +16,7 @@ import {
   Clock,
   Instagram,
   Facebook,
+  Youtube,
   MessageSquare,
   Loader2,
   Mail
@@ -172,8 +173,21 @@ export default function ContactPage() {
             <div className="pt-8 border-t">
               <p className="font-bold text-primary mb-4 font-headline">{t.contact.social}</p>
               <div className="flex gap-4">
-                <Button variant="ghost" size="icon" className="rounded-full bg-white shadow-sm hover:text-accent"><Instagram className="h-5 w-5" /></Button>
-                <Button variant="ghost" size="icon" className="rounded-full bg-white shadow-sm hover:text-accent"><Facebook className="h-5 w-5" /></Button>
+                <Button asChild variant="ghost" size="icon" className="rounded-full bg-white shadow-sm hover:text-accent">
+                  <a href="https://www.instagram.com/dhanwanthri_maruthuvam/" target="_blank" rel="noopener noreferrer">
+                    <Instagram className="h-5 w-5" />
+                  </a>
+                </Button>
+                <Button asChild variant="ghost" size="icon" className="rounded-full bg-white shadow-sm hover:text-accent">
+                  <a href="https://www.facebook.com/people/Dhanwanthri-Maruthuvam/61572365834047/?sk=followers" target="_blank" rel="noopener noreferrer">
+                    <Facebook className="h-5 w-5" />
+                  </a>
+                </Button>
+                <Button asChild variant="ghost" size="icon" className="rounded-full bg-white shadow-sm hover:text-accent">
+                  <a href="https://www.youtube.com/@dhanwanthrimaruthuvam" target="_blank" rel="noopener noreferrer">
+                    <Youtube className="h-5 w-5" />
+                  </a>
+                </Button>
               </div>
             </div>
           </div>

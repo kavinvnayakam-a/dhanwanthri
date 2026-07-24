@@ -1,7 +1,6 @@
-
 "use client";
 
-import { Mail, Phone, MapPin, Instagram, Facebook, Linkedin, ArrowRight, ShieldCheck, CalendarCheck, Sparkles } from 'lucide-react';
+import { Mail, Phone, MapPin, Instagram, Facebook, Youtube, ArrowRight, ShieldCheck, CalendarCheck, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -59,15 +58,30 @@ export function Footer() {
             {t.footer.mission}
           </p>
           <div className="flex gap-3">
-            <Link href="#" className="w-10 h-10 rounded-full border border-primary-foreground/20 flex items-center justify-center hover:bg-white hover:text-primary transition-all">
+            <a 
+              href="https://www.instagram.com/dhanwanthri_maruthuvam/" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="w-10 h-10 rounded-full border border-primary-foreground/20 flex items-center justify-center hover:bg-white hover:text-primary transition-all"
+            >
               <Instagram className="h-5 w-5" />
-            </Link>
-            <Link href="#" className="w-10 h-10 rounded-full border border-primary-foreground/20 flex items-center justify-center hover:bg-white hover:text-primary transition-all">
+            </a>
+            <a 
+              href="https://www.facebook.com/people/Dhanwanthri-Maruthuvam/61572365834047/?sk=followers" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="w-10 h-10 rounded-full border border-primary-foreground/20 flex items-center justify-center hover:bg-white hover:text-primary transition-all"
+            >
               <Facebook className="h-5 w-5" />
-            </Link>
-            <Link href="#" className="w-10 h-10 rounded-full border border-primary-foreground/20 flex items-center justify-center hover:bg-white hover:text-primary transition-all">
-              <Linkedin className="h-5 w-5" />
-            </Link>
+            </a>
+            <a 
+              href="https://www.youtube.com/@dhanwanthrimaruthuvam" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="w-10 h-10 rounded-full border border-primary-foreground/20 flex items-center justify-center hover:bg-white hover:text-primary transition-all"
+            >
+              <Youtube className="h-5 w-5" />
+            </a>
           </div>
         </div>
 
