@@ -11,6 +11,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/gallery',
     '/qa',
     '/contact',
+    '/privacy',
+    '/cookies',
+    '/accessibility',
+    '/patient-privacy'
   ]
 
   return routes.map((route) => ({

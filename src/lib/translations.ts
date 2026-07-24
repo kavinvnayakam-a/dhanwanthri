@@ -8,7 +8,11 @@ export const translations = {
       about: "Dr. Dharmesh",
       gallery: "Gallery",
       qa: "AI Q&A",
-      book: "Book Appointment"
+      book: "Book Appointment",
+      privacy: "Privacy Policy",
+      cookies: "Cookie Settings",
+      accessibility: "Accessibility",
+      patientPrivacy: "Patient Privacy"
     },
     hero: {
       badge: "Chennai's Foremost Integrative Medical Center",
@@ -175,7 +179,11 @@ export const translations = {
       about: "டாக்டர் தர்மேஷ்",
       gallery: "கேலரி",
       qa: "AI கேள்வி-பதில்",
-      book: "முன்பதிவு"
+      book: "முன்பதிவு",
+      privacy: "தனியுரிமைக் கொள்கை",
+      cookies: "குக்கீ அமைப்புகள்",
+      accessibility: "அணுகல்தன்மை",
+      patientPrivacy: "நோயாளி தனியுரிமை"
     },
     hero: {
       badge: "சென்னையின் முதன்மை ஒருங்கிணைந்த மருத்துவ மையம்",

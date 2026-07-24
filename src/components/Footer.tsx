@@ -113,7 +113,7 @@ export function Footer() {
               { name: t.nav.gallery, href: '/gallery' },
               { name: t.nav.qa, href: '/qa' },
               { name: 'Contact', href: '/contact' },
-              { name: 'Patient Privacy', href: '#' }
+              { name: t.nav.patientPrivacy, href: '/patient-privacy' }
             ].map((link) => (
               <li key={link.name}>
                 <Link href={link.href} className="hover:text-white flex items-center justify-center md:justify-start gap-2 group transition-colors">
@@ -166,9 +166,9 @@ export function Footer() {
             <span>&copy; {new Date().getFullYear()} Dhanwanthri Maruthuvam Ayurvedic & Sports Therapy</span>
           </div>
           <div className="flex gap-8 justify-center">
-            <Link href="#" className="hover:text-white">Privacy Policy</Link>
-            <Link href="#" className="hover:text-white">Cookie Settings</Link>
-            <Link href="#" className="hover:text-white">Accessibility</Link>
+            <Link href="/privacy" className="hover:text-white">{t.nav.privacy}</Link>
+            <Link href="/cookies" className="hover:text-white">{t.nav.cookies}</Link>
+            <Link href="/accessibility" className="hover:text-white">{t.nav.accessibility}</Link>
           </div>
         </div>
       </div>
